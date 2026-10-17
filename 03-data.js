@@ -8,7 +8,12 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const fmtTime = s => { s = Math.max(0, s); const m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ':' + String(r).padStart(2, '0'); };
 const fmtSec = s => { const m = Math.floor(s / 60); const r = s - m * 60; return m + ':' + r.toFixed(1).padStart(4, '0'); };
 const rand = n => Math.floor(Math.random() * n);
-const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1);[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const shuffle = (a, rnd = Math.random) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+// repeatable random numbers from a 32-bit seed (mulberry32): online battles draw the same words on every device
+function seededRng(seed) {
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
 const ls = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } }
@@ -820,7 +825,10 @@ function themeLeft(listId) {
   for (const f of activeFams(listId)) for (const w of f) if (isTheme(w)) { all.add(wkey(w)); if (!USED.has(wkey(w))) left.add(wkey(w)); }
   return { left: left.size, total: all.size };
 }
-function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
+// opts.rng: random source (default Math.random). opts.used: the set of shown words to steer away from (default: this device's
+// memory). An online battle passes a seeded rng and a fresh set, so every device draws the same words.
+function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
+  const rnd = opts.rng || Math.random, used = opts.used || USED;
   let fams = activeFams(LISTS[listId] ? listId : 'basic');
   if (!fams.length) fams = (LISTS[listId] || LISTS.basic).fams.map(f => f.filter(w => w[0] !== '*'));
   const scheme = SCHEMES.find(s => s.id === schemeId) || SCHEMES[0];
@@ -829,14 +837,15 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
   let color = 0;
   const cap = Math.max(4, Math.floor(fams.length * 0.6));
   const anchorsOf = f => f.filter(w => w[0] === '*').length;
-  const fresh = f => f.reduce((c, w) => c + (w[0] !== '*' && !USED.has(wkey(w)) ? 1 : 0), 0);
+  const fresh = f => f.reduce((c, w) => c + (w[0] !== '*' && !used.has(wkey(w)) ? 1 : 0), 0);
   let themesThisBattle = 0;
   const roster = rosterNames();
   // a streamer pack is out once its tag has been shown, or once this battle has had its share
-  const themeOut = f => f.some(isTheme) && (themeUsed(f) || (track && themesThisBattle >= THEME_PER_BATTLE));
+  const themeOut = f => f.some(isTheme) && (f.some(w => isTheme(w) && used.has(wkey(w))) || (track && themesThisBattle >= THEME_PER_BATTLE));
   function pick(n, avoid) {
     const ok = f => f.length >= n && !f.some(w => avoid.has(wkey(w))) && !themeOut(f);
-    let cands = fams.filter(f => ok(f) && !recent.includes(f));
+    const rs = new Set(recent);
+    let cands = fams.filter(f => ok(f) && !rs.has(f));
     if (!cands.length) { recent.length = 0; cands = fams.filter(ok); }
     if (!cands.length) cands = fams.filter(f => !themeOut(f));
     if (!cands.length) cands = fams;
@@ -845,7 +854,7 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
     const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), themed = f[0][0] === '*';
       const big = themed && (!PERSON_NAMES.has(wkey(f[0])) || roster.has(wkey(f[0])));
       return (big ? 3 : 1) * (ok ? 1 : themed ? 0.2 : 0.002); });
-    let r = Math.random() * wt.reduce((a, b) => a + b, 0), k = 0;
+    let r = rnd() * wt.reduce((a, b) => a + b, 0), k = 0;
     while (k < cands.length - 1 && (r -= wt[k]) > 0) k++;
     const f = cands[k];
     recent.push(f); if (recent.length > cap) recent.shift();
@@ -864,24 +873,24 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
       // packs list their most common words first; lean toward those so prompts stay easy to use. Unused words go first.
       const anchors = fam.filter(w => w[0] === '*').slice(0, slots.length);
       const rest = fam.filter(w => w[0] !== '*');
-      const unused = rest.filter(w => !USED.has(wkey(w)));
+      const unused = rest.filter(w => !used.has(wkey(w)));
       // only fall back to already-used words when this pack has too few fresh ones
-      const pool = unused.length >= slots.length - anchors.length ? unused : [...unused, ...rest.filter(w => USED.has(wkey(w)))], chosen = [];
+      const pool = unused.length >= slots.length - anchors.length ? unused : [...unused, ...rest.filter(w => used.has(wkey(w)))], chosen = [];
       while (anchors.length + chosen.length < slots.length && pool.length) {
         let tot = 0; const wts = pool.map((_, i) => (tot += Math.pow(0.72, i), Math.pow(0.72, i)));
-        let r = Math.random() * tot, k = 0; while (k < pool.length - 1 && (r -= wts[k]) > 0) k++;
+        let r = rnd() * tot, k = 0; while (k < pool.length - 1 && (r -= wts[k]) > 0) k++;
         chosen.push(pool.splice(k, 1)[0]);
       }
-      const words = shuffle([...anchors, ...chosen]).map(bare);
+      const words = shuffle([...anchors, ...chosen], rnd).map(bare);
       const c = (color++ % 6) + 1;
       slots.forEach(([ri, ci], i) => {
         const show = reveal === 'all' || (reveal === 'first' && i === 0) || (reveal === 'last' && i === slots.length - 1);
         out[ri][ci] = { w: words[i % words.length], c, show };
         // remember every shown word except people's names (theme words included, so they never come back)
-        if (track && show && !PERSON_NAMES.has(words[i % words.length].toLowerCase())) USED.add(words[i % words.length].toLowerCase());
+        if (track && show && !PERSON_NAMES.has(words[i % words.length].toLowerCase())) used.add(words[i % words.length].toLowerCase());
       });
     }
-    if (track) saveUsed();
+    if (track && used === USED) saveUsed();
     return out;
   };
 }

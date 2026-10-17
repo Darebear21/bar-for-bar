@@ -359,7 +359,9 @@ function pulseWave(duty) {
 }
 /* ---- scheduler: one clock for synth beats, uploaded tracks, and the click ---- */
 const S = { running: false, timer: 0 };
-function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, click = false, phrase = null }) {
+// timeOf(k): optional context time for step k (NaN skips it), for online battles that move the beat at changeovers.
+// startStep: first step to schedule, so joining an online battle midway doesn't walk through every step already gone
+function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, click = false, phrase = null, timeOf = null, startStep = 0 }) {
   const ctx = initAudio();
   stopPlayback(0.06);
   V = makeSession();
@@ -372,7 +374,7 @@ function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, clic
   const spb = 60 / bpm;
   S.running = true; S.T0 = T0; S.spb = spb; S.click = click; S.preset = preset || null; S.session = V;
   S.steps = preset ? preset.steps : 16; S.spbeat = S.steps / 4; S.stepDur = spb / S.spbeat; S.swing = preset ? preset.swing : 0.5;
-  S.next = 0; S.lead = null; S.src = null; S.crackle = null; S.trackEnd = Infinity; S.phrase = phrase;
+  S.next = startStep; S.timeOf = timeOf; S.lead = null; S.src = null; S.crackle = null; S.trackEnd = Infinity; S.phrase = phrase;
   if (preset && preset.crackle) {
     const c = ctx.createBufferSource(); c.buffer = A.crackleBuf; c.loop = true;
     const hp = nodes.filt('highpass', 350); const g = nodes.gain(0.22 * preset.crackle); c.connect(hp); hp.connect(g); g.connect(V.clean);
@@ -406,9 +408,10 @@ function stopPlayback(fade = 0.15) {
 function schedTick() {
   if (!S.running || !A.ctx) return;
   const ctx = A.ctx; const horizon = ctx.currentTime + 0.16;
-  for (; ;) {
-    const k = S.next; const t0 = S.T0 + k * S.stepDur;
+  for (let guard = 0; guard < 2048; guard++) {
+    const k = S.next; const t0 = S.timeOf ? S.timeOf(k) : S.T0 + k * S.stepDur;
     if (t0 > horizon) break;
+    if (t0 !== t0) { S.next++; continue; }   // NaN: a re-anchor skipped this step
     let t = t0;
     if (S.swing > 0.5 && S.spbeat === 4 && (k & 1)) t += (S.swing - 0.5) * 2 * S.stepDur;
     if (t >= ctx.currentTime - 0.005) { try { playStep(k, t); } catch (e) { console.warn(e); } }

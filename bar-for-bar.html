@@ -506,6 +506,67 @@ button.w:active{transform:translateY(1px)}
 .recap li span{font:400 12px/1.6 var(--f-mono); color:var(--ink-3)}
 .end-btns{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
 
+/* ---------- ONLINE: lobby, stage chip, toast ---------- */
+.chip[hidden],.go[hidden],.tbtn[hidden],.net-chip[hidden]{display:none}
+#online{min-height:100%; display:flex; flex-direction:column}
+.on-top{max-width:980px}
+.on-body{display:flex; flex-direction:column; gap:14px; padding:6px clamp(16px,3vw,44px) 56px; max-width:980px; width:100%; margin-inline:auto}
+.on-hero{display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:4px 0 8px}
+.on-match{display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,28px); flex-wrap:wrap; width:100%}
+.on-team{background:var(--deck); border-radius:18px; padding:14px 22px 13px; min-width:min(100%,220px); max-width:380px; display:flex; flex-direction:column; align-items:center; gap:6px; box-shadow:inset 0 3px 0 var(--c), 0 0 0 1px var(--line)}
+@media (max-width:560px){ .on-match{flex-direction:column; gap:8px} .on-team{width:100%; max-width:none} }
+.on-meta{margin:0; color:var(--ink-3); font:400 13px/1.5 var(--f-mono)}
+.on-clock{display:flex; flex-direction:column; align-items:center; gap:6px}
+.on-clock b{font:500 clamp(44px,9vw,76px)/1 var(--f-mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.on-status{display:flex; flex-direction:column; align-items:center; gap:10px; min-height:22px}
+.on-status p{margin:0; color:var(--ink-2); font-weight:650}
+.on-status p.ok{color:#4fdc8f}
+.on-note{margin:0; max-width:62ch; padding:10px 14px; border-radius:12px; background:rgba(255,177,46,.09); border:1px solid rgba(255,177,46,.3); color:var(--ink-2); font-size:14px; text-align:left}
+.on-note.err{background:rgba(255,95,109,.1); border-color:rgba(255,95,109,.4)}
+.on-card{background:var(--deck); border:1px solid var(--line); border-radius:16px; padding:18px clamp(16px,2vw,22px); display:flex; flex-direction:column; gap:12px; min-width:0}
+.on-card h2{margin:0; display:flex; align-items:center; gap:10px; font:400 clamp(16px,1.5vw,19px)/1.1 var(--f-display); letter-spacing:.02em}
+.on-card h2 .n{width:26px; height:26px; border-radius:8px; display:grid; place-items:center; background:var(--rubber); color:var(--amber); font-size:14px; flex:none}
+.on-card.done h2 .n{background:var(--amber); color:var(--amber-ink)}
+.on-roles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+.on-role{appearance:none; border:0; background:var(--deck-2); color:var(--ink); border-radius:14px; padding:14px 10px 12px; display:flex; flex-direction:column; align-items:center; gap:5px; min-width:0;
+  box-shadow:inset 0 3px 0 var(--c,var(--ink-3)), 0 0 0 1px var(--line); transition:background-color .15s, box-shadow .15s}
+.on-role:hover{background:var(--rubber)}
+.on-role b{font:400 clamp(17px,2.2vw,22px)/1.1 var(--f-display); letter-spacing:.02em; color:var(--c,var(--ink)); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.on-role span{font-size:12px; color:var(--ink-3); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.on-role[aria-pressed="true"]{background:color-mix(in srgb, var(--c,var(--amber)) 17%, var(--deck-2)); box-shadow:inset 0 0 0 2px var(--c,var(--amber)), 0 0 34px -14px var(--c,var(--amber))}
+@media (max-width:560px){ .on-roles{grid-template-columns:minmax(0,1fr)} }
+.on-check{display:grid; grid-template-columns:auto minmax(0,1fr); gap:18px; align-items:center}
+@media (max-width:600px){ .on-check{grid-template-columns:minmax(0,1fr)} }
+.on-count{display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px 26px; border-radius:14px; background:var(--lip); min-width:150px}
+.on-count b{font:400 clamp(60px,10vw,88px)/1 var(--f-display); font-variant-numeric:tabular-nums; color:var(--ink)}
+.on-count.one b{color:var(--c,var(--amber)); text-shadow:0 0 30px color-mix(in srgb, var(--c,var(--amber)) 50%, transparent)}
+.on-side{display:flex; flex-direction:column; gap:12px; min-width:0}
+.on-side .blurb b{color:var(--ink)}
+.on-delay{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center}
+.on-delay .label{max-width:9em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.on-delay output{font:500 15px/1 var(--f-mono); min-width:8.5ch; text-align:right}
+.on-link{display:flex; gap:8px; align-items:center}
+.on-link input{flex:1; font:400 13px/1.3 var(--f-mono); color:var(--ink-2)}
+.on-card .seg{align-self:flex-start; max-width:100%; flex-wrap:wrap}
+.on-resched{gap:8px}
+.on-resched .label{margin-right:4px}
+.on-foot{text-align:center; max-width:70ch; margin:4px auto 0}
+/* stage: who's on and how late this device plays them */
+.net-chip{display:flex; align-items:center; flex-wrap:wrap; gap:6px 12px; min-width:0; font:500 12px/1.3 var(--f-mono); color:var(--ink-3); letter-spacing:.08em; text-transform:uppercase}
+.net-chip b{font-family:var(--f-body); font-weight:750; letter-spacing:0; text-transform:none; font-size:14px}
+.net-chip .net-now{display:inline-flex; align-items:center; gap:6px; text-transform:none; letter-spacing:.02em; color:var(--ink-2)}
+.net-chip button{appearance:none; border:0; width:28px; height:28px; border-radius:8px; background:var(--rubber); color:var(--ink-2); font:700 16px/1 var(--f-body); box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
+.net-chip button:hover{background:var(--rubber-2); color:var(--ink)}
+.net-dot{width:8px; height:8px; border-radius:50%; background:#4fdc8f; box-shadow:0 0 10px #4fdc8f; flex:none}
+@media (max-width:640px){ .net-chip .net-me{display:none} }
+.hud .matchup{flex-direction:row; justify-content:flex-start; margin-top:0}
+@media (max-width:560px){ .hud .matchup{display:none} }
+.toast{position:fixed; z-index:90; left:50%; bottom:calc(22px + env(safe-area-inset-bottom,0px)); transform:translate(-50%,16px); width:max-content; max-width:min(92vw,520px);
+  background:var(--ink); color:var(--stage); font-weight:650; font-size:14px; line-height:1.35; padding:12px 16px; border-radius:12px; box-shadow:0 20px 40px -12px #000; opacity:0; transition:opacity .2s, transform .2s; pointer-events:none}
+.toast.show{opacity:1; transform:translate(-50%,0)}
+.toast.err{background:var(--danger); color:#1c0a0d}
+.toast[hidden]{display:none}
+
 @media (prefers-reduced-motion:reduce){
   .wm-ball,.wm-ball i,.beat.playing .vinyl,.now-track .vinyl{animation:none}
   .pad.hit,.flash.go,.clock.warn{animation:none}
@@ -528,6 +589,8 @@ button.w:active{transform:translateY(1px)}
   <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/></symbol>
   <symbol id="i-trophy" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" d="M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5M12 14v4M8 20h8"/></symbol>
   <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3c-2.6 2.5-3.9 5.5-3.9 9s1.3 6.5 3.9 9c2.6-2.5 3.9-5.5 3.9-9S14.6 5.5 12 3z"/></g></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2.5"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></g></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M6 11l6-6 6 6"/></symbol>
 </svg>
 
@@ -545,6 +608,7 @@ button.w:active{transform:translateY(1px)}
     <div class="hero-row">
       <div class="seg mode-seg" id="modeSeg" role="group" aria-label="Mode"></div>
       <button class="chip ghost tour-btn" data-act="go-bracket"><svg width="16" height="16"><use href="#i-trophy"/></svg>Tournament bracket</button>
+      <button class="chip ghost tour-btn" data-act="net-new" id="netNewBtn" title="Battle friends on a voice call: everyone opens one link, no screen sharing"><svg width="16" height="16"><use href="#i-globe"/></svg>Play online</button>
     </div>
     <button class="go hero-go" id="heroGo" data-act="start"><svg><use href="#i-play"/></svg><span>Start battle</span></button>
     <p class="hero-sum" id="heroSum" aria-live="polite"></p>
@@ -609,6 +673,7 @@ button.w:active{transform:translateY(1px)}
       <span class="vinyl" id="trkVinyl" style="--lab:var(--amber)"></span>
       <div><b id="trkName">Beat</b><span id="trkMeta">90 BPM</span></div>
     </div>
+    <div class="net-chip" id="netChip" hidden></div>
     <div class="upnext" id="upNext"></div>
     <div class="tbtns">
       <button class="tbtn" data-act="pause" id="pauseBtn" title="Pause (Space)"><svg><use href="#i-pause"/></svg><span>Pause</span></button>
@@ -642,11 +707,21 @@ button.w:active{transform:translateY(1px)}
       <div class="recap" id="recap"></div>
       <div class="end-winner" id="endWinner" hidden></div>
       <div class="end-btns">
-        <button class="go" data-act="again"><svg><use href="#i-play"/></svg><span>Run it back</span></button>
-        <button class="chip" data-act="exit">Back to setup</button>
+        <button class="go" data-act="again" id="againBtn"><svg><use href="#i-play"/></svg><span>Run it back</span></button>
+        <button class="go" data-act="net-rejoin" id="rejoinBtn" hidden><svg><use href="#i-play"/></svg><span>Rejoin</span></button>
+        <button class="chip" data-act="exit" id="exitBtn">Back to setup</button>
       </div>
     </div>
   </div>
+</section>
+
+<section id="online" class="screen" hidden aria-label="Online battle">
+  <header class="br-top on-top">
+    <button class="chip ghost" data-act="net-leave"><svg width="16" height="16"><use href="#i-back"/></svg>Leave</button>
+    <h1 class="br-title"><svg aria-hidden="true"><use href="#i-globe"/></svg>Online battle</h1>
+    <button class="icon-btn" data-act="open-settings" aria-label="Timing and sound settings" title="Timing and sound settings"><svg><use href="#i-gear"/></svg></button>
+  </header>
+  <div class="on-body" id="netBody"></div>
 </section>
 
 <section id="bracket" class="screen" hidden aria-label="Tournament bracket">
@@ -787,6 +862,7 @@ button.w:active{transform:translateY(1px)}
 </div>
 
 <input type="file" id="fileIn" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac,.flac" hidden>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <script>
 'use strict';
 /* ================= helpers ================= */
@@ -798,7 +874,12 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': 
 const fmtTime = s => { s = Math.max(0, s); const m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ':' + String(r).padStart(2, '0'); };
 const fmtSec = s => { const m = Math.floor(s / 60); const r = s - m * 60; return m + ':' + r.toFixed(1).padStart(4, '0'); };
 const rand = n => Math.floor(Math.random() * n);
-const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1);[a[i], a[j]] = [a[j], a[i]]; } return a; };
+const shuffle = (a, rnd = Math.random) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
+// repeatable random numbers from a 32-bit seed (mulberry32): online battles draw the same words on every device
+function seededRng(seed) {
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
 const ls = {
   get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } }
@@ -1610,7 +1691,10 @@ function themeLeft(listId) {
   for (const f of activeFams(listId)) for (const w of f) if (isTheme(w)) { all.add(wkey(w)); if (!USED.has(wkey(w))) left.add(wkey(w)); }
   return { left: left.size, total: all.size };
 }
-function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
+// opts.rng: random source (default Math.random). opts.used: the set of shown words to steer away from (default: this device's
+// memory). An online battle passes a seeded rng and a fresh set, so every device draws the same words.
+function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
+  const rnd = opts.rng || Math.random, used = opts.used || USED;
   let fams = activeFams(LISTS[listId] ? listId : 'basic');
   if (!fams.length) fams = (LISTS[listId] || LISTS.basic).fams.map(f => f.filter(w => w[0] !== '*'));
   const scheme = SCHEMES.find(s => s.id === schemeId) || SCHEMES[0];
@@ -1619,14 +1703,15 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
   let color = 0;
   const cap = Math.max(4, Math.floor(fams.length * 0.6));
   const anchorsOf = f => f.filter(w => w[0] === '*').length;
-  const fresh = f => f.reduce((c, w) => c + (w[0] !== '*' && !USED.has(wkey(w)) ? 1 : 0), 0);
+  const fresh = f => f.reduce((c, w) => c + (w[0] !== '*' && !used.has(wkey(w)) ? 1 : 0), 0);
   let themesThisBattle = 0;
   const roster = rosterNames();
   // a streamer pack is out once its tag has been shown, or once this battle has had its share
-  const themeOut = f => f.some(isTheme) && (themeUsed(f) || (track && themesThisBattle >= THEME_PER_BATTLE));
+  const themeOut = f => f.some(isTheme) && (f.some(w => isTheme(w) && used.has(wkey(w))) || (track && themesThisBattle >= THEME_PER_BATTLE));
   function pick(n, avoid) {
     const ok = f => f.length >= n && !f.some(w => avoid.has(wkey(w))) && !themeOut(f);
-    let cands = fams.filter(f => ok(f) && !recent.includes(f));
+    const rs = new Set(recent);
+    let cands = fams.filter(f => ok(f) && !rs.has(f));
     if (!cands.length) { recent.length = 0; cands = fams.filter(ok); }
     if (!cands.length) cands = fams.filter(f => !themeOut(f));
     if (!cands.length) cands = fams;
@@ -1635,7 +1720,7 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
     const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), themed = f[0][0] === '*';
       const big = themed && (!PERSON_NAMES.has(wkey(f[0])) || roster.has(wkey(f[0])));
       return (big ? 3 : 1) * (ok ? 1 : themed ? 0.2 : 0.002); });
-    let r = Math.random() * wt.reduce((a, b) => a + b, 0), k = 0;
+    let r = rnd() * wt.reduce((a, b) => a + b, 0), k = 0;
     while (k < cands.length - 1 && (r -= wt[k]) > 0) k++;
     const f = cands[k];
     recent.push(f); if (recent.length > cap) recent.shift();
@@ -1654,24 +1739,24 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
       // packs list their most common words first; lean toward those so prompts stay easy to use. Unused words go first.
       const anchors = fam.filter(w => w[0] === '*').slice(0, slots.length);
       const rest = fam.filter(w => w[0] !== '*');
-      const unused = rest.filter(w => !USED.has(wkey(w)));
+      const unused = rest.filter(w => !used.has(wkey(w)));
       // only fall back to already-used words when this pack has too few fresh ones
-      const pool = unused.length >= slots.length - anchors.length ? unused : [...unused, ...rest.filter(w => USED.has(wkey(w)))], chosen = [];
+      const pool = unused.length >= slots.length - anchors.length ? unused : [...unused, ...rest.filter(w => used.has(wkey(w)))], chosen = [];
       while (anchors.length + chosen.length < slots.length && pool.length) {
         let tot = 0; const wts = pool.map((_, i) => (tot += Math.pow(0.72, i), Math.pow(0.72, i)));
-        let r = Math.random() * tot, k = 0; while (k < pool.length - 1 && (r -= wts[k]) > 0) k++;
+        let r = rnd() * tot, k = 0; while (k < pool.length - 1 && (r -= wts[k]) > 0) k++;
         chosen.push(pool.splice(k, 1)[0]);
       }
-      const words = shuffle([...anchors, ...chosen]).map(bare);
+      const words = shuffle([...anchors, ...chosen], rnd).map(bare);
       const c = (color++ % 6) + 1;
       slots.forEach(([ri, ci], i) => {
         const show = reveal === 'all' || (reveal === 'first' && i === 0) || (reveal === 'last' && i === slots.length - 1);
         out[ri][ci] = { w: words[i % words.length], c, show };
         // remember every shown word except people's names (theme words included, so they never come back)
-        if (track && show && !PERSON_NAMES.has(words[i % words.length].toLowerCase())) USED.add(words[i % words.length].toLowerCase());
+        if (track && show && !PERSON_NAMES.has(words[i % words.length].toLowerCase())) used.add(words[i % words.length].toLowerCase());
       });
     }
-    if (track) saveUsed();
+    if (track && used === USED) saveUsed();
     return out;
   };
 }
@@ -2481,7 +2566,9 @@ function pulseWave(duty) {
 }
 /* ---- scheduler: one clock for synth beats, uploaded tracks, and the click ---- */
 const S = { running: false, timer: 0 };
-function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, click = false, phrase = null }) {
+// timeOf(k): optional context time for step k (NaN skips it), for online battles that move the beat at changeovers.
+// startStep: first step to schedule, so joining an online battle midway doesn't walk through every step already gone
+function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, click = false, phrase = null, timeOf = null, startStep = 0 }) {
   const ctx = initAudio();
   stopPlayback(0.06);
   V = makeSession();
@@ -2494,7 +2581,7 @@ function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, clic
   const spb = 60 / bpm;
   S.running = true; S.T0 = T0; S.spb = spb; S.click = click; S.preset = preset || null; S.session = V;
   S.steps = preset ? preset.steps : 16; S.spbeat = S.steps / 4; S.stepDur = spb / S.spbeat; S.swing = preset ? preset.swing : 0.5;
-  S.next = 0; S.lead = null; S.src = null; S.crackle = null; S.trackEnd = Infinity; S.phrase = phrase;
+  S.next = startStep; S.timeOf = timeOf; S.lead = null; S.src = null; S.crackle = null; S.trackEnd = Infinity; S.phrase = phrase;
   if (preset && preset.crackle) {
     const c = ctx.createBufferSource(); c.buffer = A.crackleBuf; c.loop = true;
     const hp = nodes.filt('highpass', 350); const g = nodes.gain(0.22 * preset.crackle); c.connect(hp); hp.connect(g); g.connect(V.clean);
@@ -2528,9 +2615,10 @@ function stopPlayback(fade = 0.15) {
 function schedTick() {
   if (!S.running || !A.ctx) return;
   const ctx = A.ctx; const horizon = ctx.currentTime + 0.16;
-  for (; ;) {
-    const k = S.next; const t0 = S.T0 + k * S.stepDur;
+  for (let guard = 0; guard < 2048; guard++) {
+    const k = S.next; const t0 = S.timeOf ? S.timeOf(k) : S.T0 + k * S.stepDur;
     if (t0 > horizon) break;
+    if (t0 !== t0) { S.next++; continue; }   // NaN: a re-anchor skipped this step
     let t = t0;
     if (S.swing > 0.5 && S.spbeat === 4 && (k & 1)) t += (S.swing - 0.5) * 2 * S.stepDur;
     if (t >= ctx.currentTime - 0.005) { try { playStep(k, t); } catch (e) { console.warn(e); } }
@@ -2737,7 +2825,7 @@ function normalizeCfg(c) {
   if (d.list === 'names' || d.list === 'grant') d.list = 'namedrop';
   const strs = v => Array.isArray(v) ? [...new Set(v.filter(x => typeof x === 'string').map(x => x.slice(0, 200)))].slice(0, 3000) : [];
   d.disabledWords = strs(c.disabledWords); d.disabledPacks = strs(c.disabledPacks);
-  if (!LISTS[d.list]) d.list = 'basic';
+  if (!Object.prototype.hasOwnProperty.call(LISTS, d.list)) d.list = 'basic';
   if (!SCHEMES.some(s => s.id === d.scheme)) d.scheme = 'AABB';
   if (!REVEALS.some(r => r.id === d.reveal)) d.reveal = 'all';
   d.teams = [0, 1].map(i => ({ name: String(d.teams[i]?.name ?? DEFAULT_CFG.teams[i].name).slice(0, 18), color: clamp(d.teams[i]?.color | 0, 0, 5) }));
@@ -2753,6 +2841,7 @@ const teamName = t => (CFG.teams[t]?.name || '').trim() || (t ? 'Team B' : 'Team
 const LIB = { db: null, assets: null, tracks: [], locals: [], localSeq: 0, buffers: new Map(), loading: new Map(), status: '', statusErr: false, confirmDel: null, dbReady: false };
 let cfgTimer = 0, lastLocalEdit = 0, cfgWriting = false, cfgDirty = false;
 function saveCfg() {
+  if (NET.on) return;   // an online battle's setup comes from its link; this device's own setup stays as it was
   ls.set('bfb.config', CFG); lastLocalEdit = Date.now();
   clearTimeout(cfgTimer); cfgTimer = setTimeout(pushCfg, 900);
 }
@@ -2766,7 +2855,7 @@ async function pushCfg() {
   if (cfgDirty) { cfgDirty = false; pushCfg(); }
 }
 function onRemoteCfg(snap) {
-  if (!snap.exists || snap.metadata.hasPendingWrites) return;
+  if (!snap.exists || snap.metadata.hasPendingWrites || NET.on) return;
   if (Date.now() - lastLocalEdit < 4000) return;
   const next = normalizeCfg(snap.data());
   LIB.lastShared = next.beat;
@@ -2912,6 +3001,8 @@ function renderHero() {
     const t = i => { const m = teamMembers(i); return `<button class="mu-team" style="--c:${teamColor(i)}" data-act="open-acc" data-v="teams" title="Edit teams"><span class="mu-name">${esc(teamName(i))}</span><span class="mu-crew">${m.length ? m.map(esc).join(' · ') : 'Add rappers'}</span></button>`; };
     $('#matchup').innerHTML = `${t(0)}<span class="mu-vs">VS</span>${t(1)}`;
   } else $('#matchup').innerHTML = '<span class="mu-solo">Solo practice</span>';
+  // online battles need a page friends can open from a link, so not inside claude.ai
+  $('#netNewBtn').hidden = c.mode !== 'battle' || !!(window.claude && typeof window.claude.use === 'function');
   // a bracket match is loaded: say which one, with a way back to the bracket
   const tc = typeof tourCurrent === 'function' ? tourCurrent() : null, bd = $('#muBadge');
   if (tc) { bd.innerHTML = `<svg width="14" height="14" aria-hidden="true"><use href="#i-trophy"/></svg>${esc(matchName(TOUR.s, tc.r, tc.m))} <button data-act="go-bracket">View bracket</button>`; bd.hidden = false; }
@@ -3111,6 +3202,7 @@ async function handleFile(file) {
 }
 const T = { open: false };
 function openTuner(o) {
+  if (NET.on) return;   // a file finished reading after an online battle opened: the battle's beat stays as it is
   Object.assign(T, { open: true, taps: [], playing: false, cache: null }, o);
   T.peaks = peaksOf(T.buffer, 1600);
   $('#tName').value = T.name; $('#tBpm').value = fmtBpm(T.bpm);
@@ -3251,7 +3343,7 @@ async function tunerSave(where) {
     tStatus(UPLOAD_ERRORS[e && e.code] || 'The upload did not go through. Check your connection, or use it on this device only.', true);
   } finally { btns.forEach(b => b.disabled = false); }
 }
-function saveCfgLocalOnly() { ls.set('bfb.config', CFG); }
+function saveCfgLocalOnly() { if (!NET.on) ls.set('bfb.config', CFG); }
 async function openTuneFor(id) {
   const b = uploadBeats().find(x => x.id === id); if (!b) return;
   stopPreview();
@@ -3686,6 +3778,474 @@ function renderTourBracket() {
     <p class="hint br-help">Click <b>Battle</b> to load a match onto the battle screen. When it ends you'll be asked who won, or click a team here to mark the winner (click again to undo).</p>`;
 }
 
+/* ================= online battles =================
+   Friends on a voice call each open the same battle link instead of sharing a screen. The link carries the setup, a word
+   seed and a start time, so every device runs the same battle in lockstep off its own clock; there's no server.
+   Whoever is rapping hears their beat with no delay. Every other device plays that turn late by the call's delay, so the
+   voice coming through the call lands on its beat. The delay switches at the start of each changeover, when the mic passes
+   to the other team: the beat makes a short gap or skip while the "Next up" card shows. A player's device keeps one delay
+   (for the other team); a watcher's keeps one per team. A sound check sets them: one team counts along to a click while
+   everyone else slides their delay until the counting lines up. */
+const NET = {
+  on: false, data: null, role: null, delay: [200, 200], localCfg: null, len: Infinity, err: '', note: '',
+  armed: false,   // pressed Join in this visit to the lobby: needed to jump into a battle that's already going
+  starting: false, raf: 0, timer: 0, offs: [], off: null, sampledAt: 0, lastSet: null, chip: '', status: '', wake: null,
+  check: { on: false, team: 0, timer: 0, lastW: -Infinity, big: '' },
+};
+const NET_KEY = 'bfb.online', NET_MIN = -1000, NET_MAX = 3000;   // delay range, ms
+const NET_SLIP = 0.015;   // s the audio clock may slip against the wall clock before the beat is put back (at a bar line)
+const NET_LINK_MAX = 8000, NET_JSON_MAX = 65536;   // real battle links are under 2,000 characters
+const NET_BROKEN = 'That battle link is broken. Ask for it again.';
+
+/* ---- battle links: "#battle=" + "j" and base64url JSON, or "z" and base64url deflated JSON for a long setup ---- */
+const b64u = {
+  enc: u8 => { let s = ''; for (let i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
+  dec: str => Uint8Array.from(atob(str.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)),
+};
+async function packBattle(d) {
+  const raw = new TextEncoder().encode(JSON.stringify(d)), plain = 'j' + b64u.enc(raw);
+  if (plain.length < 1400 || typeof CompressionStream !== 'function') return plain;
+  try { return 'z' + b64u.enc(new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer())); }
+  catch { return plain; }
+}
+async function unpackBattle(str) {
+  if (str.length > NET_LINK_MAX) throw new Error('too long');
+  const k = str[0], bytes = b64u.dec(str.slice(1));
+  let raw;
+  if (k === 'j') raw = bytes;
+  else if (k === 'z') {
+    // inflate a chunk at a time and give up past 64 KB, so a short link can't unpack into something huge
+    const rd = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw')).getReader(), parts = [];
+    let n = 0;
+    for (; ;) {
+      const { done, value } = await rd.read(); if (done) break;
+      n += value.length; if (n > NET_JSON_MAX) { rd.cancel().catch(() => { }); throw new Error('too big'); }
+      parts.push(value);
+    }
+    raw = new Uint8Array(n); let o = 0; for (const p of parts) { raw.set(p, o); o += p.length; }
+  } else throw new Error('bad link');
+  if (raw.length > NET_JSON_MAX) throw new Error('too big');
+  return JSON.parse(new TextDecoder().decode(raw));
+}
+const battleUrl = p => location.href.split('#')[0] + '#battle=' + p;
+const netStartIn = sec => Math.ceil((Date.now() + sec * 1000) / 1000) * 1000;
+
+// the parts of the setup a battle needs; switched-off words are trimmed to the ones this list has
+function battleCfg() {
+  const c = CFG, words = new Set(), packs = new Set();
+  for (const f of (LISTS[c.list] || LISTS.basic).fams) { packs.add(famKey(f)); for (const w of f) words.add(bare(w).toLowerCase()); }
+  return {
+    list: c.list, scheme: c.scheme, double: c.double, reveal: c.reveal, allNames: c.allNames,
+    teams: c.teams, lineup: c.lineup.filter(m => (m.name || '').trim()), firstTeam: c.firstTeam,
+    // online battles always get a changeover: that's when the beat moves to the next team's delay
+    barsPerTurn: c.barsPerTurn, rounds: c.rounds, changeBars: Math.max(1, c.changeBars),
+    disabledWords: c.disabledWords.filter(w => words.has(w)), disabledPacks: c.disabledPacks.filter(k => packs.has(k)),
+  };
+}
+const netCfgOf = d => normalizeCfg({ ...d.c, mode: 'battle', beat: 'synth:' + d.b, synthBpm: { [d.b]: d.bpm } });
+// a short hash of the words a battle can deal: a device running an older copy of the page would deal different ones
+function battlePrint(cfg) {
+  const keep = CFG; CFG = cfg;
+  try {
+    const s = JSON.stringify([activeFams(cfg.list), SCHEMES.map(x => [x.id, x.rows, x.dbl])]);
+    let h = 0x811c9dc5; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(36);
+  } finally { CFG = keep; }
+}
+const ownKey = (o, k) => typeof k === 'string' && Object.prototype.hasOwnProperty.call(o, k);
+// links are typed in by anyone: only accept setups the page itself could have made
+function netCheckData(d) {
+  if (!d || typeof d !== 'object' || d.v !== 1 || !d.c || typeof d.c !== 'object') return NET_BROKEN;
+  if (!PRESETS.some(p => p.id === d.b) || !ownKey(LISTS, d.c.list)) return 'This battle needs a newer version of the page. Reload, then open the link again.';
+  const c = d.c, int = (v, a, b) => Number.isInteger(v) && v >= a && v <= b;
+  if (typeof d.bpm !== 'number' || !(d.bpm >= 50 && d.bpm <= 200) || ![1, 2].includes(d.cb) || !int(d.s, 0, 2 ** 32 - 1)) return NET_BROKEN;
+  if (!int(c.barsPerTurn, 4, 32) || !int(c.rounds, 0, 12) || !int(c.changeBars, 1, 8) || !Array.isArray(c.teams) || !Array.isArray(c.lineup)) return NET_BROKEN;
+  if (!Number.isFinite(d.at) || Math.abs(d.at - Date.now()) > 7 * 86400e3) return 'That battle link is too old. Ask for a new one.';
+  return '';
+}
+
+// "Play online" on the setup screen: a battle link from the current setup, starting in three minutes
+async function netNew() {
+  if (CFG.mode !== 'battle') return;
+  const b = currentBeat(), synth = b && b.kind === 'synth';
+  const preset = synth ? b.preset : PRESETS.find(p => 'synth:' + p.id === DEFAULT_CFG.beat) || PRESETS[0];
+  const bpm = Math.round((synth ? b.bpm : preset.bpm) * 100) / 100;
+  const d = { v: 1, s: crypto.getRandomValues(new Uint32Array(1))[0], at: netStartIn(180), b: preset.id, bpm, cb: paceFor(bpm), c: battleCfg() };
+  d.w = battlePrint(netCfgOf(d));
+  const p = await packBattle(d);
+  netCopy(battleUrl(p));
+  await netGo(p, true);
+  NET.note = synth ? '' : `Online battles use the built-in beats, so this one plays ${preset.name}.`;
+  renderLobby();
+}
+// same battle, new start time: a new link everyone has to open
+async function netReschedule(sec) {
+  if (!NET.on) return;
+  const p = await packBattle({ ...NET.data, at: netStartIn(sec) });
+  netCopy(battleUrl(p), 'New link copied. Everyone needs to open this one.');
+  await netGo(p, false);
+}
+async function netGo(p, push) {
+  const url = location.pathname + location.search + '#battle=' + p;
+  try { push ? history.pushState(null, '', url) : history.replaceState(null, '', url); } catch { location.hash = 'battle=' + p; return; }
+  await netOpenHash();
+}
+const clearHash = () => { try { history.replaceState(null, '', location.pathname + location.search); } catch { } };
+// the address bar decides: a battle link opens its lobby; going back past it leaves
+async function netOpenHash() {
+  const h = location.hash, m = /^#battle=([A-Za-z0-9_-]+)/.exec(h);
+  if (!m) { if (NET.on) { if (G) exitStage(); else netLeaveToSetup(); } return; }
+  let d = null, err = '';
+  try { d = await unpackBattle(m[1]); err = netCheckData(d); } catch { err = NET_BROKEN; }
+  if (location.hash !== h) return;   // the address changed while this link unpacked; the newer one wins
+  if (!err && NET.on && NET.data && NET.data.s === d.s && NET.data.at === d.at) return;
+  if (!err) try { netEnter(d); return; } catch (e) { console.warn(e); err = NET_BROKEN; }
+  netToast(err, true);
+  if (!NET.on) clearHash();
+}
+function netEnter(d) {
+  // work out everything that could fail before touching this device's setup
+  const cfg = netCfgOf(d), print = battlePrint(cfg), keep = CFG;
+  let end;
+  CFG = cfg; try { end = buildTimeline(turnMaker(), !cfg.rounds).find(s => s.kind === 'end'); } finally { CFG = keep; }
+  if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } G = null; stopPlayback(0.1); ytStageStop(0); }
+  stopPreview(); if (T.open) closeTuner(); if (YTT.open) closeYT();
+  netStopCheck();
+  if (!NET.on) NET.localCfg = CFG;
+  NET.on = true; NET.data = d; NET.note = ''; NET.status = ''; NET.armed = false;
+  CFG = cfg;
+  NET.err = d.w && d.w !== print ? 'This page is a different version from the one that made the link, so your words won’t match. Reload the page, then open the link again.' : '';
+  // how long it runs, to tell a late joiner whether there's still a battle to join (endless ones get three hours)
+  NET.len = end ? (end.start + COUNTIN) * 4 * d.cb * 60000 / d.bpm : 3 * 3600e3;
+  const st = netStore(), saved = (st.b || {})[d.s], guess = Number.isFinite(st.last) ? st.last : 200;
+  NET.role = saved && [0, 1, 'w'].includes(saved.role) ? saved.role : null;
+  NET.delay = [0, 1].map(t => saved && Array.isArray(saved.delay) && Number.isFinite(saved.delay[t]) ? clamp(saved.delay[t], NET_MIN, NET_MAX) : guess);
+  NET.check.team = 0;
+  $('#setup').hidden = true; $('#stage').hidden = true; $('#bracket').hidden = true; $('#settings').hidden = true;
+  $('#online').hidden = false; document.body.style.overflow = ''; window.scrollTo(0, 0);
+  try { if (navigator.wakeLock && !NET.wake) navigator.wakeLock.request('screen').then(l => { if (NET.on && !NET.wake) NET.wake = l; else l.release(); }).catch(() => { }); } catch { }
+  renderLobby();
+  netLoop();
+}
+function netLeave() {
+  netStopCheck(); cancelAnimationFrame(NET.raf); clearInterval(NET.timer); NET.raf = NET.timer = 0;
+  try { NET.wake && NET.wake.release(); } catch { } NET.wake = null;
+  if (NET.localCfg) CFG = NET.localCfg;
+  NET.localCfg = null; NET.on = false; NET.data = null; previewBlock = null;
+  if (/^#battle=/.test(location.hash)) clearHash();
+  $('#online').hidden = true;
+}
+function netLeaveToSetup() { netLeave(); $('#setup').hidden = false; document.body.style.overflow = ''; renderSetup(); }
+// back to the lobby from the stage, keeping the battle open (another tab took over, say)
+function netToLobby(note) {
+  if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } G = null; stopPlayback(0.1); }
+  netStopCheck();
+  try { if (document.fullscreenElement) document.exitFullscreen(); } catch { }
+  NET.armed = false; if (note) NET.note = note;
+  $('#stage').hidden = true; $('#endcard').hidden = true; $('#online').hidden = false; document.body.style.overflow = '';
+  renderLobby(); netLoop();
+}
+
+/* ---- delays and the clock ---- */
+// ms this device plays team t's turns late: none for your own team
+const netDelay = t => NET.role === t ? 0 : NET.delay[t];
+const netSetDelay = (t, v) => { NET.delay[t] = NET.lastSet = clamp(Math.round(v), NET_MIN, NET_MAX); netSave(); };
+// context time minus wall-clock time: the median of recent readings, so one jittery reading can't move the beat
+function netSample() {
+  if (!A.ctx || A.ctx.state !== 'running') return;
+  NET.offs.push(heardTime() - Date.now() / 1000); if (NET.offs.length > 41) NET.offs.shift();
+  const s = NET.offs.slice().sort((a, b) => a - b); NET.off = s[s.length >> 1];
+}
+// the context time heard at wall-clock time w (ms)
+function netCtxAt(w) { if (NET.off == null) netSample(); return w / 1000 + (NET.off ?? heardTime() - Date.now() / 1000); }
+
+/* ---- the battle: the beat is anchored to everyone's clock and moves at each changeover ----
+   G.anchors: from beat a.b on, beat k plays at context time a.T0 + k * spb. A mapping that plays later than the one before
+   leaves a gap at its first beat; one that plays earlier skips ahead (netStepTime drops the steps it jumps over). */
+// beat 0 (the start of the count-in) is heard at the link's start time, plus the delay for whoever goes first
+function netFirstAnchor() {
+  netSample();
+  const team = G.segs[0].next ? G.segs[0].next.team : 0;
+  G.anchors = [{ b: -Infinity, T0: netCtxAt(NET.data.at + netDelay(team)), team, key: 'start', off: NET.off }];
+  G.netK = 0;   // index of the first segment not yet anchored
+  return G.anchors[0].T0;
+}
+// scheduler hooks. A late joiner starts a little before now (further back than any delay can move the beat) rather than at step 0.
+function netTiming() {
+  const spbeat = (G.beat.preset ? G.beat.preset.steps : 16) / 4, back = 2 + (NET_MAX - NET_MIN) / 1000 / G.spb;
+  return { timeOf: netStepTime, startStep: Math.max(0, Math.floor((beatAt(A.ctx.currentTime) - back) * spbeat)) };
+}
+function netStepTime(k) {
+  const bk = k / S.spbeat;
+  netEnsureAnchors(bk + 6 / G.spb);
+  let a = G.anchors, i = a.length - 1;
+  while (i > 0 && bk < a[i].b) i--;
+  // the audio clock slipped (a glitch, or the device paused its audio): put the beat back at this bar line
+  if (bk % 4 === 0 && NET.off != null && Math.abs(NET.off - a[i].off) > NET_SLIP) {
+    netResync(bk); a = G.anchors; i = a.length - 1; while (i > 0 && bk < a[i].b) i--;
+  }
+  const t = a[i].T0 + bk * G.spb;
+  return i + 1 < a.length && t >= a[i + 1].T0 + a[i + 1].b * G.spb ? NaN : t;
+}
+// the anchor in effect at beat b
+function netRegion(b) { const a = G.anchors; let i = a.length - 1; while (i > 0 && b < a[i].b) i--; return a[i]; }
+// T0 that puts beat B on everyone's clock, at this device's delay for that team
+const netT0 = (team, B) => netCtxAt(NET.data.at + netDelay(team) + B * G.spb * 1000) - B * G.spb;
+// a new anchor at beat B. One that plays earlier than the mapping before it starts a little later in the beat (up to `room`
+// beats), so the stretch it skips is the start of the changeover (or bar), not the end of the turn before it.
+function netInsertAnchor(B, T0, team, key, room) {
+  const prev = netRegion(B), b = T0 < prev.T0 ? B + Math.min(room, (prev.T0 - T0) / G.spb) : B;
+  const a = { b, T0, team, key, off: NET.off }, i = G.anchors.findIndex(x => x.b > b);
+  if (i < 0) G.anchors.push(a); else G.anchors.splice(i, 0, a);
+}
+// each changeover restarts the clock at the incoming team's delay. Anchors are worked out a few seconds ahead (more than any
+// change of delay), from a fresh clock reading.
+function netEnsureAnchors(upto) {
+  if (performance.now() - NET.sampledAt > 100) { NET.sampledAt = performance.now(); netSample(); }   // keeps going in a background tab
+  if (G.endless) extendTimeline(Math.floor(upto / G.rowBeats - COUNTIN) + 1);
+  for (; G.netK < G.segs.length; G.netK++) {
+    const s = G.segs[G.netK]; if (s.kind !== 'change') continue;
+    const B = (s.start + COUNTIN) * G.rowBeats; if (B > upto) break;
+    netInsertAnchor(B, netT0(s.next.team, B), s.next.team, s.k, s.len * G.rowBeats);
+  }
+}
+// after anchors are dropped, pick up again at the first changeover that lost its anchor
+function netReseek() { const k = G.segs.findIndex(s => s.kind === 'change' && !G.anchors.some(a => a.key === s.k)); G.netK = k < 0 ? G.segs.length : k; }
+// back on everyone's clock from bar line bk: a new anchor here moves the beat (any skip stays clear of the next changeover),
+// then the anchors worked out from the old clock reading are redone from it
+function netResync(bk) {
+  G.anchors = G.anchors.filter(x => x.b < bk);
+  netReseek();
+  if (G.endless) extendTimeline(Math.floor(bk / G.rowBeats - COUNTIN) + 1);
+  const nx = G.segs.find(s => s.kind === 'change' && (s.start + COUNTIN) * G.rowBeats >= bk);
+  const r = netRegion(bk), room = Math.min(4, nx ? (nx.start + COUNTIN) * G.rowBeats - bk - 0.5 : 4);
+  if (room > 0) netInsertAnchor(bk, netT0(r.team, bk), r.team, 'r' + bk, room);
+  netEnsureAnchors(bk + 6 / G.spb);
+}
+// live fix: play the team on screen a little later or earlier, from the next beat step on
+function netNudge(ms) {
+  if (!G || !G.net || G.ended || !G.anchors || !G.seg) return;
+  const seg = G.seg, team = seg.kind === 'turn' ? seg.who.team : seg.next ? seg.next.team : null;
+  if (team == null || team === NET.role) return;
+  const was = NET.delay[team]; netSetDelay(team, was + ms); const d = NET.delay[team] - was; if (!d) return;
+  const B = S.next / S.spbeat, r = netRegion(B);
+  G.anchors = G.anchors.filter(x => x.b <= B);   // later anchors used the old delay; they get worked out again
+  if (r.team === team) {
+    if (r.b === B && String(r.key)[0] === 'n') r.T0 += d / 1000;   // taps before the next step add up
+    else netInsertAnchor(B, r.T0 + d / 1000, team, 'n' + B, 0);
+  }
+  netReseek();
+  NET.chip = '';
+}
+// stage: keep the clock reading fresh and show whose delay is playing
+function netFrame(seg) {
+  netSample();
+  const team = seg.kind === 'turn' ? seg.who.team : seg.next ? seg.next.team : null;
+  const key = `${team}:${team == null ? '' : netDelay(team)}:${NET.role}`;
+  if (key === NET.chip) return;
+  NET.chip = key;
+  const me = NET.role === 'w' ? 'Watching' : `You’re <b style="color:${gColor(NET.role)}">${esc(gTeam(NET.role))}</b>`;
+  let now = '';
+  if (team != null) now = team === NET.role ? 'your turn, no delay'
+    : `<b style="color:${gColor(team)}">${esc(gTeam(team))}</b> ${netDelay(team)} ms late <button data-act="net-nudge" data-v="-10" aria-label="Play ${esc(gTeam(team))} 10 ms sooner" title="10 ms sooner ([)">−</button><button data-act="net-nudge" data-v="10" aria-label="Play ${esc(gTeam(team))} 10 ms later" title="10 ms later (])">+</button>`;
+  $('#netChip').innerHTML = `<i class="net-dot"></i><span class="net-me">Online · ${me}</span>${now ? `<span class="net-now">${now}</span>` : ''}`;
+}
+const netPhase = (now = Date.now()) => now < NET.data.at ? 'wait' : now < NET.data.at + NET.len + 3000 + Math.max(0, ...NET.delay) ? 'live' : 'over';
+const netLive = () => NET.on && netPhase() !== 'over';
+async function netStartStage() {
+  if (!NET.on || (G && !G.ended) || NET.starting || NET.role == null) return;
+  NET.starting = true;
+  try {
+    netStopCheck(); netClaim();
+    const ctx = initAudio(); try { await ctx.resume(); } catch { }
+    try { NET.wake && NET.wake.release(); } catch { } NET.wake = null;
+    NET.chip = ''; NET.note = '';
+    await startGame(true);
+  } finally { NET.starting = false; }
+}
+
+/* ---- sound check: a click on everyone's shared beat grid ----
+   The big number reads 1 2 3 4, 2 2 3 4, 3 2 3 4, 4 2 3 4: whoever counts reads it out loud. Everyone else hears the
+   counting through the call and slides their delay until it lands on their own clicks and numbers. The four-bar cycle
+   means a slightly wrong clock can't make it line up a whole bar off. */
+const netPadMs = () => NET.data.cb * 60000 / NET.data.bpm;
+const netBigNum = n => { const i = ((n % 16) + 16) % 16; return i % 4 ? i % 4 + 1 : i / 4 + 1; };
+function netCheckStart() {
+  const ctx = initAudio(); ctx.resume().catch(() => { });
+  netClaim();
+  NET.check.on = true; NET.check.lastW = -Infinity;
+  clearInterval(NET.check.timer); NET.check.timer = setInterval(netCheckTick, 25); netCheckTick();
+}
+function netStopCheck() { NET.check.on = false; clearInterval(NET.check.timer); NET.check.timer = 0; }
+function netCheckTick() {
+  if (!NET.check.on || !NET.on || !A.ctx || A.ctx.state !== 'running') return;
+  netSample(); if (NET.off == null) return;
+  const d = NET.data, p = netPadMs(), D = netDelay(NET.check.team), cur = A.ctx.currentTime;
+  // scheduled on the audio clock, like the beat: every click from just ahead of it to 160 ms on, none twice
+  const from = Math.max((cur + 0.005 - NET.off) * 1000, NET.check.lastW + p / 2);
+  for (let n = Math.ceil((from - d.at - D) / p), w = d.at + D + n * p; netCtxAt(w) < cur + 0.16; n++, w += p) { netClick(netCtxAt(w), n); NET.check.lastW = w; }
+}
+// a bell on the first 1 of the count, a high tick on each 1, a low tick on 2, 3 and 4
+function netClick(t, n) {
+  const i = ((n % 16) + 16) % 16, lv = i === 0 ? 2 : i % 4 === 0 ? 1 : 0;
+  const o = nodes.osc(lv === 2 ? 'triangle' : 'square', lv === 2 ? 1760 : lv ? 1500 : 1000);
+  const g = nodes.env(t, lv ? 0.55 : 0.32, 0.001, lv === 2 ? 0.22 : 0.035, A.clickOut); o.connect(g); o.start(t); o.stop(t + 0.3);
+}
+function netCheckDraw() {
+  const big = $('#netBig'); if (!big) return;
+  const n = Math.floor((Date.now() - NET.data.at - netDelay(NET.check.team)) / netPadMs()), key = n + ':' + NET.check.team;
+  if (key === NET.check.big) return;
+  NET.check.big = key;
+  big.textContent = netBigNum(n);
+  const i = ((n % 4) + 4) % 4;
+  $$('#netLeds i').forEach((d, k) => { d.classList.toggle('on', k === i); d.classList.toggle('one', k === 0); });
+  big.parentNode.classList.toggle('one', ((n % 16) + 16) % 16 === 0);
+}
+
+/* ---- lobby ---- */
+const netTeamLabel = t => esc(teamName(t));
+function renderLobby() {
+  const el = $('#netBody'); if (!el || !NET.on) return;
+  const c = CFG, b = currentBeat(), r = NET.role, ct = NET.check.team;
+  const sc = SCHEMES.find(x => x.id === c.scheme);
+  const team = t => { const m = teamMembers(t); return `<div class="on-team" style="--c:${teamColor(t)}"><span class="mu-name">${netTeamLabel(t)}</span><span class="mu-crew">${m.length ? m.map(esc).join(' · ') : 'No names listed'}</span></div>`; };
+  const role = v => {
+    const t = v === 'w' ? null : v, m = t == null ? [] : teamMembers(t);
+    return `<button class="on-role" data-act="net-role" data-v="${v}" aria-pressed="${r === v}"${t == null ? '' : ` style="--c:${teamColor(t)}"`}><b>${t == null ? 'Watching' : netTeamLabel(t)}</b><span>${t == null ? 'Not rapping' : m.length ? m.map(esc).join(' · ') : 'Rapping'}</span></button>`;
+  };
+  const fmt = c.rounds ? `${c.rounds} round${c.rounds === 1 ? '' : 's'} of ${c.barsPerTurn} bars` : `Endless · ${c.barsPerTurn} bars a turn`;
+  const counting = r === ct, ms = NET.delay[ct];
+  let check;
+  if (r == null) check = '<p class="hint">Pick your side first.</p>';
+  else if (counting) check = `<p class="blurb"><b>Count out loud with the clicks:</b> read the big number on every click. Keep going until everyone says it lines up.</p>`;
+  else check = `<p class="blurb"><b>Listen to ${netTeamLabel(ct)} count.</b> Slide until each number they say lands on your click and matches the big number on your screen. Most calls need 100 to 400 ms.</p>
+    <div class="on-delay"><span class="label">${netTeamLabel(ct)}</span><input type="range" id="netDelay" min="${NET_MIN}" max="${NET_MAX}" step="5" value="${ms}" aria-label="How late ${netTeamLabel(ct)} plays on this device"><output id="netDelayOut">${ms} ms late</output></div>
+    <div class="row-ctl"><button class="chip small" data-act="net-adj" data-v="-10">−10 ms</button><button class="chip small" data-act="net-adj" data-v="10">+10 ms</button></div>`;
+  const delays = r == null ? '' : `<p class="hint on-delays" id="netDelays">${esc(netDelaysTxt())}</p>`;
+  const url = battleUrl(location.hash.replace(/^#battle=/, ''));
+  const notes = [
+    NET.err && `<p class="on-note err">${esc(NET.err)}</p>`,
+    NET.note && `<p class="on-note">${esc(NET.note)}</p>`,
+    location.protocol === 'file:' && '<p class="on-note">This page is open from a file, so the link only works on this computer. Host the page online (GitHub Pages works) to play with friends.</p>',
+  ].filter(Boolean).join('');
+  el.innerHTML = `<div class="on-hero">
+      <div class="on-match">${team(0)}<span class="mu-vs">VS</span>${team(1)}</div>
+      <p class="on-meta">${esc(fmt)} · ${b ? esc(b.name) + ' @ ' + fmtBpm(b.bpm) + ' BPM' : ''} · ${esc(LISTS[c.list].name)} · ${esc(sc ? sc.name : '')}</p>
+      <div class="on-clock"><span class="label" id="netClockK"></span><b id="netClock"></b><span class="hint" id="netClockAt"></span></div>
+      <div class="on-status" id="netStatus"></div>
+      ${notes}
+    </div>
+    <section class="on-card${r != null ? ' done' : ''}">
+      <h2><span class="n">1</span>Your side</h2>
+      <div class="on-roles">${role(0)}${role(1)}${role('w')}</div>
+      <p class="hint">${r == null ? 'Rapping? Pick your team. Not rapping? Pick Watching.'
+        : r === 'w' ? 'Mute your mic on the call. Streaming the battle? Capture this window and the call audio in OBS. Viewers watch your stream instead of joining the call.'
+        : 'Rappers wear headphones, so the call hears your voice and not the beat. When it’s your team’s turn your beat plays with no delay.'}</p>
+    </section>
+    <section class="on-card">
+      <h2><span class="n">2</span>Sound check</h2>
+      <p class="hint">Do this together on the call. One team counts while everyone else lines up its voice, then swap. A device with a delay already set can skip it.</p>
+      <div class="seg" role="group" aria-label="Who is counting">${[0, 1].map(t => chip('net-count', t, ct === t, netTeamLabel(t) + ' counts')).join('')}</div>
+      <div class="on-check">
+        <div class="on-count" style="--c:${teamColor(ct)}"><b id="netBig">1</b><div class="leds" id="netLeds"><i></i><i></i><i></i><i></i></div></div>
+        <div class="on-side">${check}
+          ${r == null ? '' : `<div class="row-ctl"><button class="chip" data-act="net-check" aria-pressed="${NET.check.on}"><svg width="14" height="14"><use href="#i-${NET.check.on ? 'stop' : 'play'}"/></svg>${NET.check.on ? 'Stop clicks' : 'Start clicks'}</button></div>`}
+          ${delays}</div>
+      </div>
+    </section>
+    <section class="on-card">
+      <h2><span class="n">3</span>Share the link</h2>
+      <div class="on-link"><input type="text" id="netUrl" readonly value="${esc(url)}" aria-label="Battle link"><button class="chip" data-act="net-copy"><svg width="14" height="14"><use href="#i-copy"/></svg>Copy</button></div>
+      <p class="hint">Post it in the call’s chat. Everyone opens it on their own device, no screen sharing, and the battle starts on every screen at once.</p>
+      <div class="row-ctl on-resched"><span class="label">New start time</span>${[[30, 'In 30 s'], [60, 'In 1 min'], [180, 'In 3 min'], [300, 'In 5 min']].map(([s, l]) => `<button class="chip small ghost" data-act="net-resched" data-v="${s}">${l}</button>`).join('')}</div>
+      <p class="hint">A new start time makes a new link, and everyone has to open that one.</p>
+    </section>
+    <p class="hint on-foot">Everyone’s countdown should match. If yours is a second or more off, turn on automatic date and time, then reload. Pause and Next team are off online, and End only stops your device.</p>`;
+  NET.status = ''; NET.check.big = '';
+  netLobbyTick();
+}
+const netDelaysTxt = () => 'This device: ' + [0, 1].map(t => `${teamName(t)} ${NET.role === t ? 'no delay (your team)' : NET.delay[t] + ' ms late'}`).join(' · ');
+function netStatusHtml(ph) {
+  if (ph === 'over') return '<p>This battle is over.</p><button class="chip" data-act="net-leave">Back to setup</button>';
+  if (NET.role == null) return `<p>${ph === 'live' ? 'The battle has started. Pick your side, then join.' : 'Pick your side below to get ready.'}</p>`;
+  const audio = A.ctx && A.ctx.state === 'running';
+  // a battle already going needs a press of Join, so a remembered side never drops you in by surprise
+  if (ph === 'live' && !(audio && NET.armed)) return '<button class="go" data-act="net-join"><svg><use href="#i-play"/></svg><span>Join the battle</span></button>';
+  if (!audio) return '<button class="go" data-act="net-join"><svg><use href="#i-play"/></svg><span>Tap to get ready</span></button>';
+  return '<p class="ok">Ready. Your beat starts by itself.</p>';
+}
+function netLobbyTick() {
+  if (!NET.on || G) return;
+  const d = NET.data, now = Date.now(), ph = netPhase(now);
+  const k = ph === 'wait' ? 'Starts in' : ph === 'live' ? 'Live now' : 'Battle over';
+  const big = ph === 'wait' ? fmtTime(Math.ceil((d.at - now) / 1000)) : ph === 'live' ? fmtTime((now - d.at) / 1000) : 'GG';
+  const at = new Date(d.at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+  const set = (id, v) => { const e = $(id); if (e && e.textContent !== v) e.textContent = v; };
+  set('#netClockK', k); set('#netClock', big); set('#netClockAt', ph === 'wait' ? `at ${at}` : ph === 'live' ? `started at ${at}` : '');
+  const st = netStatusHtml(ph);
+  if (st !== NET.status) { NET.status = st; const e = $('#netStatus'); if (e) e.innerHTML = st; }
+  // open the stage a second before this device's beat starts (right away for someone who pressed Join on a battle under way)
+  if (ph !== 'over' && NET.role != null && A.ctx && A.ctx.state === 'running' && (ph === 'wait' || NET.armed)) {
+    const first = CFG.firstTeam === 1 ? 1 : 0;
+    if (now >= d.at + netDelay(first) - 1000) netStartStage();
+  }
+}
+function netLoop() {
+  cancelAnimationFrame(NET.raf); clearInterval(NET.timer);
+  NET.timer = setInterval(() => { if (!NET.on || G) { clearInterval(NET.timer); NET.timer = 0; return; } netLobbyTick(); }, 200);
+  const draw = () => { if (!NET.on || G) { NET.raf = 0; return; } NET.raf = requestAnimationFrame(draw); netSample(); netCheckDraw(); };
+  NET.raf = requestAnimationFrame(draw);
+}
+// audio can only start from a tap or click; then the lobby starts the battle when it's time
+function netUnlock() { const ctx = initAudio(); return ctx.resume().catch(() => { }).then(() => netLobbyTick()); }
+function netJoin() { NET.armed = true; netUnlock(); }
+function netSetRole(v) { NET.role = v; netSave(); renderLobby(); netUnlock(); }
+
+/* ---- small things ---- */
+function netStore() { const s = ls.get(NET_KEY, null); return s && typeof s === 'object' ? s : { b: {} }; }
+// remember this battle's side and delays (for a reload) and the last delay set (a good guess for the next battle)
+function netSave() {
+  if (!NET.data) return;
+  const st = netStore(); st.b = st.b && typeof st.b === 'object' ? st.b : {};
+  st.b[NET.data.s] = { role: NET.role, delay: NET.delay.slice(), t: Date.now() };
+  for (const k of Object.keys(st.b).sort((a, b) => st.b[b].t - st.b[a].t).slice(10)) delete st.b[k];
+  if (Number.isFinite(NET.lastSet)) st.last = NET.lastSet;
+  ls.set(NET_KEY, st);
+}
+async function netCopy(text, msg = 'Battle link copied. Paste it in your call’s chat.') {
+  let ok = false;
+  try { await navigator.clipboard.writeText(text); ok = true; } catch { }
+  if (!ok) try {
+    const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
+  } catch { }
+  netToast(ok ? msg : 'Couldn’t copy. Select the link in the box and copy it.', !ok);
+}
+let toastTimer = 0;
+function netToast(msg, err = false) {
+  const el = $('#toast'); if (!el) return;
+  el.textContent = msg; el.classList.toggle('err', err); el.hidden = false;
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.classList.remove('show'); toastTimer = setTimeout(() => { el.hidden = true; }, 300); }, err ? 5200 : 3200);
+}
+// one battle sound per browser: when another tab starts playing a battle (or its sound check), this tab goes quiet and
+// back to its lobby, so two beats never play at once
+const NET_TAB = Math.random().toString(36).slice(2);
+let netBC = null;
+try {
+  netBC = new BroadcastChannel('bfb-online');
+  netBC.onmessage = e => {
+    if (!e.data || e.data.t !== 'claim' || e.data.id === NET_TAB || !NET.on) return;
+    if ((G && G.net && !G.ended) || NET.check.on) netToLobby('The battle is playing in another tab now, so it stopped here.');
+  };
+} catch { }
+function netClaim() { try { netBC && netBC.postMessage({ t: 'claim', id: NET_TAB }); } catch { } }
+function netInit() {
+  window.addEventListener('hashchange', netOpenHash);
+  window.addEventListener('popstate', netOpenHash);
+  if (/^#battle=/.test(location.hash)) netOpenHash();
+}
+
 /* ================= stage ================= */
 const COUNTIN = 2;          // rows of count-in before bar 1
 const TOPZ = 1.75, VIS = 5.1; // board height in rows: ball zone above the active row + visible rows
@@ -3741,12 +4301,34 @@ function extendTimeline(row) {
   }
 }
 function segAt(r) { const s = G.segs; for (let i = s.length - 1; i >= 0; i--) if (r >= s[i].start) return s[i]; return s[0]; }
+// the beat heard at context time t. Online battles re-anchor the beat at changeovers (06d-online.js), so there the clock is
+// piecewise: anchor a restarts it at beat a.b. A later restart leaves a short gap (the ball waits); an earlier one skips ahead.
+function beatAt(t) {
+  const a = G.anchors;
+  if (!a) return (t - G.T0) / G.spb;
+  let i = a.length - 1;
+  while (i > 0 && t < a[i].T0 + a[i].b * G.spb) i--;
+  const b = (t - a[i].T0) / G.spb;
+  return i + 1 < a.length ? Math.min(b, a[i + 1].b) : b;
+}
+// words are drawn block by block in timeline order, whatever order the rows are drawn in,
+// so a device that joins an online battle late still gets the same words as everyone else
+function wordsFor(seg, blk) {
+  const B = G.words.get(seg.k + ':' + blk); if (B) return B;
+  for (const s of G.segs) {
+    if (s.kind !== 'turn') continue;
+    for (let j = 0; s === seg ? j <= blk : j < Math.ceil(s.len / 4); j++) { const key = s.k + ':' + j; if (!G.words.has(key)) G.words.set(key, G.gen()); }
+    if (s === seg) return G.words.get(seg.k + ':' + blk);
+  }
+  return G.gen();
+}
 const gColor = t => PALETTE[G.teams[t]?.color ?? t];
 const gTeam = t => (G.teams[t]?.name || '').trim() || (t ? 'Team B' : 'Team A');
 // always read as a team on stage, even when a team is named after a person
 const teamLabel = n => /^team\b/i.test(n) ? n : 'Team ' + n;
 
-async function startGame() {
+// online: start the battle from the link that NET holds (06d-online.js): its seed, its start time and this device's delays
+async function startGame(online = false) {
   const b = currentBeat(); if (!b) return;
   stopPreview();
   const ctx = initAudio(); try { await ctx.resume(); } catch { }
@@ -3758,14 +4340,15 @@ async function startGame() {
     catch (e) { setBeatStatus(esc(e.message || 'Could not load that beat.'), true); renderSummary(); return; }
     renderSummary();
   }
-  if (G) { cancelAnimationFrame(G.raf); }
-  const bpm = b.bpm, spb = 60 / bpm, cb = paceFor(bpm);
+  if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } }
+  const bpm = b.bpm, spb = 60 / bpm, cb = online ? NET.data.cb : paceFor(bpm);
   const endless = CFG.mode === 'battle' && !CFG.rounds, turnAt = turnMaker();
   G = {
     beat: b, bpm, spb, cb, rowBeats: 4 * cb, rowDur: 4 * cb * spb, mode: CFG.mode,
     segs: buildTimeline(turnAt, endless), words: new Map(), rows: new Map(),
     endless, turnAt, rounds: CFG.rounds, changeBars: CFG.changeBars, nextTurn: 8,
-    gen: makeWordGen(CFG.list, CFG.scheme, CFG.double, CFG.reveal, true),
+    gen: makeWordGen(CFG.list, CFG.scheme, CFG.double, CFG.reveal, true, online ? { rng: seededRng(NET.data.s), used: new Set() } : {}),
+    net: online, anchors: null,
     teams: JSON.parse(JSON.stringify(CFG.teams)), turns: 0,
     lastCell: null, seg: null, paused: false, ended: false, hud: {}, splashOn: false, litPad: null, look: { cur: 0, target: 0, acc: 0 },
     stageEl: $('#stage'), rowsEl: $('#rows'), glow: $('#glow'),
@@ -3775,9 +4358,9 @@ async function startGame() {
   G.rowsEl.innerHTML = '';
   showStage();
   layoutBoard();
-  const T0 = ctx.currentTime + 0.9; G.T0 = T0;
+  const T0 = online ? netFirstAnchor() : ctx.currentTime + 0.9; G.T0 = T0;
   $('#ytDock').hidden = true;
-  if (b.kind === 'synth') startPlayback({ preset: b.preset, bpm, T0, click: SETTINGS.click, phrase: gamePhrase });
+  if (b.kind === 'synth') startPlayback({ preset: b.preset, bpm, T0, click: SETTINGS.click, phrase: gamePhrase, ...(online ? netTiming() : {}) });
   else if (b.kind === 'yt') ytStageBegin(b, cb);
   else {
     const tm = trackTiming(b.meta, cb);
@@ -3787,18 +4370,20 @@ async function startGame() {
   $('#trkName').textContent = b.name;
   $('#trkMeta').textContent = `${fmtBpm(bpm)} BPM · ${b.style}${cb === 2 ? ' · half-time ball' : ''}`;
   $('#trkVinyl').style.setProperty('--lab', b.color);
-  $('#matchup').innerHTML = G.mode === 'battle'
+  $('#stage .matchup').innerHTML = G.mode === 'battle'
     ? `<span class="tchip" style="--c:${gColor(0)}">${esc(gTeam(0))}</span><span class="vs">VS</span><span class="tchip" style="--c:${gColor(1)}">${esc(gTeam(1))}</span>`
     : `<span class="tchip" style="--c:var(--amber)">Practice</span>`;
   $('#skipBtn span').textContent = G.mode === 'battle' ? 'Next team' : 'Finish';
   $('#endcard').hidden = true; $('#pausedTag').hidden = true; G.stageEl.classList.remove('is-paused', 'splash-on'); $('#splash').classList.remove('show');
   $('#pauseBtn').innerHTML = '<svg><use href="#i-pause"/></svg><span>Pause</span>';
+  // online battles run on everyone's clock at once: no pause or skipping ahead, just End (which only stops this device)
+  $('#pauseBtn').hidden = $('#skipBtn').hidden = online; $('#netChip').hidden = !online;
   try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { if (G) G.wake = l; else l.release(); }).catch(() => { }); } catch { }
   poke();
   G.raf = requestAnimationFrame(frame);
 }
 function showStage() {
-  $('#setup').hidden = true; $('#stage').hidden = false;
+  $('#setup').hidden = true; $('#online').hidden = true; $('#stage').hidden = false;
   $('#settings').hidden = true; if (T.open) closeTuner();
   document.body.style.overflow = 'hidden';
 }
@@ -3809,6 +4394,7 @@ function exitStage() {
   ytStageStop(0); $('#ytDock').hidden = true;
   if (A.ctx && A.ctx.state === 'suspended') A.ctx.resume();
   try { if (document.fullscreenElement) document.exitFullscreen(); } catch { }
+  if (NET.on) netLeave();
   $('#stage').hidden = true; $('#setup').hidden = false; document.body.style.overflow = '';
   $('#splash').classList.remove('show'); $('#stage').classList.remove('splash-on');
   renderSetup();
@@ -3836,9 +4422,8 @@ function layoutBoard() {
 function rowModel(r) {
   const seg = segAt(r), rel = r - seg.start;
   if (seg.kind === 'turn') {
-    const blk = Math.floor(rel / 4), bi = ((rel % 4) + 4) % 4, key = seg.k + ':' + blk;
-    let B = G.words.get(key); if (!B) { B = G.gen(); G.words.set(key, B); }
-    return { kind: 'turn', cells: B[bi], num: rel + 1 };
+    const blk = Math.floor(rel / 4), bi = ((rel % 4) + 4) % 4;
+    return { kind: 'turn', cells: wordsFor(seg, blk)[bi], num: rel + 1 };
   }
   if (seg.kind === 'end') return { kind: 'banner', label: rel === 0 ? "THAT'S TIME" : '', tc: 'var(--amber)' };
   const tc = seg.next ? gColor(seg.next.team) : 'var(--amber)';
@@ -4001,7 +4586,7 @@ function frame() {
   if (G.yt) ytTick();
   // a YouTube beat holds the board at the top of the count-in until the video is really playing
   const t = G.paused ? G.pauseT : G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime();
-  const b = (t - G.T0) / G.spb;
+  const b = beatAt(t);
   const rowF = b / G.rowBeats - COUNTIN;
   const row = Math.floor(rowF), ph = rowF - row;
   if (G.endless) extendTimeline(row);
@@ -4017,6 +4602,7 @@ function frame() {
   const bp = b - Math.floor(b);
   if (G.glow) G.glow.style.opacity = b >= 0 && !G.paused ? (0.35 + 0.65 * Math.exp(-bp * 5)).toFixed(3) : '0.35';
   if (!G.ended && isFinite(S.trackEnd) && t > S.trackEnd) finish('track');
+  if (G.net) netFrame(seg);
 }
 function finish(why) {
   if (!G || G.ended) return;
@@ -4027,7 +4613,7 @@ function finish(why) {
   const recap = $('#recap');
   if (G.mode === 'battle') {
     // count what was actually rapped: an early (or endless) finish stops partway through
-    const now = why === 'done' ? Infinity : Math.floor(((G.paused ? G.pauseT : heardTime()) - G.T0) / G.spb / G.rowBeats - COUNTIN);
+    const now = why === 'done' ? Infinity : Math.floor(beatAt(G.paused ? G.pauseT : heardTime()) / G.rowBeats - COUNTIN);
     const turns = G.segs.filter(s => s.kind === 'turn' && s.start <= now);
     const played = s => Math.max(0, Math.min(s.len, now - s.start + 1));
     recap.innerHTML = [0, 1].map(t => {
@@ -4035,7 +4621,7 @@ function finish(why) {
       const mem = G.turnAt(G.turnAt(0).team === t ? 0 : 1).members;
       return `<section style="--c:${gColor(t)}"><h3>${esc(gTeam(t))}</h3><ul>${mem.length ? mem.map(n => `<li>${esc(n)}</li>`).join('') : '<li>No names listed</li>'}<li><span>${ts.length} turn${ts.length === 1 ? '' : 's'} · ${bars} bars</span></li></ul></section>`;
     }).join('');
-    $('#endKicker').textContent = G.endless ? `Endless battle · ${turns.length} turn${turns.length === 1 ? '' : 's'}` : why === 'early' ? 'Battle ended early' : `${gTeam(0)} vs ${gTeam(1)}`;
+    $('#endKicker').textContent = G.endless ? `Endless battle · ${turns.length} turn${turns.length === 1 ? '' : 's'}` : why === 'early' ? (G.net ? 'You left early' : 'Battle ended early') : `${gTeam(0)} vs ${gTeam(1)}`;
     $('#endTitle').innerHTML = 'That’s <em>the battle</em>';
   } else {
     recap.innerHTML = '';
@@ -4043,15 +4629,18 @@ function finish(why) {
     $('#endTitle').innerHTML = 'Nice <em>reps</em>';
   }
   // bracket match: ask who won so the bracket can move on
-  const tc = G.mode === 'battle' ? tourCurrent() : null, ew = $('#endWinner');
+  const tc = G.mode === 'battle' && !G.net ? tourCurrent() : null, ew = $('#endWinner');
   if (tc) {
     ew.innerHTML = `<p class="label">${esc(matchName(TOUR.s, tc.r, tc.m))} · who won?</p><div class="ew-btns">${[0, 1].map(t => `<button class="ew-team" style="--c:${gColor(t)}" data-act="br-result" data-v="${t}">${esc(gTeam(t))}</button>`).join('')}</div><button class="chip small ghost" data-act="exit">Decide later</button>`;
     ew.hidden = false;
   } else ew.hidden = true;
-  setTimeout(() => { if (G && G.ended) { $('#endcard').hidden = false; (tc ? $('#endWinner .ew-team') : $('#endcard .go')).focus(); } }, why === 'done' ? 900 : 200);
+  // online: the battle carries on for everyone else, so someone who leaves early can jump back in
+  $('#againBtn').hidden = G.net; $('#rejoinBtn').hidden = !(G.net && why !== 'done' && netLive());
+  $('#exitBtn').textContent = G.net ? 'Leave battle' : 'Back to setup';
+  setTimeout(() => { if (G && G.ended) { $('#endcard').hidden = false; (tc ? $('#endWinner .ew-team') : $('#endcard .go:not([hidden])') || $('#exitBtn')).focus(); } }, why === 'done' ? 900 : 200);
 }
 function skipTurn() {
-  if (!G || G.ended) return;
+  if (!G || G.ended || G.net) return;
   const t = G.paused ? G.pauseT : heardTime();
   const row = Math.floor((t - G.T0) / G.spb / G.rowBeats - COUNTIN);
   const seg = segAt(row);
@@ -4062,7 +4651,7 @@ function skipTurn() {
   for (const [r, el] of G.rows) if (r > row) { el.remove(); G.rows.delete(r); }
 }
 function togglePause() {
-  if (!G || G.ended || !A.ctx) return;
+  if (!G || G.ended || !A.ctx || G.net) return;
   if (!G.paused) { G.pauseT = G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime(); G.paused = true; A.ctx.suspend(); }
   else { G.paused = false; A.ctx.resume(); }
   if (G.yt && G.yt.player) { try { G.paused ? G.yt.player.pauseVideo() : G.yt.player.playVideo(); } catch { } }
@@ -4191,6 +4780,18 @@ document.addEventListener('click', e => {
     case 'fullscreen': toggleFullscreen(); break;
     case 'again': startGame(); break;
     case 'exit': exitStage(); break;
+    // online battles
+    case 'net-new': netNew(); break;
+    case 'net-leave': if (G) exitStage(); else netLeaveToSetup(); break;
+    case 'net-role': netSetRole(v === 'w' ? 'w' : +v); break;
+    case 'net-count': NET.check.team = +v; renderLobby(); break;
+    case 'net-check': if (NET.check.on) netStopCheck(); else netCheckStart(); renderLobby(); break;
+    case 'net-adj': netSetDelay(NET.check.team, NET.delay[NET.check.team] + +v); renderLobby(); break;
+    case 'net-copy': netCopy($('#netUrl').value); break;
+    case 'net-resched': netReschedule(+v); break;
+    case 'net-join': netJoin(); break;
+    case 'net-rejoin': NET.armed = true; netStartStage(); break;
+    case 'net-nudge': netNudge(+v); break;
   }
 });
 document.addEventListener('input', e => {
@@ -4199,6 +4800,7 @@ document.addEventListener('input', e => {
   else if (t.dataset.bind === 'mc') { CFG.lineup[+t.dataset.i].name = t.value; saveCfg(); renderHero(); if (WB.open) renderWordbank(); }
   else if (t.id === 'wbSearch') { WB.q = t.value; renderWordbank(); }
   else if (t.id === 'bpmRange') { const b = currentBeat(); if (b && b.kind === 'synth') { CFG.synthBpm[b.preset.id] = +t.value; $('#bpmOut').textContent = t.value + ' BPM'; renderSummary(); } }
+  else if (t.id === 'netDelay') { netSetDelay(NET.check.team, +t.value); $('#netDelayOut').textContent = NET.delay[NET.check.team] + ' ms late'; const dl = $('#netDelays'); if (dl) dl.textContent = netDelaysTxt(); }
   else if (t.id === 'syncMs') { SETTINGS.syncMs = +t.value; $('#syncOut').textContent = t.value + ' ms'; saveSettings(); }
   else if (t.id === 'vol') { SETTINGS.volume = +t.value; if (A.master) A.master.gain.value = SETTINGS.volume; try { YTS.player && YTS.player.setVolume(Math.round(SETTINGS.volume * 100)); } catch { } saveSettings(); }
   else if (t.dataset.bind === 'bt-name') draftFrom()[+t.dataset.i].name = t.value;
@@ -4229,7 +4831,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.id === 'ytUrl') { e.preventDefault(); addYouTube(); return; }
   if (e.target.matches && e.target.matches('input[type=text],input[type=number],input[type=search],input[type=url]') && e.key !== 'Escape') return;
   if (stage) {
-    if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); if ($('#endcard').hidden) togglePause(); }
+    if (G && G.net && (e.key === '[' || e.key === ']')) { netNudge(e.key === '[' ? -10 : 10); }
+    else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); if ($('#endcard').hidden) { if (G && G.net) netToast('Online battles can’t pause. End stops this device only.'); else togglePause(); } }
     else if (e.key === 'n' || e.key === 'N' || e.key === 'ArrowRight') { skipTurn(); }
     else if (G && G.paused && (e.key === 'ArrowUp' || e.key === 'PageUp')) { e.preventDefault(); lookBy(e.key === 'PageUp' ? 4 : 1); }
     else if (G && G.paused && (e.key === 'ArrowDown' || e.key === 'PageDown')) { e.preventDefault(); lookBy(e.key === 'PageDown' ? -4 : -1); }
@@ -4298,4 +4901,5 @@ grain();
 applySettingsUI();
 renderSetup();
 initCaps();
+netInit();
 </script>

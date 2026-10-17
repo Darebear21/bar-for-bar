@@ -99,6 +99,18 @@ document.addEventListener('click', e => {
     case 'fullscreen': toggleFullscreen(); break;
     case 'again': startGame(); break;
     case 'exit': exitStage(); break;
+    // online battles
+    case 'net-new': netNew(); break;
+    case 'net-leave': if (G) exitStage(); else netLeaveToSetup(); break;
+    case 'net-role': netSetRole(v === 'w' ? 'w' : +v); break;
+    case 'net-count': NET.check.team = +v; renderLobby(); break;
+    case 'net-check': if (NET.check.on) netStopCheck(); else netCheckStart(); renderLobby(); break;
+    case 'net-adj': netSetDelay(NET.check.team, NET.delay[NET.check.team] + +v); renderLobby(); break;
+    case 'net-copy': netCopy($('#netUrl').value); break;
+    case 'net-resched': netReschedule(+v); break;
+    case 'net-join': netJoin(); break;
+    case 'net-rejoin': NET.armed = true; netStartStage(); break;
+    case 'net-nudge': netNudge(+v); break;
   }
 });
 document.addEventListener('input', e => {
@@ -107,6 +119,7 @@ document.addEventListener('input', e => {
   else if (t.dataset.bind === 'mc') { CFG.lineup[+t.dataset.i].name = t.value; saveCfg(); renderHero(); if (WB.open) renderWordbank(); }
   else if (t.id === 'wbSearch') { WB.q = t.value; renderWordbank(); }
   else if (t.id === 'bpmRange') { const b = currentBeat(); if (b && b.kind === 'synth') { CFG.synthBpm[b.preset.id] = +t.value; $('#bpmOut').textContent = t.value + ' BPM'; renderSummary(); } }
+  else if (t.id === 'netDelay') { netSetDelay(NET.check.team, +t.value); $('#netDelayOut').textContent = NET.delay[NET.check.team] + ' ms late'; const dl = $('#netDelays'); if (dl) dl.textContent = netDelaysTxt(); }
   else if (t.id === 'syncMs') { SETTINGS.syncMs = +t.value; $('#syncOut').textContent = t.value + ' ms'; saveSettings(); }
   else if (t.id === 'vol') { SETTINGS.volume = +t.value; if (A.master) A.master.gain.value = SETTINGS.volume; try { YTS.player && YTS.player.setVolume(Math.round(SETTINGS.volume * 100)); } catch { } saveSettings(); }
   else if (t.dataset.bind === 'bt-name') draftFrom()[+t.dataset.i].name = t.value;
@@ -137,7 +150,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.id === 'ytUrl') { e.preventDefault(); addYouTube(); return; }
   if (e.target.matches && e.target.matches('input[type=text],input[type=number],input[type=search],input[type=url]') && e.key !== 'Escape') return;
   if (stage) {
-    if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); if ($('#endcard').hidden) togglePause(); }
+    if (G && G.net && (e.key === '[' || e.key === ']')) { netNudge(e.key === '[' ? -10 : 10); }
+    else if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); if ($('#endcard').hidden) { if (G && G.net) netToast('Online battles can’t pause. End stops this device only.'); else togglePause(); } }
     else if (e.key === 'n' || e.key === 'N' || e.key === 'ArrowRight') { skipTurn(); }
     else if (G && G.paused && (e.key === 'ArrowUp' || e.key === 'PageUp')) { e.preventDefault(); lookBy(e.key === 'PageUp' ? 4 : 1); }
     else if (G && G.paused && (e.key === 'ArrowDown' || e.key === 'PageDown')) { e.preventDefault(); lookBy(e.key === 'PageDown' ? -4 : -1); }
@@ -206,3 +220,4 @@ grain();
 applySettingsUI();
 renderSetup();
 initCaps();
+netInit();

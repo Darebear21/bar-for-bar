@@ -506,6 +506,67 @@ button.w:active{transform:translateY(1px)}
 .recap li span{font:400 12px/1.6 var(--f-mono); color:var(--ink-3)}
 .end-btns{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
 
+/* ---------- ONLINE: lobby, stage chip, toast ---------- */
+.chip[hidden],.go[hidden],.tbtn[hidden],.net-chip[hidden]{display:none}
+#online{min-height:100%; display:flex; flex-direction:column}
+.on-top{max-width:980px}
+.on-body{display:flex; flex-direction:column; gap:14px; padding:6px clamp(16px,3vw,44px) 56px; max-width:980px; width:100%; margin-inline:auto}
+.on-hero{display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; padding:4px 0 8px}
+.on-match{display:flex; align-items:center; justify-content:center; gap:clamp(12px,2.4vw,28px); flex-wrap:wrap; width:100%}
+.on-team{background:var(--deck); border-radius:18px; padding:14px 22px 13px; min-width:min(100%,220px); max-width:380px; display:flex; flex-direction:column; align-items:center; gap:6px; box-shadow:inset 0 3px 0 var(--c), 0 0 0 1px var(--line)}
+@media (max-width:560px){ .on-match{flex-direction:column; gap:8px} .on-team{width:100%; max-width:none} }
+.on-meta{margin:0; color:var(--ink-3); font:400 13px/1.5 var(--f-mono)}
+.on-clock{display:flex; flex-direction:column; align-items:center; gap:6px}
+.on-clock b{font:500 clamp(44px,9vw,76px)/1 var(--f-mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.on-status{display:flex; flex-direction:column; align-items:center; gap:10px; min-height:22px}
+.on-status p{margin:0; color:var(--ink-2); font-weight:650}
+.on-status p.ok{color:#4fdc8f}
+.on-note{margin:0; max-width:62ch; padding:10px 14px; border-radius:12px; background:rgba(255,177,46,.09); border:1px solid rgba(255,177,46,.3); color:var(--ink-2); font-size:14px; text-align:left}
+.on-note.err{background:rgba(255,95,109,.1); border-color:rgba(255,95,109,.4)}
+.on-card{background:var(--deck); border:1px solid var(--line); border-radius:16px; padding:18px clamp(16px,2vw,22px); display:flex; flex-direction:column; gap:12px; min-width:0}
+.on-card h2{margin:0; display:flex; align-items:center; gap:10px; font:400 clamp(16px,1.5vw,19px)/1.1 var(--f-display); letter-spacing:.02em}
+.on-card h2 .n{width:26px; height:26px; border-radius:8px; display:grid; place-items:center; background:var(--rubber); color:var(--amber); font-size:14px; flex:none}
+.on-card.done h2 .n{background:var(--amber); color:var(--amber-ink)}
+.on-roles{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+.on-role{appearance:none; border:0; background:var(--deck-2); color:var(--ink); border-radius:14px; padding:14px 10px 12px; display:flex; flex-direction:column; align-items:center; gap:5px; min-width:0;
+  box-shadow:inset 0 3px 0 var(--c,var(--ink-3)), 0 0 0 1px var(--line); transition:background-color .15s, box-shadow .15s}
+.on-role:hover{background:var(--rubber)}
+.on-role b{font:400 clamp(17px,2.2vw,22px)/1.1 var(--f-display); letter-spacing:.02em; color:var(--c,var(--ink)); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.on-role span{font-size:12px; color:var(--ink-3); max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.on-role[aria-pressed="true"]{background:color-mix(in srgb, var(--c,var(--amber)) 17%, var(--deck-2)); box-shadow:inset 0 0 0 2px var(--c,var(--amber)), 0 0 34px -14px var(--c,var(--amber))}
+@media (max-width:560px){ .on-roles{grid-template-columns:minmax(0,1fr)} }
+.on-check{display:grid; grid-template-columns:auto minmax(0,1fr); gap:18px; align-items:center}
+@media (max-width:600px){ .on-check{grid-template-columns:minmax(0,1fr)} }
+.on-count{display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px 26px; border-radius:14px; background:var(--lip); min-width:150px}
+.on-count b{font:400 clamp(60px,10vw,88px)/1 var(--f-display); font-variant-numeric:tabular-nums; color:var(--ink)}
+.on-count.one b{color:var(--c,var(--amber)); text-shadow:0 0 30px color-mix(in srgb, var(--c,var(--amber)) 50%, transparent)}
+.on-side{display:flex; flex-direction:column; gap:12px; min-width:0}
+.on-side .blurb b{color:var(--ink)}
+.on-delay{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center}
+.on-delay .label{max-width:9em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.on-delay output{font:500 15px/1 var(--f-mono); min-width:8.5ch; text-align:right}
+.on-link{display:flex; gap:8px; align-items:center}
+.on-link input{flex:1; font:400 13px/1.3 var(--f-mono); color:var(--ink-2)}
+.on-card .seg{align-self:flex-start; max-width:100%; flex-wrap:wrap}
+.on-resched{gap:8px}
+.on-resched .label{margin-right:4px}
+.on-foot{text-align:center; max-width:70ch; margin:4px auto 0}
+/* stage: who's on and how late this device plays them */
+.net-chip{display:flex; align-items:center; flex-wrap:wrap; gap:6px 12px; min-width:0; font:500 12px/1.3 var(--f-mono); color:var(--ink-3); letter-spacing:.08em; text-transform:uppercase}
+.net-chip b{font-family:var(--f-body); font-weight:750; letter-spacing:0; text-transform:none; font-size:14px}
+.net-chip .net-now{display:inline-flex; align-items:center; gap:6px; text-transform:none; letter-spacing:.02em; color:var(--ink-2)}
+.net-chip button{appearance:none; border:0; width:28px; height:28px; border-radius:8px; background:var(--rubber); color:var(--ink-2); font:700 16px/1 var(--f-body); box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
+.net-chip button:hover{background:var(--rubber-2); color:var(--ink)}
+.net-dot{width:8px; height:8px; border-radius:50%; background:#4fdc8f; box-shadow:0 0 10px #4fdc8f; flex:none}
+@media (max-width:640px){ .net-chip .net-me{display:none} }
+.hud .matchup{flex-direction:row; justify-content:flex-start; margin-top:0}
+@media (max-width:560px){ .hud .matchup{display:none} }
+.toast{position:fixed; z-index:90; left:50%; bottom:calc(22px + env(safe-area-inset-bottom,0px)); transform:translate(-50%,16px); width:max-content; max-width:min(92vw,520px);
+  background:var(--ink); color:var(--stage); font-weight:650; font-size:14px; line-height:1.35; padding:12px 16px; border-radius:12px; box-shadow:0 20px 40px -12px #000; opacity:0; transition:opacity .2s, transform .2s; pointer-events:none}
+.toast.show{opacity:1; transform:translate(-50%,0)}
+.toast.err{background:var(--danger); color:#1c0a0d}
+.toast[hidden]{display:none}
+
 @media (prefers-reduced-motion:reduce){
   .wm-ball,.wm-ball i,.beat.playing .vinyl,.now-track .vinyl{animation:none}
   .pad.hit,.flash.go,.clock.warn{animation:none}

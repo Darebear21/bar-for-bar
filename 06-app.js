@@ -16,7 +16,7 @@ function normalizeCfg(c) {
   if (d.list === 'names' || d.list === 'grant') d.list = 'namedrop';
   const strs = v => Array.isArray(v) ? [...new Set(v.filter(x => typeof x === 'string').map(x => x.slice(0, 200)))].slice(0, 3000) : [];
   d.disabledWords = strs(c.disabledWords); d.disabledPacks = strs(c.disabledPacks);
-  if (!LISTS[d.list]) d.list = 'basic';
+  if (!Object.prototype.hasOwnProperty.call(LISTS, d.list)) d.list = 'basic';
   if (!SCHEMES.some(s => s.id === d.scheme)) d.scheme = 'AABB';
   if (!REVEALS.some(r => r.id === d.reveal)) d.reveal = 'all';
   d.teams = [0, 1].map(i => ({ name: String(d.teams[i]?.name ?? DEFAULT_CFG.teams[i].name).slice(0, 18), color: clamp(d.teams[i]?.color | 0, 0, 5) }));
@@ -32,6 +32,7 @@ const teamName = t => (CFG.teams[t]?.name || '').trim() || (t ? 'Team B' : 'Team
 const LIB = { db: null, assets: null, tracks: [], locals: [], localSeq: 0, buffers: new Map(), loading: new Map(), status: '', statusErr: false, confirmDel: null, dbReady: false };
 let cfgTimer = 0, lastLocalEdit = 0, cfgWriting = false, cfgDirty = false;
 function saveCfg() {
+  if (NET.on) return;   // an online battle's setup comes from its link; this device's own setup stays as it was
   ls.set('bfb.config', CFG); lastLocalEdit = Date.now();
   clearTimeout(cfgTimer); cfgTimer = setTimeout(pushCfg, 900);
 }
@@ -45,7 +46,7 @@ async function pushCfg() {
   if (cfgDirty) { cfgDirty = false; pushCfg(); }
 }
 function onRemoteCfg(snap) {
-  if (!snap.exists || snap.metadata.hasPendingWrites) return;
+  if (!snap.exists || snap.metadata.hasPendingWrites || NET.on) return;
   if (Date.now() - lastLocalEdit < 4000) return;
   const next = normalizeCfg(snap.data());
   LIB.lastShared = next.beat;
@@ -191,6 +192,8 @@ function renderHero() {
     const t = i => { const m = teamMembers(i); return `<button class="mu-team" style="--c:${teamColor(i)}" data-act="open-acc" data-v="teams" title="Edit teams"><span class="mu-name">${esc(teamName(i))}</span><span class="mu-crew">${m.length ? m.map(esc).join(' · ') : 'Add rappers'}</span></button>`; };
     $('#matchup').innerHTML = `${t(0)}<span class="mu-vs">VS</span>${t(1)}`;
   } else $('#matchup').innerHTML = '<span class="mu-solo">Solo practice</span>';
+  // online battles need a page friends can open from a link, so not inside claude.ai
+  $('#netNewBtn').hidden = c.mode !== 'battle' || !!(window.claude && typeof window.claude.use === 'function');
   // a bracket match is loaded: say which one, with a way back to the bracket
   const tc = typeof tourCurrent === 'function' ? tourCurrent() : null, bd = $('#muBadge');
   if (tc) { bd.innerHTML = `<svg width="14" height="14" aria-hidden="true"><use href="#i-trophy"/></svg>${esc(matchName(TOUR.s, tc.r, tc.m))} <button data-act="go-bracket">View bracket</button>`; bd.hidden = false; }
@@ -390,6 +393,7 @@ async function handleFile(file) {
 }
 const T = { open: false };
 function openTuner(o) {
+  if (NET.on) return;   // a file finished reading after an online battle opened: the battle's beat stays as it is
   Object.assign(T, { open: true, taps: [], playing: false, cache: null }, o);
   T.peaks = peaksOf(T.buffer, 1600);
   $('#tName').value = T.name; $('#tBpm').value = fmtBpm(T.bpm);
@@ -530,7 +534,7 @@ async function tunerSave(where) {
     tStatus(UPLOAD_ERRORS[e && e.code] || 'The upload did not go through. Check your connection, or use it on this device only.', true);
   } finally { btns.forEach(b => b.disabled = false); }
 }
-function saveCfgLocalOnly() { ls.set('bfb.config', CFG); }
+function saveCfgLocalOnly() { if (!NET.on) ls.set('bfb.config', CFG); }
 async function openTuneFor(id) {
   const b = uploadBeats().find(x => x.id === id); if (!b) return;
   stopPreview();

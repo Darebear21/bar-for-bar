@@ -54,12 +54,34 @@ function extendTimeline(row) {
   }
 }
 function segAt(r) { const s = G.segs; for (let i = s.length - 1; i >= 0; i--) if (r >= s[i].start) return s[i]; return s[0]; }
+// the beat heard at context time t. Online battles re-anchor the beat at changeovers (06d-online.js), so there the clock is
+// piecewise: anchor a restarts it at beat a.b. A later restart leaves a short gap (the ball waits); an earlier one skips ahead.
+function beatAt(t) {
+  const a = G.anchors;
+  if (!a) return (t - G.T0) / G.spb;
+  let i = a.length - 1;
+  while (i > 0 && t < a[i].T0 + a[i].b * G.spb) i--;
+  const b = (t - a[i].T0) / G.spb;
+  return i + 1 < a.length ? Math.min(b, a[i + 1].b) : b;
+}
+// words are drawn block by block in timeline order, whatever order the rows are drawn in,
+// so a device that joins an online battle late still gets the same words as everyone else
+function wordsFor(seg, blk) {
+  const B = G.words.get(seg.k + ':' + blk); if (B) return B;
+  for (const s of G.segs) {
+    if (s.kind !== 'turn') continue;
+    for (let j = 0; s === seg ? j <= blk : j < Math.ceil(s.len / 4); j++) { const key = s.k + ':' + j; if (!G.words.has(key)) G.words.set(key, G.gen()); }
+    if (s === seg) return G.words.get(seg.k + ':' + blk);
+  }
+  return G.gen();
+}
 const gColor = t => PALETTE[G.teams[t]?.color ?? t];
 const gTeam = t => (G.teams[t]?.name || '').trim() || (t ? 'Team B' : 'Team A');
 // always read as a team on stage, even when a team is named after a person
 const teamLabel = n => /^team\b/i.test(n) ? n : 'Team ' + n;
 
-async function startGame() {
+// online: start the battle from the link that NET holds (06d-online.js): its seed, its start time and this device's delays
+async function startGame(online = false) {
   const b = currentBeat(); if (!b) return;
   stopPreview();
   const ctx = initAudio(); try { await ctx.resume(); } catch { }
@@ -71,14 +93,15 @@ async function startGame() {
     catch (e) { setBeatStatus(esc(e.message || 'Could not load that beat.'), true); renderSummary(); return; }
     renderSummary();
   }
-  if (G) { cancelAnimationFrame(G.raf); }
-  const bpm = b.bpm, spb = 60 / bpm, cb = paceFor(bpm);
+  if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } }
+  const bpm = b.bpm, spb = 60 / bpm, cb = online ? NET.data.cb : paceFor(bpm);
   const endless = CFG.mode === 'battle' && !CFG.rounds, turnAt = turnMaker();
   G = {
     beat: b, bpm, spb, cb, rowBeats: 4 * cb, rowDur: 4 * cb * spb, mode: CFG.mode,
     segs: buildTimeline(turnAt, endless), words: new Map(), rows: new Map(),
     endless, turnAt, rounds: CFG.rounds, changeBars: CFG.changeBars, nextTurn: 8,
-    gen: makeWordGen(CFG.list, CFG.scheme, CFG.double, CFG.reveal, true),
+    gen: makeWordGen(CFG.list, CFG.scheme, CFG.double, CFG.reveal, true, online ? { rng: seededRng(NET.data.s), used: new Set() } : {}),
+    net: online, anchors: null,
     teams: JSON.parse(JSON.stringify(CFG.teams)), turns: 0,
     lastCell: null, seg: null, paused: false, ended: false, hud: {}, splashOn: false, litPad: null, look: { cur: 0, target: 0, acc: 0 },
     stageEl: $('#stage'), rowsEl: $('#rows'), glow: $('#glow'),
@@ -88,9 +111,9 @@ async function startGame() {
   G.rowsEl.innerHTML = '';
   showStage();
   layoutBoard();
-  const T0 = ctx.currentTime + 0.9; G.T0 = T0;
+  const T0 = online ? netFirstAnchor() : ctx.currentTime + 0.9; G.T0 = T0;
   $('#ytDock').hidden = true;
-  if (b.kind === 'synth') startPlayback({ preset: b.preset, bpm, T0, click: SETTINGS.click, phrase: gamePhrase });
+  if (b.kind === 'synth') startPlayback({ preset: b.preset, bpm, T0, click: SETTINGS.click, phrase: gamePhrase, ...(online ? netTiming() : {}) });
   else if (b.kind === 'yt') ytStageBegin(b, cb);
   else {
     const tm = trackTiming(b.meta, cb);
@@ -100,18 +123,20 @@ async function startGame() {
   $('#trkName').textContent = b.name;
   $('#trkMeta').textContent = `${fmtBpm(bpm)} BPM · ${b.style}${cb === 2 ? ' · half-time ball' : ''}`;
   $('#trkVinyl').style.setProperty('--lab', b.color);
-  $('#matchup').innerHTML = G.mode === 'battle'
+  $('#stage .matchup').innerHTML = G.mode === 'battle'
     ? `<span class="tchip" style="--c:${gColor(0)}">${esc(gTeam(0))}</span><span class="vs">VS</span><span class="tchip" style="--c:${gColor(1)}">${esc(gTeam(1))}</span>`
     : `<span class="tchip" style="--c:var(--amber)">Practice</span>`;
   $('#skipBtn span').textContent = G.mode === 'battle' ? 'Next team' : 'Finish';
   $('#endcard').hidden = true; $('#pausedTag').hidden = true; G.stageEl.classList.remove('is-paused', 'splash-on'); $('#splash').classList.remove('show');
   $('#pauseBtn').innerHTML = '<svg><use href="#i-pause"/></svg><span>Pause</span>';
+  // online battles run on everyone's clock at once: no pause or skipping ahead, just End (which only stops this device)
+  $('#pauseBtn').hidden = $('#skipBtn').hidden = online; $('#netChip').hidden = !online;
   try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { if (G) G.wake = l; else l.release(); }).catch(() => { }); } catch { }
   poke();
   G.raf = requestAnimationFrame(frame);
 }
 function showStage() {
-  $('#setup').hidden = true; $('#stage').hidden = false;
+  $('#setup').hidden = true; $('#online').hidden = true; $('#stage').hidden = false;
   $('#settings').hidden = true; if (T.open) closeTuner();
   document.body.style.overflow = 'hidden';
 }
@@ -122,6 +147,7 @@ function exitStage() {
   ytStageStop(0); $('#ytDock').hidden = true;
   if (A.ctx && A.ctx.state === 'suspended') A.ctx.resume();
   try { if (document.fullscreenElement) document.exitFullscreen(); } catch { }
+  if (NET.on) netLeave();
   $('#stage').hidden = true; $('#setup').hidden = false; document.body.style.overflow = '';
   $('#splash').classList.remove('show'); $('#stage').classList.remove('splash-on');
   renderSetup();
@@ -149,9 +175,8 @@ function layoutBoard() {
 function rowModel(r) {
   const seg = segAt(r), rel = r - seg.start;
   if (seg.kind === 'turn') {
-    const blk = Math.floor(rel / 4), bi = ((rel % 4) + 4) % 4, key = seg.k + ':' + blk;
-    let B = G.words.get(key); if (!B) { B = G.gen(); G.words.set(key, B); }
-    return { kind: 'turn', cells: B[bi], num: rel + 1 };
+    const blk = Math.floor(rel / 4), bi = ((rel % 4) + 4) % 4;
+    return { kind: 'turn', cells: wordsFor(seg, blk)[bi], num: rel + 1 };
   }
   if (seg.kind === 'end') return { kind: 'banner', label: rel === 0 ? "THAT'S TIME" : '', tc: 'var(--amber)' };
   const tc = seg.next ? gColor(seg.next.team) : 'var(--amber)';
@@ -314,7 +339,7 @@ function frame() {
   if (G.yt) ytTick();
   // a YouTube beat holds the board at the top of the count-in until the video is really playing
   const t = G.paused ? G.pauseT : G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime();
-  const b = (t - G.T0) / G.spb;
+  const b = beatAt(t);
   const rowF = b / G.rowBeats - COUNTIN;
   const row = Math.floor(rowF), ph = rowF - row;
   if (G.endless) extendTimeline(row);
@@ -330,6 +355,7 @@ function frame() {
   const bp = b - Math.floor(b);
   if (G.glow) G.glow.style.opacity = b >= 0 && !G.paused ? (0.35 + 0.65 * Math.exp(-bp * 5)).toFixed(3) : '0.35';
   if (!G.ended && isFinite(S.trackEnd) && t > S.trackEnd) finish('track');
+  if (G.net) netFrame(seg);
 }
 function finish(why) {
   if (!G || G.ended) return;
@@ -340,7 +366,7 @@ function finish(why) {
   const recap = $('#recap');
   if (G.mode === 'battle') {
     // count what was actually rapped: an early (or endless) finish stops partway through
-    const now = why === 'done' ? Infinity : Math.floor(((G.paused ? G.pauseT : heardTime()) - G.T0) / G.spb / G.rowBeats - COUNTIN);
+    const now = why === 'done' ? Infinity : Math.floor(beatAt(G.paused ? G.pauseT : heardTime()) / G.rowBeats - COUNTIN);
     const turns = G.segs.filter(s => s.kind === 'turn' && s.start <= now);
     const played = s => Math.max(0, Math.min(s.len, now - s.start + 1));
     recap.innerHTML = [0, 1].map(t => {
@@ -348,7 +374,7 @@ function finish(why) {
       const mem = G.turnAt(G.turnAt(0).team === t ? 0 : 1).members;
       return `<section style="--c:${gColor(t)}"><h3>${esc(gTeam(t))}</h3><ul>${mem.length ? mem.map(n => `<li>${esc(n)}</li>`).join('') : '<li>No names listed</li>'}<li><span>${ts.length} turn${ts.length === 1 ? '' : 's'} · ${bars} bars</span></li></ul></section>`;
     }).join('');
-    $('#endKicker').textContent = G.endless ? `Endless battle · ${turns.length} turn${turns.length === 1 ? '' : 's'}` : why === 'early' ? 'Battle ended early' : `${gTeam(0)} vs ${gTeam(1)}`;
+    $('#endKicker').textContent = G.endless ? `Endless battle · ${turns.length} turn${turns.length === 1 ? '' : 's'}` : why === 'early' ? (G.net ? 'You left early' : 'Battle ended early') : `${gTeam(0)} vs ${gTeam(1)}`;
     $('#endTitle').innerHTML = 'That’s <em>the battle</em>';
   } else {
     recap.innerHTML = '';
@@ -356,15 +382,18 @@ function finish(why) {
     $('#endTitle').innerHTML = 'Nice <em>reps</em>';
   }
   // bracket match: ask who won so the bracket can move on
-  const tc = G.mode === 'battle' ? tourCurrent() : null, ew = $('#endWinner');
+  const tc = G.mode === 'battle' && !G.net ? tourCurrent() : null, ew = $('#endWinner');
   if (tc) {
     ew.innerHTML = `<p class="label">${esc(matchName(TOUR.s, tc.r, tc.m))} · who won?</p><div class="ew-btns">${[0, 1].map(t => `<button class="ew-team" style="--c:${gColor(t)}" data-act="br-result" data-v="${t}">${esc(gTeam(t))}</button>`).join('')}</div><button class="chip small ghost" data-act="exit">Decide later</button>`;
     ew.hidden = false;
   } else ew.hidden = true;
-  setTimeout(() => { if (G && G.ended) { $('#endcard').hidden = false; (tc ? $('#endWinner .ew-team') : $('#endcard .go')).focus(); } }, why === 'done' ? 900 : 200);
+  // online: the battle carries on for everyone else, so someone who leaves early can jump back in
+  $('#againBtn').hidden = G.net; $('#rejoinBtn').hidden = !(G.net && why !== 'done' && netLive());
+  $('#exitBtn').textContent = G.net ? 'Leave battle' : 'Back to setup';
+  setTimeout(() => { if (G && G.ended) { $('#endcard').hidden = false; (tc ? $('#endWinner .ew-team') : $('#endcard .go:not([hidden])') || $('#exitBtn')).focus(); } }, why === 'done' ? 900 : 200);
 }
 function skipTurn() {
-  if (!G || G.ended) return;
+  if (!G || G.ended || G.net) return;
   const t = G.paused ? G.pauseT : heardTime();
   const row = Math.floor((t - G.T0) / G.spb / G.rowBeats - COUNTIN);
   const seg = segAt(row);
@@ -375,7 +404,7 @@ function skipTurn() {
   for (const [r, el] of G.rows) if (r > row) { el.remove(); G.rows.delete(r); }
 }
 function togglePause() {
-  if (!G || G.ended || !A.ctx) return;
+  if (!G || G.ended || !A.ctx || G.net) return;
   if (!G.paused) { G.pauseT = G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime(); G.paused = true; A.ctx.suspend(); }
   else { G.paused = false; A.ctx.resume(); }
   if (G.yt && G.yt.player) { try { G.paused ? G.yt.player.pauseVideo() : G.yt.player.playVideo(); } catch { } }
