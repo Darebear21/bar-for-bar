@@ -1253,80 +1253,262 @@ rich switch pitch twitch glitch
 more before floor score core explore
 cash crash flash dash stash
 `,
-// person packs: a leading * marks the name. A pack is only used when that name is on a team roster (or is a team name).
+// name packs (common first names, plus a few nicknames): a leading * marks the name. A pack comes up when that name is
+// on a team roster (or is a team name), or for everyone when the "Every name pack" switch is on.
 people: `
-*Darren sharin' parent carin' darin' barren
+*Aaron wearin' sharin' apparent carin' darin'
+*Abigail fail mail nail jail scale whale
+*Adam atom madam had_'em add_'em grab_'em at_'em
+*Addison had_this_in add_this_in medicine packed_this_in
+*Aiden fadin' tradin' raidin' maiden waitin' laden
 *Alex balance palace Dallas chalice
+*Alexander commander slander bystander salamander candor
+*Amanda panda propaganda veranda can_the
+*Amelia feel_ya heal_ya steal_ya Cecilia
+*Amy blame_me name_me tame_me shame_me claim_me
+*Andrew brand_new can_do and_you plan_to man_too
+*Andy candy handy dandy sandy brandy
+*Angela can_tell_a and_tell_a handle_a cancel_a
 *Aniket set bet net threat jet sweat
+*Anna banana Havana Montana can_a nirvana
+*Anthony family canopy symphony Tiffany epiphany
 *Arvin parkin' starvin' Marvin carvin'
+*Ashley flashy trashy rashly classy
 *Aswin within begin spin grin
+*Ava save_ya made_ya lava java
+*Avery bravery savory favor_me save_for_me
+*Barbara barber harbor larva Sahara
+*Becky sketchy techy check_me wreck_me
+*Ben ten when then again pen men
+*Benjamin Benjamins then_again ten_of_them when_I'm_in
 *Bennett when_it senate tenant pennant
+*Beth breath depth Macbeth Seth
+*Betty spaghetti confetti petty sweaty ready Yeti
 *Brandon standin' landin' expandin' abandon commandin'
+*Brenda agenda blender vendor lender pretender
+*Brian lion iron cryin' flyin' tryin' Zion
 *Cameron camera_on glamorous hammerin' stammerin'
+*Carol barrel apparel peril feral sterile
+*Carolyn very_thin terror_in carry_him bury_him
+*Catherine flatterin' gatherin' rather_in scatterin'
+*Charles marbles snarls stars cars bars
+*Charlotte scarlet car_lot starlet target market
+*Chloe slowly show_me know_me snowy throw_me
+*Chris this miss diss bliss abyss hiss
+*Christina arena subpoena Athena ballerina between_a
+*Christine clean machine routine scene green sixteen
+*Christopher whisper sister Mister twister blister
+*Cynthia with_ya win_the in_the begin_the
+*Dan plan can fan man scan began
+*Daniel manual annual spaniel channel panel flannel
+*Darren sharin' parent carin' darin' barren
+*Dave wave save brave cave rave behave
+*David saved_it made_it played_it paid_it gave_it
+*Deborah zebra better ever never
+*Debra zebra never whatever ever
+*Dennis menace tennis Venice Guinness finish
+*Diane plan can fan began Japan scan
+*Donald McDonald's modeled bottled throttled coddled
+*Donna gonna wanna Madonna piranha honor
+*Dorothy priority majority authority sorority
+*Douglas struggles juggles snuggles troubles
+*Edward red_bird said_word head_first next_word best_word
+*Elijah inspire_ya hire_ya fire_ya deny_ya higher
 *Eliza wiser visor riser appetizer
+*Elizabeth breath depth Macbeth Seth
+*Ella fella Stella umbrella tell_a sell_a propeller
+*Emily memory enemy remedy melody
+*Emma dilemma henna Vienna them_a
+*Eric generic hysteric cleric numeric America
+*Ethan breathin' beatin' eatin' even freedom
+*Evelyn devil_in level_in revel_in rebel_in seven_in
+*Frank bank tank thank rank prank blank
 *Fred said head instead spread shred
+*Gary scary very carry berry hairy legendary
 *Gavin havin' travelin' javelin unravelin'
+*George forge gorge large charge barge
+*Grace face place race space chase case
+*Greg leg beg egg keg nutmeg peg
+*Gregory legacy memory weaponry category
+*Hannah banana Savannah Havana Montana can_a
+*Harper sharper darker starter marker
+*Heather weather leather together feather tether forever
+*Helen tellin' sellin' yellin' melon felon swellin'
 *Henry century plenty entry sentry
 *Huimin gamin' claimin' aimin' namin' framin'
 *Hyeontae one_day fun_day Sunday Monday runway
+*Isabella umbrella fella Cinderella cellar a_capella
+*Jack back track black attack stack snack
+*Jackson action traction fraction taxin' relaxin' faction
 *Jacob make_up take_up wake_up shake_up
+*James games names flames claims frames aims
+*Janet planet granite can_it plan_it ran_it
+*Jason chasin' racin' facin' basin placin' amazin'
+*Jayden fadin' tradin' maiden playin' sayin'
+*Jeff chef ref left deaf breath
+*Jeffrey referee left_me freshly hefty
 *Jen when then again men pen den yen
+*Jennifer venture sinister minister defender
+*Jerry cherry very scary merry berry ferry
+*Jess mess stress dress press chess success
+*Jessica mess_of_a best_of_a less_of_a test_of_a
+*Jim gym him slim swim grim trim
+*Joan own phone known alone zone throne
+*Joe go show flow know glow pro
+*John on gone dawn con lawn upon drawn
+*Jon on gone dawn con upon drawn
+*Jonathan marathon on_and_on Amazon Babylon
+*Jose okay today away display ballet holiday
+*Joseph close_up dose_of most_of host_of ghost_of
+*Josh gosh wash squash posh slosh
+*Joshua watch_you got_you caught_you bought_you taught_you
+*Joyce voice choice noise Royce rejoice toys
+*Julie truly newly unruly do_me
+*Justin trust_in bustin' adjustin' discussin'
+*Karen starin' sharin' carin' wearin' darin' comparin'
+*Kate great late wait date straight plate
+*Katherine gatherin' batterin' flatterin' shatterin' scatterin'
+*Kathleen caffeine gasoline magazine trampoline
+*Katie lately greatly eighty shady weighty
+*Kelly belly jelly smelly deli tell_me sell_me
+*Kenneth when_it then_it send_it spend_it tenth
 *Kevin seven heaven eleven Devon
+*Kim slim gym swim trim him whim
+*Kimberly nimbly simply assembly trembly
 *Kwan on gone dawn swan
+*Larry scary very carry dairy legendary canary
+*Laura aura flora Dora Bora_Bora explorer
+*Lauren pourin' scorin' borin' snorin' foreign explorin'
+*Liam see_'em free_'em museum coliseum need_'em
 *Lina arena Argentina Athena ballerina
+*Linda win_the spin_the in_the window begin_the
+*Lisa pizza Visa Ibiza teaser piece_of
+*Liz quiz fizz biz whiz showbiz his
+*Logan slogan token frozen open chosen
+*Lucas mucus juke_us nuke_us shook_us took_us
 *Lucy juicy loosely Gucci bougie
 *Madeline saddle_in battlin' rattlin' paddlin'
+*Madison add_this_in had_this_in medicine packed_this_in
+*Margaret target market carpet starlet
+*Maria idea see_ya Korea pizzeria
+*Mark dark park spark shark bark remark
+*Mary very scary carry fairy berry legendary
+*Mason basin chasin' facin' racin' wastin' tastin'
+*Matt that chat flat hat combat format
+*Matthew at_you that_you had_you bad_news grab_you
+*Meg egg leg beg peg keg
 *Meher hair care there chair stare share flair unfair nightmare millionaire
+*Melissa miss_ya diss_ya kiss_ya this_a listen
+*Mia idea see_ya Korea free_ya
+*Michael cycle recycle bicycle viral spiral vital
+*Michelle well tell sell shell spell bell
+*Mike mic like bike strike spike Nike
+*Nancy fancy antsy can't_see dance_free
+*Nathan waitin' hatin' patient creatin' playin'
+*Nicholas ridiculous meticulous tickle_us pickle_us
 *Nick quick click kick trick brick slick
-*Aaron wearin' sharin' apparent carin' darin'
+*Nicole soul goal roll control whole patrol
+*Noah know_ya show_ya throw_ya boa Iowa
 *Noj road code showed mode load owed
+*Olivia trivia Bolivia give_ya oblivion
+*Pamela camera hammer_a slammer stammer
+*Patricia wish_ya miss_ya diss_ya fishin' delicious
+*Patrick hat_trick that_trick magic tragic matrix
 *Paul all call small ball wall tall
-*Sofia idea see_ya Korea Maria
+*Pete beat heat street sweet elite defeat
+*Peter heater meter cheetah leader beater
 *Pia idea see_ya Maria Mamma_Mia pizzeria
 *Piyush push ambush whoosh swoosh
+*Rachel facial spatial basil glacial
+*Ray day play say stay okay today
+*Raymond payment statement basement placement
+*Rebecca Mecca wreck_a check_a deck_a
+*Richard picture pitcher richer switch_it ditch_it
+*Rob job mob snob slob knob sob
+*Robert mobster lobster monster concert got_hurt
 *Rohan gone drawn dawn lawn pawn yawn
+*Ronald McDonald's modeled toddled wobbled
+*Ryan lion iron cryin' flyin' tryin' denyin'
+*Sam jam slam scam exam Instagram program
+*Samantha panther answer dancer Atlanta Santa
+*Samuel manual annual camel mammal handle
+*Sandra panda candor scandal sandal and_the
+*Sarah era error terror mascara Sahara
+*Scott hot got lot shot spot plot
 *Shannon cannon abandon canyon
+*Sharon sharin' starin' wearin' carin' barren
+*Shirley surely early curly burly pearly
+*Sofia idea see_ya Korea Maria
+*Sophia idea see_ya free_ya Korea pizzeria
+*Stephanie felony epiphany symphony Tiffany deafen_me
+*Stephen even leavin' believin' achievin' sneezin'
+*Steve believe leave sleeve achieve weave
+*Steven even leavin' believin' achievin' breathin' grievin'
+*Susan losin' choosin' cruisin' bruisin' snoozin' amusin'
+*Thomas promise honest Bahamas pajamas
 *Tigran Lebron electron python proton Teflon
+*Tim him whim rim slim swim grim
+*Timothy sympathy hit_me with_me pity city
+*Tom bomb calm palm mom prom
 *Tony only testimony pony macaroni
 *Tyler compiler styler dialer smiler
+*Victoria euphoria Gloria Astoria for_ya
 *Wenzheng hang gang bang dang mustang slang boomerang
+*Will skill chill still thrill bill spill
+*William million billion brilliant villain civilian chillin'
 *Xiang long wrong song strong gong
+*Zach back attack snack track stack crack
+*Zachary battery flattery factory gallery salary
 *Zhen when then again ten Zen
 *Zhenhua Iowa Ottawa Nicaragua
 `,
-// Grant + cash-advance packs: the starred word always shows when its pack is drawn
-grant: `
-*Grant can't plant rant chant slant pants
-*Kikoff pick_off sick_of tick_off
-*advance chance dance finance stance glance romance enhance
-*instant consistent distant assistant persistent resistant
-*payday away stay okay display delay today relay
-*fast_cash crash flash dash splash stash trash clash smash
-*rent event percent spent content went sent meant invent
-*paycheck tech neck deck wreck trek spec
-*short court report sort fort sport support
-*no_fee free key agree guarantee three degree see
-*bills skills hills chills spills thrills drills grills
-*cash_out about doubt shout drought scout clout sprout
-*loan own known phone alone zone stone throne grown tone
-*credit edit said_it get_it bet_it regret_it
-*paid made trade grade played stayed weighed afraid parade
-*app trap snap map clap wrap gap tap cap
-*debt set bet net threat sweat regret
-*bank thank tank rank blank frank prank
-*score more before floor door four core explore
-*limit in_it win_it spin_it
-*fees please keys trees breeze squeeze ease
-*funds runs tons ones sons
-*payback laid_back way_back stay_back
-*cash_flow go show slow glow throw
-*payroll control goal soul whole
-*borrow tomorrow sorrow
-*on_time rhyme climb prime dime
-*boost produced reduced introduced
-*approved moved grooved
-*overdraft craft laughed shaft staffed
-*hustle muscle tussle
+// streamer packs: tags of the most-followed Twitch streamers. The tag always shows when its pack is drawn, once per tournament.
+streamers: `
+*KaiCenat that flat chat combat format acrobat
+*Ibai bye sky fly high why goodbye
+*Ninja in_ya win_ya spin_ya begin_ya
+*Auronplay play okay display replay today away
+*Rubius dubious studious Julius ludicrous
+*xQc excuse_me rescue_me free degree guarantee
+*EasyLiker biker hiker striker I_like_her
+*TheGrefg chef ref left clef
+*Juansguarnizo chorizo Ibiza pizza Mona_Lisa
+*Tfue few view crew true through review
+*Shroud loud crowd proud cloud allowed vowed
+*Jynxzi Helsinki pinky slinky think_he
+*ElMariana banana Montana Havana Nirvana bandana
+*Edu90 mighty nightly tightly slightly almighty
+*ElSpreen green clean screen machine routine between
+*Pokimane main game chain insane campaign champagne
+*Sodapoppin stoppin' droppin' shoppin' hip-hoppin' non-stoppin'
+*caseoh ratio patio radio rodeo say_so
+*Clix fix mix tricks kicks six picks
+*Alanzoka mocha polka Toyota quota
+*TimTheTatman plan fan can van began Pac-Man
+*Myth with Smith fifth gift
+*Tommyinnit in_it win_it minute spin_it limit
+*SypherPK okay play today away display
+*Coringa bring_a sing_a swing_a ring_a
+*Mongraal all ball call fall wall
+*AriGameplays plays days ways praise blaze craze
+*RiversGG free me see degree three key
+*AdinRoss boss loss cross toss floss sauce
+*NICKMERCS works perks jerks quirks lurks
+*Quackity capacity audacity tenacity back_to_me
+*Summit1g me free tree spree guarantee
+*Amouranth amaranth plant chant can't slant
+*Dream team scheme stream seem extreme supreme
+*Moistcr1tikal critical political cynical typical pinnacle
+*Robleis phase maze gaze haze raise
+*Squeezie easy breezy cheesy queasy
+*NickEh30 dirty flirty nerdy early wordy
+*MontanaBlack88 great late straight state wait
+*Elded welded melted belted pelted
+*Loltyler1 run done fun won none
+*Bugha tuba scuba Cuba Aruba
+*IShowSpeed need lead bleed indeed succeed stampede
+*Tubbo jumbo gumbo Dumbo Columbo
+*stableronaldo Waldo tornado avocado Toledo
 `
 };
 const bare = w => w.replace(/^\*/, '');
@@ -1355,12 +1537,12 @@ const LISTS = (() => {
     multi: { name: 'Two-syllable', blurb: 'Multis like motion / ocean / notion. Harder to fit, sounds better.', fams: parseFams(RAW.multi) },
     toolkit: { name: "Rapper's toolkit", blurb: 'Bars, flex, drip, clout. Hip-hop vocabulary.', fams: toolkit },
     office: { name: 'Office hours', blurb: 'Credit, sprints, Slack, payroll. Bars about the day job.', fams: parseFams(RAW.office) },
-    grant: { name: 'Grant', blurb: 'Grant and money rhymes, a pack for each rapper on your teams (their name always shows), every Everyday pack, and the best of the rest.', fams: (() => {
+    namedrop: { name: 'Name drop', blurb: 'Streamer tags and a name pack for each rapper on your teams (names always show), plus every Everyday pack and the best of the rest.', fams: (() => {
       // easy, high-energy packs borrowed from the smaller lists (found by a word they contain)
       const BEST = { multi: ['money', 'paper', 'nation', 'power'], toolkit: ['drip', 'flex', 'bars', 'mic', 'respect', 'legit'], office: ['deploy', 'meeting', 'laptop', 'spreadsheet', 'Slack'] };
       const best = Object.entries(BEST).flatMap(([k, ws]) => { const fams = parseFams(RAW[k]); return ws.map(w => fams.find(f => f.map(bare).includes(w))).filter(Boolean); });
       const seen = new Set(), out = [];
-      for (const f of [...PEOPLE_FAMS, ...parseFams(RAW.grant), ...basic, ...best]) { const k = f.map(w => bare(w).toLowerCase()).sort().join('|'); if (!seen.has(k)) { seen.add(k); out.push(f); } }
+      for (const f of [...PEOPLE_FAMS, ...parseFams(RAW.streamers), ...basic, ...best]) { const k = f.map(w => bare(w).toLowerCase()).sort().join('|'); if (!seen.has(k)) { seen.add(k); out.push(f); } }
       return out;
     })() },
   };
@@ -1378,7 +1560,7 @@ function rosterNames() {
 // the "Every name pack" switch (CFG.allNames) turns on everyone's pack, not just the rappers on the teams
 const allNamesOn = () => { try { return !!CFG.allNames; } catch { return false; } };
 const personActive = (f, names = rosterNames()) => allNamesOn() || names.has(bare(f[0]).toLowerCase());
-// the families a list draws from right now (Grant drops person packs for anyone not on a team)
+// the families a list draws from right now (Name drop leaves out name packs for anyone not on a team)
 // what the viewer switched off in the word browser: words (off in every list) and whole packs
 const famKey = f => f.map(w => bare(w).toLowerCase()).sort().join('|');
 function switchedOff() {
@@ -1388,7 +1570,7 @@ function switchedOff() {
 const packOff = (f, off) => off.packs.has(famKey(f)) || (f[0][0] === '*' && off.words.has(bare(f[0]).toLowerCase()));
 function activeFams(listId) {
   const l = LISTS[listId] || LISTS.basic;
-  const names = listId === 'grant' ? rosterNames() : null;
+  const names = listId === 'namedrop' ? rosterNames() : null;
   const off = switchedOff(), out = [];
   for (const f of l.fams) {
     if (names && PEOPLE.has(f) && !personActive(f, names)) continue;
@@ -1427,7 +1609,7 @@ function freshLeft(listId) {
   for (const f of activeFams(listId)) for (const w of f) if (w[0] !== '*' && !USED.has(wkey(w))) s.add(wkey(w));
   return s.size;
 }
-// Grant and money words (starred, but not people's names) show once per tournament; names can repeat
+// streamer tags (starred, but not people's names) show once per tournament; names can repeat
 const PERSON_NAMES = new Set(PEOPLE_FAMS.map(f => bare(f[0]).toLowerCase()));
 const isTheme = w => w[0] === '*' && !PERSON_NAMES.has(wkey(w));
 const themeUsed = f => f.some(w => isTheme(w) && USED.has(wkey(w)));
@@ -1448,7 +1630,8 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
   const anchorsOf = f => f.filter(w => w[0] === '*').length;
   const fresh = f => f.reduce((c, w) => c + (w[0] !== '*' && !USED.has(wkey(w)) ? 1 : 0), 0);
   let themesThisBattle = 0;
-  // a Grant/money pack is out once its theme word has been shown, or once this battle has had its share
+  const roster = rosterNames();
+  // a streamer pack is out once its tag has been shown, or once this battle has had its share
   const themeOut = f => f.some(isTheme) && (themeUsed(f) || (track && themesThisBattle >= THEME_PER_BATTLE));
   function pick(n, avoid) {
     const ok = f => f.length >= n && !f.some(w => avoid.has(wkey(w))) && !themeOut(f);
@@ -1456,8 +1639,11 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false) {
     if (!cands.length) { recent.length = 0; cands = fams.filter(ok); }
     if (!cands.length) cands = fams.filter(f => !themeOut(f));
     if (!cands.length) cands = fams;
-    // packs with enough fresh words win; name and Grant packs (starred) come up 3x as often and may reuse partner words
-    const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), themed = f[0][0] === '*'; return (themed ? 3 : 1) * (ok ? 1 : themed ? 0.2 : 0.002); });
+    // packs with enough fresh words win; streamer packs and the names of rappers on the teams come up 3x as often
+    // (names switched on for everyone come up like any other pack); starred packs may reuse partner words
+    const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), themed = f[0][0] === '*';
+      const big = themed && (!PERSON_NAMES.has(wkey(f[0])) || roster.has(wkey(f[0])));
+      return (big ? 3 : 1) * (ok ? 1 : themed ? 0.2 : 0.002); });
     let r = Math.random() * wt.reduce((a, b) => a + b, 0), k = 0;
     while (k < cands.length - 1 && (r -= wt[k]) > 0) k++;
     const f = cands[k];
@@ -2549,15 +2735,15 @@ const saveSettings = () => ls.set('bfb.settings', SETTINGS);
 const DEFAULT_CFG = {
   mode: 'battle', list: 'basic', scheme: 'AABB', double: false, reveal: 'all',
   beat: 'synth:basement', synthBpm: {}, practiceBars: 16,
-  teams: [{ name: 'Kikoff', color: 0 }, { name: 'Grant', color: 1 }],
-  lineup: [{ name: 'Kikoff MC 1', team: 0 }, { name: 'Grant MC 1', team: 1 }, { name: 'Kikoff MC 2', team: 0 }, { name: 'Grant MC 2', team: 1 }],
+  teams: [{ name: 'East', color: 0 }, { name: 'West', color: 1 }],
+  lineup: [{ name: 'East MC 1', team: 0 }, { name: 'West MC 1', team: 1 }, { name: 'East MC 2', team: 0 }, { name: 'West MC 2', team: 1 }],
   barsPerTurn: 16, rounds: 2, changeBars: 2, firstTeam: 0, disabledWords: [], disabledPacks: [], allNames: false,
 };
 function normalizeCfg(c) {
   const d = JSON.parse(JSON.stringify(DEFAULT_CFG));
   if (!c || typeof c !== 'object') return d;
   for (const k of Object.keys(d)) if (c[k] !== undefined && typeof c[k] === typeof d[k] && Array.isArray(c[k]) === Array.isArray(d[k])) d[k] = c[k];
-  if (d.list === 'names') d.list = 'grant';
+  if (d.list === 'names' || d.list === 'grant') d.list = 'namedrop';
   const strs = v => Array.isArray(v) ? [...new Set(v.filter(x => typeof x === 'string').map(x => x.slice(0, 200)))].slice(0, 3000) : [];
   d.disabledWords = strs(c.disabledWords); d.disabledPacks = strs(c.disabledPacks);
   if (!LISTS[d.list]) d.list = 'basic';
@@ -2749,8 +2935,8 @@ function renderAccSums() {
   set('format', c.mode === 'battle' ? `${c.rounds ? `${c.rounds} round${c.rounds === 1 ? '' : 's'}` : 'Endless'} · ${c.barsPerTurn} bars a turn · ${c.changeBars ? c.changeBars + '-bar changeover' : 'no changeover'} · ${teamName(c.firstTeam)} first` : (c.practiceBars ? c.practiceBars + ' bars' : 'Endless'));
   const b = currentBeat(); set('beat', b ? `${b.name} · ${b.style} · ${fmtBpm(b.bpm)} BPM` : 'Pick a beat');
   const sc = SCHEMES.find(x => x.id === c.scheme), rv = REVEALS.find(x => x.id === c.reveal);
-  const th = c.list === 'grant' ? themeLeft('grant') : null;
-  set('words', `${LISTS[c.list].name} · ${sc ? sc.name : ''}${c.double ? ' + beat 2' : ''} · ${rv ? rv.name.toLowerCase() : ''}${th && th.total ? ` · ${th.left}/${th.total} Grant words left` : ''}${c.list === 'grant' && c.allNames ? ' · every name pack' : ''}`);
+  const th = c.list === 'namedrop' ? themeLeft('namedrop') : null;
+  set('words', `${LISTS[c.list].name} · ${sc ? sc.name : ''}${c.double ? ' + beat 2' : ''} · ${rv ? rv.name.toLowerCase() : ''}${th && th.total ? ` · ${th.left}/${th.total} streamer tags left` : ''}${c.list === 'namedrop' && c.allNames ? ' · every name pack' : ''}`);
 }
 function renderOrder() {
   const el = $('#order'); if (!el) return;
@@ -2766,7 +2952,7 @@ function renderWords() {
     <div class="field"><span class="label">Word list</span>
       <div class="chips">${Object.entries(LISTS).map(([k, l]) => chip('list', k, c.list === k, esc(l.name))).join('')}</div>
       <p class="blurb">${esc(LISTS[c.list].blurb)}</p>
-      ${c.list === 'grant' ? `<div class="names-row"><label class="toggle"><input type="checkbox" id="namesTgl" data-bind="allNames" ${c.allNames ? 'checked' : ''}> Every name pack</label><span class="hint">${c.allNames ? `All ${PEOPLE_FAMS.length} name packs can come up, whoever is on the teams.` : 'Off: only rappers on the teams get their name pack.'}</span></div>` : ''}
+      ${c.list === 'namedrop' ? `<div class="names-row"><label class="toggle"><input type="checkbox" id="namesTgl" data-bind="allNames" ${c.allNames ? 'checked' : ''}> Every name pack</label><span class="hint">${c.allNames ? `All ${PEOPLE_FAMS.length} name packs can come up, whoever is on the teams.` : 'Off: only rappers on the teams get their name pack.'}</span></div>` : ''}
       <p class="hint mem" id="memLine" aria-live="polite">${memHtml()}</p></div>
     <div class="field"><span class="label">Rhyme scheme</span>
       <div class="scheme-row"><div class="chips">${SCHEMES.map(s => chip('scheme', s.id, c.scheme === s.id, s.name)).join('')}</div>
@@ -2787,7 +2973,7 @@ let memConfirm = false;
 function memHtml() {
   const n = USED.size, left = freshLeft(CFG.list), name = esc(LISTS[CFG.list].name);
   if (memConfirm) return `<span>Forget all ${n.toLocaleString()} used words so they can come up again?</span><button class="chip small" data-act="mem-yes">Yes, start fresh</button><button class="chip small ghost" data-act="mem-no">Cancel</button>`;
-  const th = themeLeft(CFG.list), themes = th.total ? ` ${th.left} of ${th.total} Grant words still unused (each shows once per tournament; names can repeat).` : '';
+  const th = themeLeft(CFG.list), themes = th.total ? ` ${th.left} of ${th.total} streamer tags still unused (each shows once per tournament; names can repeat).` : '';
   if (!n) return `<span><b>No repeats.</b> Words shown in a battle are remembered on this device, so later battles get fresh ones. ${left.toLocaleString()} fresh words in ${name}.${themes}</span>`;
   return `<span><b>${n.toLocaleString()} word${n === 1 ? '' : 's'} used</b> in earlier battles won’t come back until the list runs low. ${left.toLocaleString()} fresh words left in ${name}.${themes}</span><button class="chip small ghost" data-act="mem-ask">Reset used words</button>`;
 }
@@ -2825,13 +3011,13 @@ function renderWordbank() {
   let fams = LISTS[sel].fams.map((f, i) => [f, i]).filter(([f]) => match(f));
   const st = LIST_STATS[sel];
   const names = rosterNames();
-  const off = f => sel === 'grant' && PEOPLE.has(f) && !personActive(f, names);
-  if (sel === 'grant') fams = fams.filter(([f]) => !off(f)).concat(fams.filter(([f]) => off(f)));
+  const off = f => sel === 'namedrop' && PEOPLE.has(f) && !personActive(f, names);
+  if (sel === 'namedrop') fams = fams.filter(([f]) => !off(f)).concat(fams.filter(([f]) => off(f)));
   let sum;
-  if (!q && sel === 'grant') {
+  if (!q && sel === 'namedrop') {
     const swo = switchedOff();
-    const on = LISTS.grant.fams.filter(f => PEOPLE.has(f) && personActive(f, names) && !packOff(f, swo)).map(f => bare(f[0]));
-    sum = `<b>Grant</b>${sel === CFG.list ? ' (the list you’re playing with)' : ''}: ${activeFams('grant').length} rhyme families in play. ` +
+    const on = LISTS.namedrop.fams.filter(f => PEOPLE.has(f) && personActive(f, names) && !packOff(f, swo)).map(f => bare(f[0]));
+    sum = `<b>Name drop</b>${sel === CFG.list ? ' (the list you’re playing with)' : ''}: ${activeFams('namedrop').length} rhyme families in play. ` +
       (CFG.allNames ? `<b>Every name pack is on</b> (${on.length}), whoever is on the teams.` : (on.length ? `Name packs on for <b>${on.map(esc).join(', ')}</b>, because they’re on a team.` : 'No name packs are on yet: add rappers to the teams and their packs switch on.') +
       ` Dimmed packs belong to people who aren’t on a team, so they won’t come up.`) + ` Light chips are the words that always show when their pack comes up.`;
   } else if (!q) sum = `<b>${esc(LISTS[sel].name)}</b>${sel === CFG.list ? ' (the list you’re playing with)' : ''}: ${st.fams} rhyme families, ${st.words} words. Every word on a row rhymes with the others on that row.`;
@@ -3929,9 +4115,9 @@ document.addEventListener('click', e => {
     case 'rounds': upd(() => CFG.rounds = +v, ['lineup', 'summary']); break;
     case 'change': upd(() => CFG.changeBars = +v, ['lineup', 'summary']); break;
     case 'pbars': upd(() => CFG.practiceBars = +v, ['lineup', 'summary']); break;
-    case 'list': previewBlock = null; upd(() => CFG.list = v, ['words']); break;
-    case 'scheme': previewBlock = null; upd(() => CFG.scheme = v, ['words']); break;
-    case 'reveal': previewBlock = null; upd(() => CFG.reveal = v, ['words']); break;
+    case 'list': previewBlock = null; upd(() => CFG.list = v, ['words']); renderAccSums(); break;
+    case 'scheme': previewBlock = null; upd(() => CFG.scheme = v, ['words']); renderAccSums(); break;
+    case 'reveal': previewBlock = null; upd(() => CFG.reveal = v, ['words']); renderAccSums(); break;
     case 'shuffle': previewBlock = null; renderWords(); break;
     case 'wb-list': WB.list = v; renderWordbank(); $('#wbFams').scrollTop = 0; break;
     case 'wb-word': case 'wb-pack': {

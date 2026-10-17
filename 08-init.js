@@ -14,9 +14,9 @@ document.addEventListener('click', e => {
     case 'rounds': upd(() => CFG.rounds = +v, ['lineup', 'summary']); break;
     case 'change': upd(() => CFG.changeBars = +v, ['lineup', 'summary']); break;
     case 'pbars': upd(() => CFG.practiceBars = +v, ['lineup', 'summary']); break;
-    case 'list': previewBlock = null; upd(() => CFG.list = v, ['words']); break;
-    case 'scheme': previewBlock = null; upd(() => CFG.scheme = v, ['words']); break;
-    case 'reveal': previewBlock = null; upd(() => CFG.reveal = v, ['words']); break;
+    case 'list': previewBlock = null; upd(() => CFG.list = v, ['words']); renderAccSums(); break;
+    case 'scheme': previewBlock = null; upd(() => CFG.scheme = v, ['words']); renderAccSums(); break;
+    case 'reveal': previewBlock = null; upd(() => CFG.reveal = v, ['words']); renderAccSums(); break;
     case 'shuffle': previewBlock = null; renderWords(); break;
     case 'wb-list': WB.list = v; renderWordbank(); $('#wbFams').scrollTop = 0; break;
     case 'wb-word': case 'wb-pack': {
