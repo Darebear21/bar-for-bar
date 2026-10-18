@@ -1856,7 +1856,7 @@ function syllables(w) {
 const PEOPLE_FAMS = [...parseFams(RAW.people), ...parseFams(RAW.streamers)];
 const PEOPLE = new Set(PEOPLE_FAMS);
 const LISTS = (() => {
-  const basic = parseFams(RAW.basic), toolkit = parseFams(RAW.toolkit);
+  const basic = parseFams(RAW.basic), toolkit = parseFams(RAW.toolkit), multi = parseFams(RAW.multi);
   const one = [];
   const seen = new Set();
   for (const f of [...basic, ...toolkit]) {
@@ -1867,7 +1867,8 @@ const LISTS = (() => {
   return {
     basic: { name: 'Everyday', blurb: 'Common words everyone knows. The best place to start.', fams: basic },
     one: { name: 'One-syllable', blurb: 'Short and punchy, like cash, flash, stash. Easiest to land on the beat.', fams: one },
-    multi: { name: 'Two-syllable', blurb: 'Multis like motion / ocean / notion. Harder to fit, sounds better.', fams: parseFams(RAW.multi) },
+    multi: { name: 'Two-syllable', blurb: 'Multis like motion / ocean / notion. Harder to fit, sounds better.', fams: multi },
+    mix: { name: 'One + two syllable', blurb: 'Every One-syllable and Two-syllable pack together, so punchy rhymes and multis trade off in the same battle.', fams: [...one, ...multi] },
     toolkit: { name: "Rapper's toolkit", blurb: 'Bars, flex, drip, clout. Hip-hop vocabulary.', fams: toolkit },
     office: { name: 'Office hours', blurb: 'Credit, sprints, Slack, payroll. Bars about the day job.', fams: parseFams(RAW.office) },
     gaming: { name: 'Gaming', blurb: 'Clutch, respawn, loot, lobby. Bars for the squad chat.', fams: parseFams(RAW.gaming) },
