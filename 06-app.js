@@ -7,7 +7,7 @@ const DEFAULT_CFG = {
   beat: 'synth:basement', synthBpm: {}, practiceBars: 16,
   teams: [{ name: 'East', color: 0 }, { name: 'West', color: 1 }],
   lineup: [{ name: 'East MC 1', team: 0 }, { name: 'West MC 1', team: 1 }, { name: 'East MC 2', team: 0 }, { name: 'West MC 2', team: 1 }],
-  barsPerTurn: 16, rounds: 2, changeBars: 2, firstTeam: 0, disabledWords: [], disabledPacks: [], allNames: false,
+  barsPerTurn: 16, rounds: 2, changeBars: 2, firstTeam: 0, disabledWords: [], disabledPacks: [], allNames: false, enabledNames: [],
 };
 function normalizeCfg(c) {
   const d = JSON.parse(JSON.stringify(DEFAULT_CFG));
@@ -15,7 +15,7 @@ function normalizeCfg(c) {
   for (const k of Object.keys(d)) if (c[k] !== undefined && typeof c[k] === typeof d[k] && Array.isArray(c[k]) === Array.isArray(d[k])) d[k] = c[k];
   if (d.list === 'names' || d.list === 'grant') d.list = 'namedrop';
   const strs = v => Array.isArray(v) ? [...new Set(v.filter(x => typeof x === 'string').map(x => x.slice(0, 200)))].slice(0, 3000) : [];
-  d.disabledWords = strs(c.disabledWords); d.disabledPacks = strs(c.disabledPacks);
+  d.disabledWords = strs(c.disabledWords); d.disabledPacks = strs(c.disabledPacks); d.enabledNames = strs(c.enabledNames).map(x => x.toLowerCase());
   if (!Object.prototype.hasOwnProperty.call(LISTS, d.list)) d.list = 'basic';
   if (!SCHEMES.some(s => s.id === d.scheme)) d.scheme = 'AABB';
   if (!REVEALS.some(r => r.id === d.reveal)) d.reveal = 'all';
@@ -208,8 +208,8 @@ function renderAccSums() {
   set('format', c.mode === 'battle' ? `${c.rounds ? `${c.rounds} round${c.rounds === 1 ? '' : 's'}` : 'Endless'} · ${c.barsPerTurn} bars a turn · ${c.changeBars ? c.changeBars + '-bar changeover' : 'no changeover'} · ${teamName(c.firstTeam)} first` : (c.practiceBars ? c.practiceBars + ' bars' : 'Endless'));
   const b = currentBeat(); set('beat', b ? `${b.name} · ${b.style} · ${fmtBpm(b.bpm)} BPM` : 'Pick a beat');
   const sc = SCHEMES.find(x => x.id === c.scheme), rv = REVEALS.find(x => x.id === c.reveal);
-  const th = c.list === 'namedrop' ? themeLeft('namedrop') : null;
-  set('words', `${LISTS[c.list].name} · ${sc ? sc.name : ''}${c.double ? ' + beat 2' : ''} · ${rv ? rv.name.toLowerCase() : ''}${th && th.total ? ` · ${th.left}/${th.total} streamer tags left` : ''}${c.list === 'namedrop' && c.allNames ? ' · every name pack' : ''}`);
+  const hand = c.list === 'namedrop' && !c.allNames ? c.enabledNames.filter(k => PERSON_NAMES.has(k)).length : 0;
+  set('words', `${LISTS[c.list].name} · ${sc ? sc.name : ''}${c.double ? ' + beat 2' : ''} · ${rv ? rv.name.toLowerCase() : ''}${c.list === 'namedrop' && c.allNames ? ' · every name pack' : ''}${hand ? ` · ${hand} name${hand === 1 ? '' : 's'} turned on` : ''}`);
 }
 function renderOrder() {
   const el = $('#order'); if (!el) return;
@@ -225,7 +225,7 @@ function renderWords() {
     <div class="field"><span class="label">Word list</span>
       <div class="chips">${Object.entries(LISTS).map(([k, l]) => chip('list', k, c.list === k, esc(l.name))).join('')}</div>
       <p class="blurb">${esc(LISTS[c.list].blurb)}</p>
-      ${c.list === 'namedrop' ? `<div class="names-row"><label class="toggle"><input type="checkbox" id="namesTgl" data-bind="allNames" ${c.allNames ? 'checked' : ''}> Every name pack</label><span class="hint">${c.allNames ? `All ${PEOPLE_FAMS.length} name packs can come up, whoever is on the teams.` : 'Off: only rappers on the teams get their name pack.'}</span></div>` : ''}
+      ${c.list === 'namedrop' ? `<div class="names-row"><label class="toggle"><input type="checkbox" id="namesTgl" data-bind="allNames" ${c.allNames ? 'checked' : ''}> Every name pack</label><span class="hint">${c.allNames ? `All ${PEOPLE_FAMS.length} name packs (streamer tags included) can come up, whoever is on the teams.` : 'Off: only rappers on the teams get their name pack or streamer tag, plus any name you turn on in Browse every word.'}</span></div>` : ''}
       <p class="hint mem" id="memLine" aria-live="polite">${memHtml()}</p></div>
     <div class="field"><span class="label">Rhyme scheme</span>
       <div class="scheme-row"><div class="chips">${SCHEMES.map(s => chip('scheme', s.id, c.scheme === s.id, s.name)).join('')}</div>
@@ -246,9 +246,8 @@ let memConfirm = false;
 function memHtml() {
   const n = USED.size, left = freshLeft(CFG.list), name = esc(LISTS[CFG.list].name);
   if (memConfirm) return `<span>Forget all ${n.toLocaleString()} used words so they can come up again?</span><button class="chip small" data-act="mem-yes">Yes, start fresh</button><button class="chip small ghost" data-act="mem-no">Cancel</button>`;
-  const th = themeLeft(CFG.list), themes = th.total ? ` ${th.left} of ${th.total} streamer tags still unused (each shows once per tournament; names can repeat).` : '';
-  if (!n) return `<span><b>No repeats.</b> Words shown in a battle are remembered on this device, so later battles get fresh ones. ${left.toLocaleString()} fresh words in ${name}.${themes}</span>`;
-  return `<span><b>${n.toLocaleString()} word${n === 1 ? '' : 's'} used</b> in earlier battles won’t come back until the list runs low. ${left.toLocaleString()} fresh words left in ${name}.${themes}</span><button class="chip small ghost" data-act="mem-ask">Reset used words</button>`;
+  if (!n) return `<span><b>No repeats.</b> Words shown in a battle are remembered on this device, so later battles get fresh ones. ${left.toLocaleString()} fresh words in ${name}.</span>`;
+  return `<span><b>${n.toLocaleString()} word${n === 1 ? '' : 's'} used</b> in earlier battles won’t come back until the list runs low. ${left.toLocaleString()} fresh words left in ${name}.</span><button class="chip small ghost" data-act="mem-ask">Reset used words</button>`;
 }
 function refreshMem() { const el = $('#memLine'); if (el) el.innerHTML = memHtml(); }
 const miniHtml = () => previewBlock.map(row => row.map(cell => cell ? `<div class="p rh c${cell.c}${cell.show ? '' : ' blank'}">${cell.show ? esc(cell.w) : ''}</div>` : '<div class="p"></div>').join('')).join('');
@@ -283,16 +282,17 @@ function renderWordbank() {
     `<button class="chip small" data-act="wb-list" data-v="${k}" aria-pressed="${k === sel}">${esc(l.name)}<span class="ct">${q ? hits[k] : activeFams(k).length}</span>${k === CFG.list ? '<span class="sr"> (in use)</span>' : ''}</button>`).join('');
   let fams = LISTS[sel].fams.map((f, i) => [f, i]).filter(([f]) => match(f));
   const st = LIST_STATS[sel];
-  const names = rosterNames();
-  const off = f => sel === 'namedrop' && PEOPLE.has(f) && !personActive(f, names);
+  const names = rosterNames(), hand = handNames();
+  const off = f => sel === 'namedrop' && PEOPLE.has(f) && !personActive(f, names, hand);
   if (sel === 'namedrop') fams = fams.filter(([f]) => !off(f)).concat(fams.filter(([f]) => off(f)));
   let sum;
   if (!q && sel === 'namedrop') {
-    const swo = switchedOff();
-    const on = LISTS.namedrop.fams.filter(f => PEOPLE.has(f) && personActive(f, names) && !packOff(f, swo)).map(f => bare(f[0]));
+    const swo = switchedOff(), on = LISTS.namedrop.fams.filter(f => PEOPLE.has(f) && personActive(f, names, hand) && !packOff(f, swo)).map(f => bare(f[0]));
+    const team = on.filter(n => names.has(n.toLowerCase())), picked = on.filter(n => !names.has(n.toLowerCase()));
+    const list = (ns, why) => `<b>${ns.map(esc).join(', ')}</b> (${why})`;
     sum = `<b>Name drop</b>${sel === CFG.list ? ' (the list you’re playing with)' : ''}: ${activeFams('namedrop').length} rhyme families in play. ` +
-      (CFG.allNames ? `<b>Every name pack is on</b> (${on.length}), whoever is on the teams.` : (on.length ? `Name packs on for <b>${on.map(esc).join(', ')}</b>, because they’re on a team.` : 'No name packs are on yet: add rappers to the teams and their packs switch on.') +
-      ` Dimmed packs belong to people who aren’t on a team, so they won’t come up.`) + ` Light chips are the words that always show when their pack comes up.`;
+      (CFG.allNames ? `<b>Every name pack is on</b> (${on.length}), whoever is on the teams.` : (on.length ? `Name packs on for ${[team.length && list(team, 'on a team'), picked.length && list(picked, 'turned on here')].filter(Boolean).join(' and ')}.` : 'No name packs are on yet: add rappers to the teams, or turn a name on below.') +
+      ` Dimmed packs won’t come up. Press Turn on next to one to use it anyway.`) + ` Light chips are the words that always show when their pack comes up.`;
   } else if (!q) sum = `<b>${esc(LISTS[sel].name)}</b>${sel === CFG.list ? ' (the list you’re playing with)' : ''}: ${st.fams} rhyme families, ${st.words} words. Every word on a row rhymes with the others on that row.`;
   else if (fams.length) sum = `${fams.length} famil${fams.length === 1 ? 'y' : 'ies'} in <b>${esc(LISTS[sel].name)}</b> with “${esc(WB.q.trim())}”.`;
   else {
@@ -305,11 +305,14 @@ function renderWordbank() {
   $('#wbOff').innerHTML = `<span>Click a word to turn it off (in every list), or a row's box to turn off the whole pack.${USED.size ? ' <span class="wb-key"></span>Faded words were used in an earlier battle.' : ''}${nOff ? ` <b>${sw.packs.size} pack${sw.packs.size === 1 ? '' : 's'} and ${sw.words.size} word${sw.words.size === 1 ? '' : 's'} off.</b>` : ''}</span>${nOff ? '<button class="chip small ghost" data-act="wb-reset">Turn everything back on</button>' : ''}`;
   const box = $('#wbFams'); const top = box.scrollTop;
   box.innerHTML = fams.length ? fams.map(([f], i) => {
-    const key = famKey(f), userOff = packOff(f, sw), roster = off(f), label = bare(f[0]);
-    return `<div class="fam${roster ? ' off' : ''}${userOff ? ' user-off' : ''}"${roster ? ' title="Not on a team, so this pack won’t come up"' : ''}>
+    const key = famKey(f), userOff = packOff(f, sw), roster = off(f), label = bare(f[0]), nk = label.toLowerCase();
+    // name packs: on because they're on a team, or a switch to turn one on by hand
+    const nameCtl = sel !== 'namedrop' || !PEOPLE.has(f) || CFG.allNames ? '' : names.has(nk) ? '<span class="fam-note">on a team</span>'
+      : `<button class="chip small name-tgl" data-act="wb-name" data-k="${esc(nk)}" aria-pressed="${hand.has(nk)}" title="${hand.has(nk) ? 'Turned on by hand. Click to turn it off again.' : 'Use this pack even though they aren’t on a team'}">${hand.has(nk) ? 'Turned on' : 'Turn on'}</button>`;
+    return `<div class="fam${roster ? ' off' : ''}${userOff ? ' user-off' : ''}"${roster ? ' title="Not on a team, so this pack won’t come up unless you turn it on"' : ''}>
       <button class="pack-tgl" data-act="wb-pack" data-k="${esc(key)}" aria-pressed="${!userOff}" aria-label="${userOff ? 'Turn on' : 'Turn off'} the ${esc(label)} pack" title="${userOff ? 'Turn this pack back on' : 'Turn this whole pack off'}"></button>
       <div class="fam-w">${f.map(w => { const bw = bare(w), wOff = sw.words.has(bw.toLowerCase());
-        return `<button class="w rh c${(i % 6) + 1}${w[0] === '*' ? ' anchor' : ''}${wOff ? ' w-off' : ''}${w[0] !== '*' && USED.has(bw.toLowerCase()) ? ' used' : ''}${q && bw.toLowerCase().includes(q) ? ' hit' : ''}" data-act="wb-word" data-w="${esc(bw.toLowerCase())}" aria-pressed="${!wOff}" title="${wOff ? `Turn “${esc(bw)}” back on` : `Turn “${esc(bw)}” off`}${w[0] === '*' ? ' (the name always shows, so this turns off the whole pack)' : ''}">${esc(bw)}</button>`; }).join('')}${roster ? '<span class="fam-note">not on a team</span>' : ''}</div></div>`;
+        return `<button class="w rh c${(i % 6) + 1}${w[0] === '*' ? ' anchor' : ''}${wOff ? ' w-off' : ''}${w[0] !== '*' && USED.has(bw.toLowerCase()) ? ' used' : ''}${q && bw.toLowerCase().includes(q) ? ' hit' : ''}" data-act="wb-word" data-w="${esc(bw.toLowerCase())}" aria-pressed="${!wOff}" title="${wOff ? `Turn “${esc(bw)}” back on` : `Turn “${esc(bw)}” off`}${w[0] === '*' ? ' (the name always shows, so this turns off the whole pack)' : ''}">${esc(bw)}</button>`; }).join('')}${nameCtl}</div></div>`;
   }).join('') : '<p class="wb-empty">Nothing here matches. Try another list or a shorter search.</p>';
   box.scrollTop = top;
 }

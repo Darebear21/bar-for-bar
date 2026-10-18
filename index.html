@@ -305,7 +305,8 @@ button.br-slot:hover{box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 60%,
 .w.anchor{background:var(--ink); color:var(--pad-ink); box-shadow:inset 0 0 0 2px var(--pc), inset 0 -2px 0 rgba(0,0,0,.18)}
 .w.anchor.hit{box-shadow:inset 0 0 0 2px var(--pc), 0 0 0 2px var(--amber)}
 .w.hit{box-shadow:0 0 0 2px var(--ink), inset 0 -2px 0 rgba(0,0,0,.22)}
-.fam.off{opacity:.38}
+.fam.off .pack-tgl,.fam.off .w{opacity:.38}
+.name-tgl{padding:5px 9px; font-size:12px; margin-left:4px}
 .fam-note{font:500 11px/25px var(--f-mono); color:var(--ink-3); letter-spacing:.06em}
 .pack-tgl{appearance:none; width:22px; height:22px; margin-top:2px; border-radius:6px; border:1.5px solid var(--ink-3); background:transparent; display:grid; place-items:center; padding:0}
 .pack-tgl:hover{border-color:var(--amber)}
@@ -1345,6 +1346,7 @@ people: `
 *Alex balance palace Dallas chalice
 *Alexander commander slander bystander salamander candor
 *Amanda panda propaganda veranda can_the
+*Amber chamber clamber hamper camper pamper scamper
 *Amelia feel_ya heal_ya steal_ya Cecilia
 *Amy blame_me name_me tame_me shame_me claim_me
 *Andrew brand_new can_do and_you plan_to man_too
@@ -1354,6 +1356,7 @@ people: `
 *Anna banana Havana Montana can_a nirvana
 *Anthony family canopy symphony Tiffany epiphany
 *Arvin parkin' starvin' Marvin carvin'
+*Asher smasher crasher slasher dasher thrasher faster master
 *Ashley flashy trashy rashly classy
 *Aswin within begin spin grin
 *Ava save_ya made_ya lava java
@@ -1393,6 +1396,7 @@ people: `
 *Donna gonna wanna Madonna piranha honor
 *Dorothy priority majority authority sorority
 *Douglas struggles juggles snuggles troubles
+*Dylan villain chillin' killin' million billion willin' spillin'
 *Edward red_bird said_word head_first next_word best_word
 *Elijah inspire_ya hire_ya fire_ya deny_ya higher
 *Eliza wiser visor riser appetizer
@@ -1416,6 +1420,7 @@ people: `
 *Heather weather leather together feather tether forever
 *Helen tellin' sellin' yellin' melon felon swellin'
 *Henry century plenty entry sentry
+*Hirad squad nod odd fraud abroad facade applaud
 *Huimin gamin' claimin' aimin' namin' framin'
 *Hyeontae one_day fun_day Sunday Monday runway
 *Isabella umbrella fella Cinderella cellar a_capella
@@ -1448,6 +1453,7 @@ people: `
 *Justin trust_in bustin' adjustin' discussin'
 *Karen starin' sharin' carin' wearin' darin' comparin'
 *Kate great late wait date straight plate
+*Katelyn waitin' skatin' hatin' datin' makin' takin'
 *Katherine gatherin' batterin' flatterin' shatterin' scatterin'
 *Kathleen caffeine gasoline magazine trampoline
 *Katie lately greatly eighty shady weighty
@@ -1457,6 +1463,7 @@ people: `
 *Kim slim gym swim trim him whim
 *Kimberly nimbly simply assembly trembly
 *Kwan on gone dawn swan
+*Kyle style smile while mile pile file aisle
 *Larry scary very carry dairy legendary canary
 *Laura aura flora Dora Bora_Bora explorer
 *Lauren pourin' scorin' borin' snorin' foreign explorin'
@@ -1534,6 +1541,7 @@ people: `
 *Tony only testimony pony macaroni
 *Tyler compiler styler dialer smiler
 *Victoria euphoria Gloria Astoria for_ya
+*Wendy trendy spendy send_me lend_me bendy friendly
 *Wenzheng hang gang bang dang mustang slang boomerang
 *Will skill chill still thrill bill spill
 *William million billion brilliant villain civilian chillin'
@@ -1543,7 +1551,8 @@ people: `
 *Zhen when then again ten Zen
 *Zhenhua Iowa Ottawa Nicaragua
 `,
-// streamer packs: tags of the most-followed Twitch streamers. The tag always shows when its pack is drawn, once per tournament.
+// streamer packs: tags of the most-followed Twitch streamers, plus a few favorites. They work like name packs: a tag only
+// comes up when that streamer is on a team (or for everyone when "Every name pack" is on).
 streamers: `
 *KaiCenat that flat chat combat format acrobat
 *Ibai bye sky fly high why goodbye
@@ -1590,6 +1599,8 @@ streamers: `
 *IShowSpeed need lead bleed indeed succeed stampede
 *Tubbo jumbo gumbo Dumbo Columbo
 *stableronaldo Waldo tornado avocado Toledo
+*Ludwig big gig dig rig twig swig jig
+*Atrioc rock clock block shock stock knock deadlock
 `
 };
 const bare = w => w.replace(/^\*/, '');
@@ -1601,7 +1612,8 @@ function syllables(w) {
   const m = w.match(/[aeiouy]{1,2}/g);
   return m ? m.length : 1;
 }
-const PEOPLE_FAMS = parseFams(RAW.people);
+// name packs, streamer tags included
+const PEOPLE_FAMS = [...parseFams(RAW.people), ...parseFams(RAW.streamers)];
 const PEOPLE = new Set(PEOPLE_FAMS);
 const LISTS = (() => {
   const basic = parseFams(RAW.basic), toolkit = parseFams(RAW.toolkit);
@@ -1618,29 +1630,33 @@ const LISTS = (() => {
     multi: { name: 'Two-syllable', blurb: 'Multis like motion / ocean / notion. Harder to fit, sounds better.', fams: parseFams(RAW.multi) },
     toolkit: { name: "Rapper's toolkit", blurb: 'Bars, flex, drip, clout. Hip-hop vocabulary.', fams: toolkit },
     office: { name: 'Office hours', blurb: 'Credit, sprints, Slack, payroll. Bars about the day job.', fams: parseFams(RAW.office) },
-    namedrop: { name: 'Name drop', blurb: 'Streamer tags and a name pack for each rapper on your teams (names always show), plus every Everyday pack and the best of the rest.', fams: (() => {
+    namedrop: { name: 'Name drop', blurb: 'A name pack for each rapper on your teams (streamers get their tag), plus every Everyday pack and the best of the rest.', fams: (() => {
       // easy, high-energy packs borrowed from the smaller lists (found by a word they contain)
       const BEST = { multi: ['money', 'paper', 'nation', 'power'], toolkit: ['drip', 'flex', 'bars', 'mic', 'respect', 'legit'], office: ['deploy', 'meeting', 'laptop', 'spreadsheet', 'Slack'] };
       const best = Object.entries(BEST).flatMap(([k, ws]) => { const fams = parseFams(RAW[k]); return ws.map(w => fams.find(f => f.map(bare).includes(w))).filter(Boolean); });
       const seen = new Set(), out = [];
-      for (const f of [...PEOPLE_FAMS, ...parseFams(RAW.streamers), ...basic, ...best]) { const k = f.map(w => bare(w).toLowerCase()).sort().join('|'); if (!seen.has(k)) { seen.add(k); out.push(f); } }
+      for (const f of [...PEOPLE_FAMS, ...basic, ...best]) { const k = f.map(w => bare(w).toLowerCase()).sort().join('|'); if (!seen.has(k)) { seen.add(k); out.push(f); } }
       return out;
     })() },
   };
 })();
-// names currently on a team: each rapper's first word, plus the team names themselves
+// names currently on a team: each rapper's first word and whole name run together ("Kai Cenat" matches the KaiCenat tag),
+// plus the team names themselves
 function rosterNames() {
   const s = new Set();
+  const add = n => { n = (n || '').trim().toLowerCase(); if (!n) return; s.add(n.split(/\s+/)[0]); s.add(n.replace(/[\s._'’-]+/g, '')); };
   try {
-    for (const m of CFG.lineup) { const w = (m.name || '').trim().split(/\s+/)[0]; if (w) s.add(w.toLowerCase()); }
+    for (const m of CFG.lineup) add(m.name);
     if (s.has('jennifer')) s.add('jen');
-    for (const t of CFG.teams) { const w = (t.name || '').trim().split(/\s+/)[0]; if (w) s.add(w.toLowerCase()); }
+    for (const t of CFG.teams) add(t.name);
   } catch { }
   return s;
 }
-// the "Every name pack" switch (CFG.allNames) turns on everyone's pack, not just the rappers on the teams
+// the "Every name pack" switch (CFG.allNames) turns on everyone's pack, not just the rappers on the teams;
+// Turn on in the word browser (CFG.enabledNames) does it for one name
 const allNamesOn = () => { try { return !!CFG.allNames; } catch { return false; } };
-const personActive = (f, names = rosterNames()) => allNamesOn() || names.has(bare(f[0]).toLowerCase());
+const handNames = () => { try { return new Set(CFG.enabledNames); } catch { return new Set(); } };
+const personActive = (f, names = rosterNames(), hand = handNames()) => { const k = bare(f[0]).toLowerCase(); return allNamesOn() || names.has(k) || hand.has(k); };
 // the families a list draws from right now (Name drop leaves out name packs for anyone not on a team)
 // what the viewer switched off in the word browser: words (off in every list) and whole packs
 const famKey = f => f.map(w => bare(w).toLowerCase()).sort().join('|');
@@ -1651,10 +1667,10 @@ function switchedOff() {
 const packOff = (f, off) => off.packs.has(famKey(f)) || (f[0][0] === '*' && off.words.has(bare(f[0]).toLowerCase()));
 function activeFams(listId) {
   const l = LISTS[listId] || LISTS.basic;
-  const names = listId === 'namedrop' ? rosterNames() : null;
+  const names = listId === 'namedrop' ? rosterNames() : null, hand = handNames();
   const off = switchedOff(), out = [];
   for (const f of l.fams) {
-    if (names && PEOPLE.has(f) && !personActive(f, names)) continue;
+    if (names && PEOPLE.has(f) && !personActive(f, names, hand)) continue;
     if (packOff(f, off)) continue;
     const kept = off.words.size ? f.filter(w => !off.words.has(bare(w).toLowerCase())) : f;
     if (kept.length >= 2) out.push(kept);
@@ -1684,22 +1700,14 @@ const USED = new Set(ls.get(USED_KEY, []));
 const wkey = w => bare(w).toLowerCase();
 function saveUsed() { ls.set(USED_KEY, [...USED].slice(-12000)); }
 function forgetUsed() { USED.clear(); saveUsed(); }
-// fresh (never shown) words left in a list right now; names and theme words always show, so they don't count
+// fresh (never shown) words left in a list right now; names always show, so they don't count
 function freshLeft(listId) {
   const s = new Set();
   for (const f of activeFams(listId)) for (const w of f) if (w[0] !== '*' && !USED.has(wkey(w))) s.add(wkey(w));
   return s.size;
 }
-// streamer tags (starred, but not people's names) show once per tournament; names can repeat
+// names (and streamer tags) can repeat, so the word memory leaves them out
 const PERSON_NAMES = new Set(PEOPLE_FAMS.map(f => bare(f[0]).toLowerCase()));
-const isTheme = w => w[0] === '*' && !PERSON_NAMES.has(wkey(w));
-const themeUsed = f => f.some(w => isTheme(w) && USED.has(wkey(w)));
-const THEME_PER_BATTLE = 4;   // spread them out so the final still gets some
-function themeLeft(listId) {
-  const all = new Set(), left = new Set();
-  for (const f of activeFams(listId)) for (const w of f) if (isTheme(w)) { all.add(wkey(w)); if (!USED.has(wkey(w))) left.add(wkey(w)); }
-  return { left: left.size, total: all.size };
-}
 // opts.rng: random source (default Math.random). opts.used: the set of shown words to steer away from (default: this device's
 // memory). An online battle passes a seeded rng and a fresh set, so every device draws the same words.
 function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
@@ -1713,27 +1721,22 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
   const cap = Math.max(4, Math.floor(fams.length * 0.6));
   const anchorsOf = f => f.filter(w => w[0] === '*').length;
   const fresh = f => f.reduce((c, w) => c + (w[0] !== '*' && !used.has(wkey(w)) ? 1 : 0), 0);
-  let themesThisBattle = 0;
-  const roster = rosterNames();
-  // a streamer pack is out once its tag has been shown, or once this battle has had its share
-  const themeOut = f => f.some(isTheme) && (f.some(w => isTheme(w) && used.has(wkey(w))) || (track && themesThisBattle >= THEME_PER_BATTLE));
+  const roster = rosterNames(); for (const k of handNames()) roster.add(k);
   function pick(n, avoid) {
-    const ok = f => f.length >= n && !f.some(w => avoid.has(wkey(w))) && !themeOut(f);
+    const ok = f => f.length >= n && !f.some(w => avoid.has(wkey(w)));
     const rs = new Set(recent);
     let cands = fams.filter(f => ok(f) && !rs.has(f));
     if (!cands.length) { recent.length = 0; cands = fams.filter(ok); }
-    if (!cands.length) cands = fams.filter(f => !themeOut(f));
     if (!cands.length) cands = fams;
-    // packs with enough fresh words win; streamer packs and the names of rappers on the teams come up 3x as often
-    // (names switched on for everyone come up like any other pack); starred packs may reuse partner words
-    const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), themed = f[0][0] === '*';
-      const big = themed && (!PERSON_NAMES.has(wkey(f[0])) || roster.has(wkey(f[0])));
-      return (big ? 3 : 1) * (ok ? 1 : themed ? 0.2 : 0.002); });
+    // packs with enough fresh words win; the names of rappers on the teams (and names turned on by hand) come up 3x as
+    // often, while packs switched on for everyone come up like any other pack; name packs may reuse partner words
+    const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), named = f[0][0] === '*';
+      const big = named && roster.has(wkey(f[0]));
+      return (big ? 3 : 1) * (ok ? 1 : named ? 0.2 : 0.002); });
     let r = rnd() * wt.reduce((a, b) => a + b, 0), k = 0;
     while (k < cands.length - 1 && (r -= wt[k]) > 0) k++;
     const f = cands[k];
     recent.push(f); if (recent.length > cap) recent.shift();
-    if (f.some(isTheme)) themesThisBattle++;
     return f;
   }
   return function block() {
@@ -1761,7 +1764,7 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
       slots.forEach(([ri, ci], i) => {
         const show = reveal === 'all' || (reveal === 'first' && i === 0) || (reveal === 'last' && i === slots.length - 1);
         out[ri][ci] = { w: words[i % words.length], c, show };
-        // remember every shown word except people's names (theme words included, so they never come back)
+        // remember every shown word except names, which can come back
         if (track && show && !PERSON_NAMES.has(words[i % words.length].toLowerCase())) used.add(words[i % words.length].toLowerCase());
       });
     }
@@ -2825,7 +2828,7 @@ const DEFAULT_CFG = {
   beat: 'synth:basement', synthBpm: {}, practiceBars: 16,
   teams: [{ name: 'East', color: 0 }, { name: 'West', color: 1 }],
   lineup: [{ name: 'East MC 1', team: 0 }, { name: 'West MC 1', team: 1 }, { name: 'East MC 2', team: 0 }, { name: 'West MC 2', team: 1 }],
-  barsPerTurn: 16, rounds: 2, changeBars: 2, firstTeam: 0, disabledWords: [], disabledPacks: [], allNames: false,
+  barsPerTurn: 16, rounds: 2, changeBars: 2, firstTeam: 0, disabledWords: [], disabledPacks: [], allNames: false, enabledNames: [],
 };
 function normalizeCfg(c) {
   const d = JSON.parse(JSON.stringify(DEFAULT_CFG));
@@ -2833,7 +2836,7 @@ function normalizeCfg(c) {
   for (const k of Object.keys(d)) if (c[k] !== undefined && typeof c[k] === typeof d[k] && Array.isArray(c[k]) === Array.isArray(d[k])) d[k] = c[k];
   if (d.list === 'names' || d.list === 'grant') d.list = 'namedrop';
   const strs = v => Array.isArray(v) ? [...new Set(v.filter(x => typeof x === 'string').map(x => x.slice(0, 200)))].slice(0, 3000) : [];
-  d.disabledWords = strs(c.disabledWords); d.disabledPacks = strs(c.disabledPacks);
+  d.disabledWords = strs(c.disabledWords); d.disabledPacks = strs(c.disabledPacks); d.enabledNames = strs(c.enabledNames).map(x => x.toLowerCase());
   if (!Object.prototype.hasOwnProperty.call(LISTS, d.list)) d.list = 'basic';
   if (!SCHEMES.some(s => s.id === d.scheme)) d.scheme = 'AABB';
   if (!REVEALS.some(r => r.id === d.reveal)) d.reveal = 'all';
@@ -3026,8 +3029,8 @@ function renderAccSums() {
   set('format', c.mode === 'battle' ? `${c.rounds ? `${c.rounds} round${c.rounds === 1 ? '' : 's'}` : 'Endless'} · ${c.barsPerTurn} bars a turn · ${c.changeBars ? c.changeBars + '-bar changeover' : 'no changeover'} · ${teamName(c.firstTeam)} first` : (c.practiceBars ? c.practiceBars + ' bars' : 'Endless'));
   const b = currentBeat(); set('beat', b ? `${b.name} · ${b.style} · ${fmtBpm(b.bpm)} BPM` : 'Pick a beat');
   const sc = SCHEMES.find(x => x.id === c.scheme), rv = REVEALS.find(x => x.id === c.reveal);
-  const th = c.list === 'namedrop' ? themeLeft('namedrop') : null;
-  set('words', `${LISTS[c.list].name} · ${sc ? sc.name : ''}${c.double ? ' + beat 2' : ''} · ${rv ? rv.name.toLowerCase() : ''}${th && th.total ? ` · ${th.left}/${th.total} streamer tags left` : ''}${c.list === 'namedrop' && c.allNames ? ' · every name pack' : ''}`);
+  const hand = c.list === 'namedrop' && !c.allNames ? c.enabledNames.filter(k => PERSON_NAMES.has(k)).length : 0;
+  set('words', `${LISTS[c.list].name} · ${sc ? sc.name : ''}${c.double ? ' + beat 2' : ''} · ${rv ? rv.name.toLowerCase() : ''}${c.list === 'namedrop' && c.allNames ? ' · every name pack' : ''}${hand ? ` · ${hand} name${hand === 1 ? '' : 's'} turned on` : ''}`);
 }
 function renderOrder() {
   const el = $('#order'); if (!el) return;
@@ -3043,7 +3046,7 @@ function renderWords() {
     <div class="field"><span class="label">Word list</span>
       <div class="chips">${Object.entries(LISTS).map(([k, l]) => chip('list', k, c.list === k, esc(l.name))).join('')}</div>
       <p class="blurb">${esc(LISTS[c.list].blurb)}</p>
-      ${c.list === 'namedrop' ? `<div class="names-row"><label class="toggle"><input type="checkbox" id="namesTgl" data-bind="allNames" ${c.allNames ? 'checked' : ''}> Every name pack</label><span class="hint">${c.allNames ? `All ${PEOPLE_FAMS.length} name packs can come up, whoever is on the teams.` : 'Off: only rappers on the teams get their name pack.'}</span></div>` : ''}
+      ${c.list === 'namedrop' ? `<div class="names-row"><label class="toggle"><input type="checkbox" id="namesTgl" data-bind="allNames" ${c.allNames ? 'checked' : ''}> Every name pack</label><span class="hint">${c.allNames ? `All ${PEOPLE_FAMS.length} name packs (streamer tags included) can come up, whoever is on the teams.` : 'Off: only rappers on the teams get their name pack or streamer tag, plus any name you turn on in Browse every word.'}</span></div>` : ''}
       <p class="hint mem" id="memLine" aria-live="polite">${memHtml()}</p></div>
     <div class="field"><span class="label">Rhyme scheme</span>
       <div class="scheme-row"><div class="chips">${SCHEMES.map(s => chip('scheme', s.id, c.scheme === s.id, s.name)).join('')}</div>
@@ -3064,9 +3067,8 @@ let memConfirm = false;
 function memHtml() {
   const n = USED.size, left = freshLeft(CFG.list), name = esc(LISTS[CFG.list].name);
   if (memConfirm) return `<span>Forget all ${n.toLocaleString()} used words so they can come up again?</span><button class="chip small" data-act="mem-yes">Yes, start fresh</button><button class="chip small ghost" data-act="mem-no">Cancel</button>`;
-  const th = themeLeft(CFG.list), themes = th.total ? ` ${th.left} of ${th.total} streamer tags still unused (each shows once per tournament; names can repeat).` : '';
-  if (!n) return `<span><b>No repeats.</b> Words shown in a battle are remembered on this device, so later battles get fresh ones. ${left.toLocaleString()} fresh words in ${name}.${themes}</span>`;
-  return `<span><b>${n.toLocaleString()} word${n === 1 ? '' : 's'} used</b> in earlier battles won’t come back until the list runs low. ${left.toLocaleString()} fresh words left in ${name}.${themes}</span><button class="chip small ghost" data-act="mem-ask">Reset used words</button>`;
+  if (!n) return `<span><b>No repeats.</b> Words shown in a battle are remembered on this device, so later battles get fresh ones. ${left.toLocaleString()} fresh words in ${name}.</span>`;
+  return `<span><b>${n.toLocaleString()} word${n === 1 ? '' : 's'} used</b> in earlier battles won’t come back until the list runs low. ${left.toLocaleString()} fresh words left in ${name}.</span><button class="chip small ghost" data-act="mem-ask">Reset used words</button>`;
 }
 function refreshMem() { const el = $('#memLine'); if (el) el.innerHTML = memHtml(); }
 const miniHtml = () => previewBlock.map(row => row.map(cell => cell ? `<div class="p rh c${cell.c}${cell.show ? '' : ' blank'}">${cell.show ? esc(cell.w) : ''}</div>` : '<div class="p"></div>').join('')).join('');
@@ -3101,16 +3103,17 @@ function renderWordbank() {
     `<button class="chip small" data-act="wb-list" data-v="${k}" aria-pressed="${k === sel}">${esc(l.name)}<span class="ct">${q ? hits[k] : activeFams(k).length}</span>${k === CFG.list ? '<span class="sr"> (in use)</span>' : ''}</button>`).join('');
   let fams = LISTS[sel].fams.map((f, i) => [f, i]).filter(([f]) => match(f));
   const st = LIST_STATS[sel];
-  const names = rosterNames();
-  const off = f => sel === 'namedrop' && PEOPLE.has(f) && !personActive(f, names);
+  const names = rosterNames(), hand = handNames();
+  const off = f => sel === 'namedrop' && PEOPLE.has(f) && !personActive(f, names, hand);
   if (sel === 'namedrop') fams = fams.filter(([f]) => !off(f)).concat(fams.filter(([f]) => off(f)));
   let sum;
   if (!q && sel === 'namedrop') {
-    const swo = switchedOff();
-    const on = LISTS.namedrop.fams.filter(f => PEOPLE.has(f) && personActive(f, names) && !packOff(f, swo)).map(f => bare(f[0]));
+    const swo = switchedOff(), on = LISTS.namedrop.fams.filter(f => PEOPLE.has(f) && personActive(f, names, hand) && !packOff(f, swo)).map(f => bare(f[0]));
+    const team = on.filter(n => names.has(n.toLowerCase())), picked = on.filter(n => !names.has(n.toLowerCase()));
+    const list = (ns, why) => `<b>${ns.map(esc).join(', ')}</b> (${why})`;
     sum = `<b>Name drop</b>${sel === CFG.list ? ' (the list you’re playing with)' : ''}: ${activeFams('namedrop').length} rhyme families in play. ` +
-      (CFG.allNames ? `<b>Every name pack is on</b> (${on.length}), whoever is on the teams.` : (on.length ? `Name packs on for <b>${on.map(esc).join(', ')}</b>, because they’re on a team.` : 'No name packs are on yet: add rappers to the teams and their packs switch on.') +
-      ` Dimmed packs belong to people who aren’t on a team, so they won’t come up.`) + ` Light chips are the words that always show when their pack comes up.`;
+      (CFG.allNames ? `<b>Every name pack is on</b> (${on.length}), whoever is on the teams.` : (on.length ? `Name packs on for ${[team.length && list(team, 'on a team'), picked.length && list(picked, 'turned on here')].filter(Boolean).join(' and ')}.` : 'No name packs are on yet: add rappers to the teams, or turn a name on below.') +
+      ` Dimmed packs won’t come up. Press Turn on next to one to use it anyway.`) + ` Light chips are the words that always show when their pack comes up.`;
   } else if (!q) sum = `<b>${esc(LISTS[sel].name)}</b>${sel === CFG.list ? ' (the list you’re playing with)' : ''}: ${st.fams} rhyme families, ${st.words} words. Every word on a row rhymes with the others on that row.`;
   else if (fams.length) sum = `${fams.length} famil${fams.length === 1 ? 'y' : 'ies'} in <b>${esc(LISTS[sel].name)}</b> with “${esc(WB.q.trim())}”.`;
   else {
@@ -3123,11 +3126,14 @@ function renderWordbank() {
   $('#wbOff').innerHTML = `<span>Click a word to turn it off (in every list), or a row's box to turn off the whole pack.${USED.size ? ' <span class="wb-key"></span>Faded words were used in an earlier battle.' : ''}${nOff ? ` <b>${sw.packs.size} pack${sw.packs.size === 1 ? '' : 's'} and ${sw.words.size} word${sw.words.size === 1 ? '' : 's'} off.</b>` : ''}</span>${nOff ? '<button class="chip small ghost" data-act="wb-reset">Turn everything back on</button>' : ''}`;
   const box = $('#wbFams'); const top = box.scrollTop;
   box.innerHTML = fams.length ? fams.map(([f], i) => {
-    const key = famKey(f), userOff = packOff(f, sw), roster = off(f), label = bare(f[0]);
-    return `<div class="fam${roster ? ' off' : ''}${userOff ? ' user-off' : ''}"${roster ? ' title="Not on a team, so this pack won’t come up"' : ''}>
+    const key = famKey(f), userOff = packOff(f, sw), roster = off(f), label = bare(f[0]), nk = label.toLowerCase();
+    // name packs: on because they're on a team, or a switch to turn one on by hand
+    const nameCtl = sel !== 'namedrop' || !PEOPLE.has(f) || CFG.allNames ? '' : names.has(nk) ? '<span class="fam-note">on a team</span>'
+      : `<button class="chip small name-tgl" data-act="wb-name" data-k="${esc(nk)}" aria-pressed="${hand.has(nk)}" title="${hand.has(nk) ? 'Turned on by hand. Click to turn it off again.' : 'Use this pack even though they aren’t on a team'}">${hand.has(nk) ? 'Turned on' : 'Turn on'}</button>`;
+    return `<div class="fam${roster ? ' off' : ''}${userOff ? ' user-off' : ''}"${roster ? ' title="Not on a team, so this pack won’t come up unless you turn it on"' : ''}>
       <button class="pack-tgl" data-act="wb-pack" data-k="${esc(key)}" aria-pressed="${!userOff}" aria-label="${userOff ? 'Turn on' : 'Turn off'} the ${esc(label)} pack" title="${userOff ? 'Turn this pack back on' : 'Turn this whole pack off'}"></button>
       <div class="fam-w">${f.map(w => { const bw = bare(w), wOff = sw.words.has(bw.toLowerCase());
-        return `<button class="w rh c${(i % 6) + 1}${w[0] === '*' ? ' anchor' : ''}${wOff ? ' w-off' : ''}${w[0] !== '*' && USED.has(bw.toLowerCase()) ? ' used' : ''}${q && bw.toLowerCase().includes(q) ? ' hit' : ''}" data-act="wb-word" data-w="${esc(bw.toLowerCase())}" aria-pressed="${!wOff}" title="${wOff ? `Turn “${esc(bw)}” back on` : `Turn “${esc(bw)}” off`}${w[0] === '*' ? ' (the name always shows, so this turns off the whole pack)' : ''}">${esc(bw)}</button>`; }).join('')}${roster ? '<span class="fam-note">not on a team</span>' : ''}</div></div>`;
+        return `<button class="w rh c${(i % 6) + 1}${w[0] === '*' ? ' anchor' : ''}${wOff ? ' w-off' : ''}${w[0] !== '*' && USED.has(bw.toLowerCase()) ? ' used' : ''}${q && bw.toLowerCase().includes(q) ? ' hit' : ''}" data-act="wb-word" data-w="${esc(bw.toLowerCase())}" aria-pressed="${!wOff}" title="${wOff ? `Turn “${esc(bw)}” back on` : `Turn “${esc(bw)}” off`}${w[0] === '*' ? ' (the name always shows, so this turns off the whole pack)' : ''}">${esc(bw)}</button>`; }).join('')}${nameCtl}</div></div>`;
   }).join('') : '<p class="wb-empty">Nothing here matches. Try another list or a shorter search.</p>';
   box.scrollTop = top;
 }
@@ -3849,6 +3855,7 @@ function battleCfg() {
     // online battles always get a changeover: that's when the beat moves to the next team's delay
     barsPerTurn: c.barsPerTurn, rounds: c.rounds, changeBars: Math.max(1, c.changeBars),
     disabledWords: c.disabledWords.filter(w => words.has(w)), disabledPacks: c.disabledPacks.filter(k => packs.has(k)),
+    enabledNames: c.enabledNames.filter(k => PERSON_NAMES.has(k)),
   };
 }
 const netCfgOf = d => normalizeCfg({ ...d.c, mode: 'battle', beat: 'synth:' + d.b, synthBpm: { [d.b]: d.bpm } });
@@ -4718,6 +4725,7 @@ document.addEventListener('click', e => {
     case 'mem-no': memConfirm = false; refreshMem(); break;
     case 'mem-yes': memConfirm = false; forgetUsed(); previewBlock = null; renderWords(); break;
     case 'wb-reset': CFG.disabledWords = []; CFG.disabledPacks = []; saveCfg(); renderWordbank(); refreshMini(); refreshMem(); break;
+    case 'wb-name': { const s = new Set(CFG.enabledNames), k = el.dataset.k; s.has(k) ? s.delete(k) : s.add(k); CFG.enabledNames = [...s]; saveCfg(); renderWordbank(); refreshMini(); refreshMem(); renderAccSums(); break; }
     case 'team-color': upd(() => { const other = CFG.teams[1 - i].color; let c = CFG.teams[i].color; do { c = (c + 1) % PALETTE.length; } while (c === other); CFG.teams[i].color = c; }, ['lineup']); break;
     case 'mc-del': upd(() => CFG.lineup.splice(i, 1), ['lineup', 'summary']); if (WB.open) renderWordbank(); break;
     case 'mc-add': {

@@ -61,6 +61,7 @@ function battleCfg() {
     // online battles always get a changeover: that's when the beat moves to the next team's delay
     barsPerTurn: c.barsPerTurn, rounds: c.rounds, changeBars: Math.max(1, c.changeBars),
     disabledWords: c.disabledWords.filter(w => words.has(w)), disabledPacks: c.disabledPacks.filter(k => packs.has(k)),
+    enabledNames: c.enabledNames.filter(k => PERSON_NAMES.has(k)),
   };
 }
 const netCfgOf = d => normalizeCfg({ ...d.c, mode: 'battle', beat: 'synth:' + d.b, synthBpm: { [d.b]: d.bpm } });

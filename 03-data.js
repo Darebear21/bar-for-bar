@@ -470,6 +470,7 @@ people: `
 *Alex balance palace Dallas chalice
 *Alexander commander slander bystander salamander candor
 *Amanda panda propaganda veranda can_the
+*Amber chamber clamber hamper camper pamper scamper
 *Amelia feel_ya heal_ya steal_ya Cecilia
 *Amy blame_me name_me tame_me shame_me claim_me
 *Andrew brand_new can_do and_you plan_to man_too
@@ -479,6 +480,7 @@ people: `
 *Anna banana Havana Montana can_a nirvana
 *Anthony family canopy symphony Tiffany epiphany
 *Arvin parkin' starvin' Marvin carvin'
+*Asher smasher crasher slasher dasher thrasher faster master
 *Ashley flashy trashy rashly classy
 *Aswin within begin spin grin
 *Ava save_ya made_ya lava java
@@ -518,6 +520,7 @@ people: `
 *Donna gonna wanna Madonna piranha honor
 *Dorothy priority majority authority sorority
 *Douglas struggles juggles snuggles troubles
+*Dylan villain chillin' killin' million billion willin' spillin'
 *Edward red_bird said_word head_first next_word best_word
 *Elijah inspire_ya hire_ya fire_ya deny_ya higher
 *Eliza wiser visor riser appetizer
@@ -541,6 +544,7 @@ people: `
 *Heather weather leather together feather tether forever
 *Helen tellin' sellin' yellin' melon felon swellin'
 *Henry century plenty entry sentry
+*Hirad squad nod odd fraud abroad facade applaud
 *Huimin gamin' claimin' aimin' namin' framin'
 *Hyeontae one_day fun_day Sunday Monday runway
 *Isabella umbrella fella Cinderella cellar a_capella
@@ -573,6 +577,7 @@ people: `
 *Justin trust_in bustin' adjustin' discussin'
 *Karen starin' sharin' carin' wearin' darin' comparin'
 *Kate great late wait date straight plate
+*Katelyn waitin' skatin' hatin' datin' makin' takin'
 *Katherine gatherin' batterin' flatterin' shatterin' scatterin'
 *Kathleen caffeine gasoline magazine trampoline
 *Katie lately greatly eighty shady weighty
@@ -582,6 +587,7 @@ people: `
 *Kim slim gym swim trim him whim
 *Kimberly nimbly simply assembly trembly
 *Kwan on gone dawn swan
+*Kyle style smile while mile pile file aisle
 *Larry scary very carry dairy legendary canary
 *Laura aura flora Dora Bora_Bora explorer
 *Lauren pourin' scorin' borin' snorin' foreign explorin'
@@ -659,6 +665,7 @@ people: `
 *Tony only testimony pony macaroni
 *Tyler compiler styler dialer smiler
 *Victoria euphoria Gloria Astoria for_ya
+*Wendy trendy spendy send_me lend_me bendy friendly
 *Wenzheng hang gang bang dang mustang slang boomerang
 *Will skill chill still thrill bill spill
 *William million billion brilliant villain civilian chillin'
@@ -668,7 +675,8 @@ people: `
 *Zhen when then again ten Zen
 *Zhenhua Iowa Ottawa Nicaragua
 `,
-// streamer packs: tags of the most-followed Twitch streamers. The tag always shows when its pack is drawn, once per tournament.
+// streamer packs: tags of the most-followed Twitch streamers, plus a few favorites. They work like name packs: a tag only
+// comes up when that streamer is on a team (or for everyone when "Every name pack" is on).
 streamers: `
 *KaiCenat that flat chat combat format acrobat
 *Ibai bye sky fly high why goodbye
@@ -715,6 +723,8 @@ streamers: `
 *IShowSpeed need lead bleed indeed succeed stampede
 *Tubbo jumbo gumbo Dumbo Columbo
 *stableronaldo Waldo tornado avocado Toledo
+*Ludwig big gig dig rig twig swig jig
+*Atrioc rock clock block shock stock knock deadlock
 `
 };
 const bare = w => w.replace(/^\*/, '');
@@ -726,7 +736,8 @@ function syllables(w) {
   const m = w.match(/[aeiouy]{1,2}/g);
   return m ? m.length : 1;
 }
-const PEOPLE_FAMS = parseFams(RAW.people);
+// name packs, streamer tags included
+const PEOPLE_FAMS = [...parseFams(RAW.people), ...parseFams(RAW.streamers)];
 const PEOPLE = new Set(PEOPLE_FAMS);
 const LISTS = (() => {
   const basic = parseFams(RAW.basic), toolkit = parseFams(RAW.toolkit);
@@ -743,29 +754,33 @@ const LISTS = (() => {
     multi: { name: 'Two-syllable', blurb: 'Multis like motion / ocean / notion. Harder to fit, sounds better.', fams: parseFams(RAW.multi) },
     toolkit: { name: "Rapper's toolkit", blurb: 'Bars, flex, drip, clout. Hip-hop vocabulary.', fams: toolkit },
     office: { name: 'Office hours', blurb: 'Credit, sprints, Slack, payroll. Bars about the day job.', fams: parseFams(RAW.office) },
-    namedrop: { name: 'Name drop', blurb: 'Streamer tags and a name pack for each rapper on your teams (names always show), plus every Everyday pack and the best of the rest.', fams: (() => {
+    namedrop: { name: 'Name drop', blurb: 'A name pack for each rapper on your teams (streamers get their tag), plus every Everyday pack and the best of the rest.', fams: (() => {
       // easy, high-energy packs borrowed from the smaller lists (found by a word they contain)
       const BEST = { multi: ['money', 'paper', 'nation', 'power'], toolkit: ['drip', 'flex', 'bars', 'mic', 'respect', 'legit'], office: ['deploy', 'meeting', 'laptop', 'spreadsheet', 'Slack'] };
       const best = Object.entries(BEST).flatMap(([k, ws]) => { const fams = parseFams(RAW[k]); return ws.map(w => fams.find(f => f.map(bare).includes(w))).filter(Boolean); });
       const seen = new Set(), out = [];
-      for (const f of [...PEOPLE_FAMS, ...parseFams(RAW.streamers), ...basic, ...best]) { const k = f.map(w => bare(w).toLowerCase()).sort().join('|'); if (!seen.has(k)) { seen.add(k); out.push(f); } }
+      for (const f of [...PEOPLE_FAMS, ...basic, ...best]) { const k = f.map(w => bare(w).toLowerCase()).sort().join('|'); if (!seen.has(k)) { seen.add(k); out.push(f); } }
       return out;
     })() },
   };
 })();
-// names currently on a team: each rapper's first word, plus the team names themselves
+// names currently on a team: each rapper's first word and whole name run together ("Kai Cenat" matches the KaiCenat tag),
+// plus the team names themselves
 function rosterNames() {
   const s = new Set();
+  const add = n => { n = (n || '').trim().toLowerCase(); if (!n) return; s.add(n.split(/\s+/)[0]); s.add(n.replace(/[\s._'’-]+/g, '')); };
   try {
-    for (const m of CFG.lineup) { const w = (m.name || '').trim().split(/\s+/)[0]; if (w) s.add(w.toLowerCase()); }
+    for (const m of CFG.lineup) add(m.name);
     if (s.has('jennifer')) s.add('jen');
-    for (const t of CFG.teams) { const w = (t.name || '').trim().split(/\s+/)[0]; if (w) s.add(w.toLowerCase()); }
+    for (const t of CFG.teams) add(t.name);
   } catch { }
   return s;
 }
-// the "Every name pack" switch (CFG.allNames) turns on everyone's pack, not just the rappers on the teams
+// the "Every name pack" switch (CFG.allNames) turns on everyone's pack, not just the rappers on the teams;
+// Turn on in the word browser (CFG.enabledNames) does it for one name
 const allNamesOn = () => { try { return !!CFG.allNames; } catch { return false; } };
-const personActive = (f, names = rosterNames()) => allNamesOn() || names.has(bare(f[0]).toLowerCase());
+const handNames = () => { try { return new Set(CFG.enabledNames); } catch { return new Set(); } };
+const personActive = (f, names = rosterNames(), hand = handNames()) => { const k = bare(f[0]).toLowerCase(); return allNamesOn() || names.has(k) || hand.has(k); };
 // the families a list draws from right now (Name drop leaves out name packs for anyone not on a team)
 // what the viewer switched off in the word browser: words (off in every list) and whole packs
 const famKey = f => f.map(w => bare(w).toLowerCase()).sort().join('|');
@@ -776,10 +791,10 @@ function switchedOff() {
 const packOff = (f, off) => off.packs.has(famKey(f)) || (f[0][0] === '*' && off.words.has(bare(f[0]).toLowerCase()));
 function activeFams(listId) {
   const l = LISTS[listId] || LISTS.basic;
-  const names = listId === 'namedrop' ? rosterNames() : null;
+  const names = listId === 'namedrop' ? rosterNames() : null, hand = handNames();
   const off = switchedOff(), out = [];
   for (const f of l.fams) {
-    if (names && PEOPLE.has(f) && !personActive(f, names)) continue;
+    if (names && PEOPLE.has(f) && !personActive(f, names, hand)) continue;
     if (packOff(f, off)) continue;
     const kept = off.words.size ? f.filter(w => !off.words.has(bare(w).toLowerCase())) : f;
     if (kept.length >= 2) out.push(kept);
@@ -809,22 +824,14 @@ const USED = new Set(ls.get(USED_KEY, []));
 const wkey = w => bare(w).toLowerCase();
 function saveUsed() { ls.set(USED_KEY, [...USED].slice(-12000)); }
 function forgetUsed() { USED.clear(); saveUsed(); }
-// fresh (never shown) words left in a list right now; names and theme words always show, so they don't count
+// fresh (never shown) words left in a list right now; names always show, so they don't count
 function freshLeft(listId) {
   const s = new Set();
   for (const f of activeFams(listId)) for (const w of f) if (w[0] !== '*' && !USED.has(wkey(w))) s.add(wkey(w));
   return s.size;
 }
-// streamer tags (starred, but not people's names) show once per tournament; names can repeat
+// names (and streamer tags) can repeat, so the word memory leaves them out
 const PERSON_NAMES = new Set(PEOPLE_FAMS.map(f => bare(f[0]).toLowerCase()));
-const isTheme = w => w[0] === '*' && !PERSON_NAMES.has(wkey(w));
-const themeUsed = f => f.some(w => isTheme(w) && USED.has(wkey(w)));
-const THEME_PER_BATTLE = 4;   // spread them out so the final still gets some
-function themeLeft(listId) {
-  const all = new Set(), left = new Set();
-  for (const f of activeFams(listId)) for (const w of f) if (isTheme(w)) { all.add(wkey(w)); if (!USED.has(wkey(w))) left.add(wkey(w)); }
-  return { left: left.size, total: all.size };
-}
 // opts.rng: random source (default Math.random). opts.used: the set of shown words to steer away from (default: this device's
 // memory). An online battle passes a seeded rng and a fresh set, so every device draws the same words.
 function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
@@ -838,27 +845,22 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
   const cap = Math.max(4, Math.floor(fams.length * 0.6));
   const anchorsOf = f => f.filter(w => w[0] === '*').length;
   const fresh = f => f.reduce((c, w) => c + (w[0] !== '*' && !used.has(wkey(w)) ? 1 : 0), 0);
-  let themesThisBattle = 0;
-  const roster = rosterNames();
-  // a streamer pack is out once its tag has been shown, or once this battle has had its share
-  const themeOut = f => f.some(isTheme) && (f.some(w => isTheme(w) && used.has(wkey(w))) || (track && themesThisBattle >= THEME_PER_BATTLE));
+  const roster = rosterNames(); for (const k of handNames()) roster.add(k);
   function pick(n, avoid) {
-    const ok = f => f.length >= n && !f.some(w => avoid.has(wkey(w))) && !themeOut(f);
+    const ok = f => f.length >= n && !f.some(w => avoid.has(wkey(w)));
     const rs = new Set(recent);
     let cands = fams.filter(f => ok(f) && !rs.has(f));
     if (!cands.length) { recent.length = 0; cands = fams.filter(ok); }
-    if (!cands.length) cands = fams.filter(f => !themeOut(f));
     if (!cands.length) cands = fams;
-    // packs with enough fresh words win; streamer packs and the names of rappers on the teams come up 3x as often
-    // (names switched on for everyone come up like any other pack); starred packs may reuse partner words
-    const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), themed = f[0][0] === '*';
-      const big = themed && (!PERSON_NAMES.has(wkey(f[0])) || roster.has(wkey(f[0])));
-      return (big ? 3 : 1) * (ok ? 1 : themed ? 0.2 : 0.002); });
+    // packs with enough fresh words win; the names of rappers on the teams (and names turned on by hand) come up 3x as
+    // often, while packs switched on for everyone come up like any other pack; name packs may reuse partner words
+    const wt = cands.map(f => { const ok = fresh(f) >= n - Math.min(n, anchorsOf(f)), named = f[0][0] === '*';
+      const big = named && roster.has(wkey(f[0]));
+      return (big ? 3 : 1) * (ok ? 1 : named ? 0.2 : 0.002); });
     let r = rnd() * wt.reduce((a, b) => a + b, 0), k = 0;
     while (k < cands.length - 1 && (r -= wt[k]) > 0) k++;
     const f = cands[k];
     recent.push(f); if (recent.length > cap) recent.shift();
-    if (f.some(isTheme)) themesThisBattle++;
     return f;
   }
   return function block() {
@@ -886,7 +888,7 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
       slots.forEach(([ri, ci], i) => {
         const show = reveal === 'all' || (reveal === 'first' && i === 0) || (reveal === 'last' && i === slots.length - 1);
         out[ri][ci] = { w: words[i % words.length], c, show };
-        // remember every shown word except people's names (theme words included, so they never come back)
+        // remember every shown word except names, which can come back
         if (track && show && !PERSON_NAMES.has(words[i % words.length].toLowerCase())) used.add(words[i % words.length].toLowerCase());
       });
     }

@@ -28,6 +28,7 @@ document.addEventListener('click', e => {
     case 'mem-no': memConfirm = false; refreshMem(); break;
     case 'mem-yes': memConfirm = false; forgetUsed(); previewBlock = null; renderWords(); break;
     case 'wb-reset': CFG.disabledWords = []; CFG.disabledPacks = []; saveCfg(); renderWordbank(); refreshMini(); refreshMem(); break;
+    case 'wb-name': { const s = new Set(CFG.enabledNames), k = el.dataset.k; s.has(k) ? s.delete(k) : s.add(k); CFG.enabledNames = [...s]; saveCfg(); renderWordbank(); refreshMini(); refreshMem(); renderAccSums(); break; }
     case 'team-color': upd(() => { const other = CFG.teams[1 - i].color; let c = CFG.teams[i].color; do { c = (c + 1) % PALETTE.length; } while (c === other); CFG.teams[i].color = c; }, ['lineup']); break;
     case 'mc-del': upd(() => CFG.lineup.splice(i, 1), ['lineup', 'summary']); if (WB.open) renderWordbank(); break;
     case 'mc-add': {
