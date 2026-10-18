@@ -9,7 +9,7 @@ A freestyle rap battle trainer. A ball bounces across four pads every bar, and r
 - **Tournament bracket:** single elimination with byes, results carried from round to round.
 - **Practice mode:** solo reps for a set number of bars, or endless.
 - **Beats:** 20 built-in synth beats (boom bap, trap, drill, genre flips, phonk) with a tempo slider. You can also upload your own MP3/M4A/WAV, which detects the tempo, or use a YouTube link.
-- **Words:** six word lists, four rhyme schemes (AABB, AAAA, ABAB, AA·A), an optional extra rhyme on beat 2, and options for how many words show on the pads.
+- **Words:** ten word lists (Everyday, One-syllable, Two-syllable, Rapper's toolkit, Office hours, Gaming, Internet slang, Food, Sports and Name drop), four rhyme schemes (AABB, AAAA, ABAB, AA·A), an optional extra rhyme on beat 2, and options for how many words show on the pads.
   - The **Name drop** list has rhyme packs for about 200 first names and the tags of the most-followed streamers (plus Ludwig and Atrioc). A pack only comes up when that rapper or streamer is on a team, so a rapper named "Kai Cenat" gets the KaiCenat tag.
   - **Every name pack** turns on all the name and streamer packs, not just the rappers on the teams. To use just a few, press **Turn on** next to those names in **Browse every word**.
 - **No repeats:** words shown in a battle are remembered on the device, so later battles get fresh ones. Names can repeat.

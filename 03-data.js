@@ -399,6 +399,63 @@ outrageous courageous contagious
 explicit implicit illicit
 dummy mummy yummy tummy
 hazel nasal appraisal
+bottle model throttle Aristotle coddle
+party smarty hearty arty Bacardi
+lucky ducky plucky Kentucky yucky
+happy snappy scrappy sappy
+nothing bluffing stuffing puffing roughing
+freedom need_'em lead_'em feed_'em beat_'em
+rhythm with_'em give_'em hit_'em
+jealous zealous fellas tell_us
+pillow willow billow armadillo
+yellow fellow mellow hello cello
+sorry Ferrari safari Atari calamari
+planet granite Janet damn_it
+rabbit habit grab_it have_it
+magic tragic traffic
+chicken kickin' stickin' pickin' thicken
+coffee toffee off_me
+water daughter hotter otter
+bottom autumn Gotham got_'em
+heavy Chevy levee bevy
+golden holdin' foldin' olden beholden
+silent violent tyrant
+sister twister blister mister whisper
+buckle chuckle knuckle
+giggle wiggle jiggle squiggle
+busy dizzy fizzy frizzy
+messy dressy Jessie
+lady shady Brady Grady
+cozy rosy nosy
+fancy Nancy chancy
+travel gravel unravel
+brother mother other another smother
+button mutton glutton nothin'
+written kitten mitten smitten bitten
+hidden forbidden ridden kiddin'
+chosen frozen closin' posin' dozin'
+fashion passion crashin' cashin' smashin' clashin'
+nervous service purpose surface
+focus hocus_pocus locus bogus
+lightning frightening tightening brightening
+moment opponent component exponent proponent
+purple turtle hurdle girdle fertile
+crystal pistol Bristol
+simple dimple pimple
+sizzle drizzle fizzle chisel
+dragon wagon draggin' braggin' saggin'
+funky monkey chunky spunky flunky
+turkey jerky murky perky quirky
+apple chapel grapple dapple
+quicker thicker sticker kicker slicker liquor
+flavor favor savior labor neighbor
+hero zero Nero De_Niro
+tiny shiny whiny
+pony phony bony Tony baloney macaroni
+sleepy creepy weepy
+legal eagle regal beagle illegal
+castle hassle tassel
+battle rattle cattle Seattle saddle
 `,
 toolkit: `
 ship trip flip grip whip sip drip
@@ -408,7 +465,7 @@ cars stars bars Mars scars guitars
 like strike bike spike hike mic
 new through true due view crew debut brew
 designed grind refined aligned mastermind rewind
-show although below pro flow glow
+show although below pro flow glow dough
 type pipe hype ripe swipe stripe
 across loss boss sauce floss
 about out doubt shout scout drought clout
@@ -430,6 +487,38 @@ game name claim aim fame flame
 line design divine shine
 cash flash splash stash
 down town brown crown clown
+cypher hyper viper sniper wiper
+hook book look took cook crook
+beef chief thief grief brief
+diss miss this kiss bliss abyss
+opps guap drop top stop shop props
+homie show_me know_me owe_me slowly
+hood good stood could would wood
+gang slang hang rang sang fang
+swag brag bag flag drag tag
+fire higher buyer liar wire entire
+banger hanger anger
+rhyme time dime prime climb crime
+scheme team dream stream extreme
+legend second reckoned beckoned
+throne zone own known stone grown
+cheddar better letter sweater wetter
+bread head said spread fed thread
+bands hands stands fans plans grands
+real deal feel steal wheel
+fake snake break take make shake
+rep step prep pep
+diamond rhymin' climbin' timin' shinin'
+sample example ample trample
+loop group hoop troop coop
+scratch match catch patch batch
+crowd loud proud cloud allowed vowed
+stage page cage age wage engage
+encore floor more before score
+charts hearts parts starts smarts
+feature creature teacher preacher bleacher
+producer juicer loser user reducer
+ice price nice twice dice slice
 `,
 office: `
 get_it said_it credit bet_it regret_it edit
@@ -458,6 +547,166 @@ complete repeat compete retreat receipt upbeat spreadsheet
 rich switch pitch twitch glitch
 more before floor score core explore
 cash crash flash dash stash
+`,
+// themed lists: each pack rhymes, and leads with its most on-theme words
+gaming: `
+game frame aim fame name same flame blame
+clutch much touch such crutch Dutch
+lobby hobby Bobby snobby
+respawn dawn gone upon drawn lawn
+loot shoot boot route recruit mute suit
+noob tube cube YouTube
+ranked thanked banked tanked yanked pranked
+quest chest best test rest west dressed
+lag tag bag brag drag flag
+squad nod odd flawed applaud facade
+camp champ stamp ramp lamp
+controller roller stroller bowler solar polar
+console control goal soul roll stroll hole
+streamer dreamer screamer schemer redeemer steamer
+pixel nickel tickle pickle fickle sickle
+grind mind find behind blind rewind
+skin win spin begin in thin
+perk work jerk smirk quirk lurk
+nerf surf turf smurf
+buff stuff rough tough enough puff
+raid played made blade fade stayed
+guild build skilled filled chilled killed
+clan plan fan man can scan
+dungeon plungin' onion bunion
+mouse house spouse blouse
+ping king ring thing swing wing
+queue crew through view new true
+zone throne phone bone own known
+drop top stop pop shop hop
+heal feel real deal steal wheel
+tank bank prank plank thank blank
+sniper viper hyper wiper diaper piper
+gamer tamer framer lamer claimer
+stealth health wealth self
+ammo camo Rambo
+crit hit quit split legit lit
+rage stage cage page age wage
+emote quote vote boat note float
+patch match catch batch snatch hatch
+carry scary very merry hairy
+`,
+slang: `
+rizz fizz quiz whiz biz his
+cap snap slap trap rap clap map nap
+mid kid did hid lid squid skid
+slay okay play day they pray
+ratio radio patio rodeo
+aura Laura flora Nora Dora
+glazing amazing blazing praising raising grazing
+delulu Honolulu Zulu Lulu
+sus bus plus fuss us
+vibe tribe bribe scribe describe
+goat note quote boat vote wrote
+ick sick quick pick trick slick
+simp shrimp limp blimp
+stan fan plan man can
+ghosted posted hosted boasted toasted roasted coasted
+sheesh leash quiche unleash
+yeet feet heat beat sweet street
+bet set net debt threat sweat
+lowkey smoky hokey pokey
+cringe unhinged binge fringe hinge
+based chased faced laced paced taste
+sigma stigma enigma
+mog dog fog log frog jog
+valid salad ballad
+tea free see degree three key
+shook cooked book look took hook
+lore more score floor core pour
+yapping rapping clapping snapping tapping napping
+chat that flat hat cat
+ate great late eight straight weight
+vibing driving thriving striving
+scrolling trolling rolling bowling strolling controlling
+meme team dream stream scheme
+viral spiral rival tribal
+lit fit hit bit split quit
+bussin' cussin' fussin' discussin'
+iconic chronic sonic tonic bionic
+`,
+food: `
+tacos nachos ponchos
+ramen almond common salmon
+waffle awful falafel
+pizza Lisa visa Ibiza Teresa
+burger merger Gerber
+fries size rise prize eyes wise
+steak cake shake bake make take
+rice spice nice price ice twice
+bread said head fed red spread
+cheese please breeze keys ease trees
+toast roast most post coast ghost
+wings things kings rings swings
+noodle strudel doodle poodle
+curry hurry worry blurry flurry
+honey money funny sunny
+cookie rookie bookie
+pickle tickle nickel fickle
+cherry berry dairy very merry scary
+mango tango Durango
+melon felon Helen Ellen
+potato tomato Plato
+gravy wavy navy Davy
+candy handy dandy brandy sandy
+chips dips trips flips lips ships
+fish dish wish swish
+snack back track stack crack attack
+munch lunch brunch crunch bunch punch
+sauce boss loss toss cross
+grill chill skill thrill still
+feast beast least east yeast
+spicy icy pricey dicey
+bacon taken shaken makin' breakin'
+smoothie movie groovy moody
+soup scoop group loop hoop troop
+juice loose goose truce produce
+pie fry high fly sky try
+jelly deli belly smelly
+beef chief grief brief leaf thief
+meat treat eat sweet beat heat
+wrap snap trap rap map
+`,
+sports: `
+dunk funk junk trunk punk
+goal bowl roll soul control hole
+score more floor door core
+ball call fall wall all hall
+shot hot spot got lot plot
+net set bet sweat threat
+court sport short report support
+field shield yield sealed healed
+coach approach roach poach
+team dream scheme stream extreme
+win spin begin grin in
+slam jam exam scam ram
+pitch switch rich ditch hitch
+swing ring king bring thing
+strike spike like bike hike
+race base chase face place space
+track sack back attack stack
+pass grass class glass mass
+block clock rock shock knock
+defense fence intense sense tense
+tackle shackle crackle cackle
+hustle muscle tussle bustle
+fumble rumble humble stumble tumble
+rebound sound ground found around
+sprint hint print mint
+medal pedal metal settle
+league fatigue intrigue
+foul howl growl owl prowl
+serve curve swerve nerve deserve
+bench French trench wrench drench
+draft craft laughed shaft
+kick quick stick trick pick slick
+punt hunt stunt front blunt
+lap snap gap clap trap
 `,
 // name packs (common first names, plus a few nicknames): a leading * marks the name. A pack comes up when that name is
 // on a team roster (or is a team name), or for everyone when the "Every name pack" switch is on.
@@ -754,6 +1003,10 @@ const LISTS = (() => {
     multi: { name: 'Two-syllable', blurb: 'Multis like motion / ocean / notion. Harder to fit, sounds better.', fams: parseFams(RAW.multi) },
     toolkit: { name: "Rapper's toolkit", blurb: 'Bars, flex, drip, clout. Hip-hop vocabulary.', fams: toolkit },
     office: { name: 'Office hours', blurb: 'Credit, sprints, Slack, payroll. Bars about the day job.', fams: parseFams(RAW.office) },
+    gaming: { name: 'Gaming', blurb: 'Clutch, respawn, loot, lobby. Bars for the squad chat.', fams: parseFams(RAW.gaming) },
+    slang: { name: 'Internet slang', blurb: 'Rizz, cap, aura, delulu. Words from the group chat.', fams: parseFams(RAW.slang) },
+    food: { name: 'Food', blurb: 'Tacos, ramen, waffles, wings. Bars you can taste.', fams: parseFams(RAW.food) },
+    sports: { name: 'Sports', blurb: 'Dunk, tackle, rebound, fumble. Bars from the arena.', fams: parseFams(RAW.sports) },
     namedrop: { name: 'Name drop', blurb: 'A name pack for each rapper on your teams (streamers get their tag), plus every Everyday pack and the best of the rest.', fams: (() => {
       // easy, high-energy packs borrowed from the smaller lists (found by a word they contain)
       const BEST = { multi: ['money', 'paper', 'nation', 'power'], toolkit: ['drip', 'flex', 'bars', 'mic', 'respect', 'legit'], office: ['deploy', 'meeting', 'laptop', 'spreadsheet', 'Slack'] };
