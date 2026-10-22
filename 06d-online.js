@@ -434,14 +434,14 @@ function netSave() {
   if (Number.isFinite(NET.lastSet)) st.last = NET.lastSet;
   ls.set(NET_KEY, st);
 }
-async function netCopy(text, msg = 'Battle link copied. Paste it in your call’s chat.') {
+async function netCopy(text, msg = 'Battle link copied. Paste it in your call’s chat.', fail = 'Couldn’t copy. Select the link in the box and copy it.') {
   let ok = false;
   try { await navigator.clipboard.writeText(text); ok = true; } catch { }
   if (!ok) try {
     const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
     document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
   } catch { }
-  netToast(ok ? msg : 'Couldn’t copy. Select the link in the box and copy it.', !ok);
+  netToast(ok ? msg : fail, !ok);
 }
 let toastTimer = 0;
 function netToast(msg, err = false) {

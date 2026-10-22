@@ -506,6 +506,38 @@ button.w:active{transform:translateY(1px)}
 .recap li{display:flex; justify-content:space-between; gap:10px}
 .recap li span{font:400 12px/1.6 var(--f-mono); color:var(--ink-3)}
 .end-btns{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
+/* every word from the battle, under the recap */
+.end-words{width:100%; text-align:left; background:var(--deck); border:1px solid var(--line); border-radius:16px; min-width:0}
+.end-words[hidden]{display:none}
+.end-words>summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:16px}
+.end-words>summary::-webkit-details-marker{display:none}
+.end-words>summary:hover .acc-chev{color:var(--amber)}
+.end-words[open] .acc-chev{transform:rotate(180deg)}
+.wr-sum{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; margin-right:auto; font-weight:750; font-stretch:108%}
+.wr-sum span{font:400 12.5px/1.4 var(--f-mono); color:var(--ink-3)}
+.wr-body{max-height:min(46vh,440px); overflow:auto; overscroll-behavior:contain; padding:0 18px 16px; display:flex; flex-direction:column; gap:16px}
+.wr-turn h4{margin:0 0 8px; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; font:400 16px/1.1 var(--f-display); letter-spacing:.02em; color:var(--c)}
+.wr-turn h4 span{font:400 12px/1.3 var(--f-mono); letter-spacing:0; color:var(--ink-3)}
+.wr-blk{display:grid; grid-template-columns:50px minmax(0,1fr); gap:10px; align-items:start; padding:3px 0}
+.wr-bars{font:500 11px/25px var(--f-mono); color:var(--ink-3); font-variant-numeric:tabular-nums}
+.wr-ws{display:flex; flex-wrap:wrap; gap:5px; min-width:0}
+.wr-ws .w.wr-hid{background:transparent; color:var(--ink-2); box-shadow:inset 0 0 0 1.5px var(--pc)}
+.wr-tools{display:flex; justify-content:flex-end; margin-bottom:-8px}
+.wr-said{margin:6px 0 2px 60px; color:var(--ink); font-size:14.5px; line-height:1.5; max-width:72ch}
+.wr-said b{display:block; font:500 10.5px/1 var(--f-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
+@media (max-width:560px){ .wr-said{margin-left:0} }
+/* transcribe: the mic button glows while it listens, and the last words heard show beside it */
+.mic-btn[aria-pressed="true"]{background:color-mix(in srgb, var(--amber) 22%, var(--rubber)); color:var(--ink)}
+.mic-btn{position:relative}
+.mic-btn.live::after{content:""; position:absolute; top:7px; right:7px; width:7px; height:7px; border-radius:50%; background:var(--danger); box-shadow:0 0 8px var(--danger); animation:micPulse 1.2s ease-in-out infinite}
+@keyframes micPulse{50%{opacity:.35}}
+/* the caption takes whatever room the bar has left (it never pushes the buttons onto a new line) and keeps the newest words in view */
+.mic-live{flex:1 1 0; min-width:0; max-width:38ch; display:flex; justify-content:flex-end; overflow:hidden; white-space:nowrap; font:italic 400 13px/1.3 var(--f-body); color:var(--ink-2);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 2.5em); mask-image:linear-gradient(90deg,transparent,#000 2.5em)}
+.mic-live[hidden]{display:none}
+@supports (container-type:inline-size){ .mic-live{container-type:inline-size} @container (max-width:80px){ .mic-live > span{visibility:hidden} } }
+@media (max-width:1000px){ .mic-btn span{display:none} }
+@media (max-width:640px){ .mic-live{display:none} }
 
 /* ---------- ONLINE: lobby, stage chip, toast ---------- */
 .chip[hidden],.go[hidden],.tbtn[hidden],.net-chip[hidden]{display:none}

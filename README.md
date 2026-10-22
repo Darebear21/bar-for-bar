@@ -15,8 +15,10 @@ A freestyle rap battle trainer. A ball bounces across four pads every bar, and r
 - **No repeats:** words shown in a battle are remembered on the device, so later battles get fresh ones. Names can repeat.
 - **Word browser:** search every list and turn off single words or whole packs.
 - **Look back:** pause and scroll up to see earlier bars.
+- **Word recap:** the end screen lists every word from the bars you played, turn by turn.
+- **Transcripts:** press **Transcribe** (or `M`) on stage and the browser's built-in speech recognition writes down what you rap. The end screen shows it under each turn, with a button to copy it. It works in Chrome, Edge and Safari, using the browser's own speech service: Chrome sends the audio to Google, Edge to Microsoft, and Safari uses Apple's. Headphones help, so the mic hears you and not the beat. In online battles each device transcribes its own team.
 
-Keyboard: `Space` pause, `N` next team, `Esc` end, `F` fullscreen, `↑` / `↓` look back while paused. Online: `[` / `]` play the team that's on 10 ms sooner or later.
+Keyboard: `Space` pause, `N` next team, `M` transcribe, `Esc` end, `F` fullscreen, `↑` / `↓` look back while paused. Online: `[` / `]` play the team that's on 10 ms sooner or later.
 
 ## Play online
 
@@ -56,6 +58,7 @@ The app is split into source files that `build.sh` joins in order:
 | `06b-youtube.js` | YouTube beats |
 | `06c-bracket.js` | Tournament bracket |
 | `06d-online.js` | Online battles: battle links, lobby, sound check, timing |
+| `06e-speech.js` | Transcripts with the browser's speech recognition |
 | `07-game.js` | Battle stage: timeline, ball, pads, HUD |
 | `08-init.js` | Event handlers and startup |
 

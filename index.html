@@ -515,6 +515,38 @@ button.w:active{transform:translateY(1px)}
 .recap li{display:flex; justify-content:space-between; gap:10px}
 .recap li span{font:400 12px/1.6 var(--f-mono); color:var(--ink-3)}
 .end-btns{display:flex; flex-wrap:wrap; gap:10px; justify-content:center}
+/* every word from the battle, under the recap */
+.end-words{width:100%; text-align:left; background:var(--deck); border:1px solid var(--line); border-radius:16px; min-width:0}
+.end-words[hidden]{display:none}
+.end-words>summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:16px}
+.end-words>summary::-webkit-details-marker{display:none}
+.end-words>summary:hover .acc-chev{color:var(--amber)}
+.end-words[open] .acc-chev{transform:rotate(180deg)}
+.wr-sum{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; margin-right:auto; font-weight:750; font-stretch:108%}
+.wr-sum span{font:400 12.5px/1.4 var(--f-mono); color:var(--ink-3)}
+.wr-body{max-height:min(46vh,440px); overflow:auto; overscroll-behavior:contain; padding:0 18px 16px; display:flex; flex-direction:column; gap:16px}
+.wr-turn h4{margin:0 0 8px; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 12px; font:400 16px/1.1 var(--f-display); letter-spacing:.02em; color:var(--c)}
+.wr-turn h4 span{font:400 12px/1.3 var(--f-mono); letter-spacing:0; color:var(--ink-3)}
+.wr-blk{display:grid; grid-template-columns:50px minmax(0,1fr); gap:10px; align-items:start; padding:3px 0}
+.wr-bars{font:500 11px/25px var(--f-mono); color:var(--ink-3); font-variant-numeric:tabular-nums}
+.wr-ws{display:flex; flex-wrap:wrap; gap:5px; min-width:0}
+.wr-ws .w.wr-hid{background:transparent; color:var(--ink-2); box-shadow:inset 0 0 0 1.5px var(--pc)}
+.wr-tools{display:flex; justify-content:flex-end; margin-bottom:-8px}
+.wr-said{margin:6px 0 2px 60px; color:var(--ink); font-size:14.5px; line-height:1.5; max-width:72ch}
+.wr-said b{display:block; font:500 10.5px/1 var(--f-mono); letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom:5px}
+@media (max-width:560px){ .wr-said{margin-left:0} }
+/* transcribe: the mic button glows while it listens, and the last words heard show beside it */
+.mic-btn[aria-pressed="true"]{background:color-mix(in srgb, var(--amber) 22%, var(--rubber)); color:var(--ink)}
+.mic-btn{position:relative}
+.mic-btn.live::after{content:""; position:absolute; top:7px; right:7px; width:7px; height:7px; border-radius:50%; background:var(--danger); box-shadow:0 0 8px var(--danger); animation:micPulse 1.2s ease-in-out infinite}
+@keyframes micPulse{50%{opacity:.35}}
+/* the caption takes whatever room the bar has left (it never pushes the buttons onto a new line) and keeps the newest words in view */
+.mic-live{flex:1 1 0; min-width:0; max-width:38ch; display:flex; justify-content:flex-end; overflow:hidden; white-space:nowrap; font:italic 400 13px/1.3 var(--f-body); color:var(--ink-2);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 2.5em); mask-image:linear-gradient(90deg,transparent,#000 2.5em)}
+.mic-live[hidden]{display:none}
+@supports (container-type:inline-size){ .mic-live{container-type:inline-size} @container (max-width:80px){ .mic-live > span{visibility:hidden} } }
+@media (max-width:1000px){ .mic-btn span{display:none} }
+@media (max-width:640px){ .mic-live{display:none} }
 
 /* ---------- ONLINE: lobby, stage chip, toast ---------- */
 .chip[hidden],.go[hidden],.tbtn[hidden],.net-chip[hidden]{display:none}
@@ -601,6 +633,7 @@ button.w:active{transform:translateY(1px)}
   <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3c-2.6 2.5-3.9 5.5-3.9 9s1.3 6.5 3.9 9c2.6-2.5 3.9-5.5 3.9-9S14.6 5.5 12 3z"/></g></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2.5"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></g></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect fill="currentColor" x="9" y="2.5" width="6" height="11.5" rx="3"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M6 11l6-6 6 6"/></symbol>
 </svg>
 
@@ -685,9 +718,11 @@ button.w:active{transform:translateY(1px)}
     </div>
     <div class="net-chip" id="netChip" hidden></div>
     <div class="upnext" id="upNext"></div>
+    <div class="mic-live" id="micLive" hidden aria-hidden="true"><span></span></div>
     <div class="tbtns">
       <button class="tbtn" data-act="pause" id="pauseBtn" title="Pause (Space)"><svg><use href="#i-pause"/></svg><span>Pause</span></button>
       <button class="tbtn" data-act="skip" id="skipBtn" title="Next team (N)"><svg><use href="#i-next"/></svg><span>Next team</span></button>
+      <button class="tbtn mic-btn" data-act="mic" id="micBtn" aria-pressed="false" aria-label="Transcribe" hidden><svg><use href="#i-mic"/></svg><span>Transcribe</span></button>
       <button class="tbtn" data-act="end" title="End (Esc)"><svg><use href="#i-stop"/></svg><span>End</span></button>
       <button class="tbtn" data-act="fullscreen" title="Fullscreen (F)" aria-label="Fullscreen"><svg><use href="#i-full"/></svg></button>
     </div>
@@ -715,6 +750,10 @@ button.w:active{transform:translateY(1px)}
       <p class="label" id="endKicker">Battle complete</p>
       <h2 id="endTitle">That's <em>the battle</em></h2>
       <div class="recap" id="recap"></div>
+      <details class="end-words" id="endWords" hidden>
+        <summary><span class="wr-sum" id="endWordsSum"></span><svg class="acc-chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="wr-body" id="endWordsBody"></div>
+      </details>
       <div class="end-winner" id="endWinner" hidden></div>
       <div class="end-btns">
         <button class="go" data-act="again" id="againBtn"><svg><use href="#i-play"/></svg><span>Run it back</span></button>
@@ -766,7 +805,7 @@ button.w:active{transform:translateY(1px)}
     </div>
     <label class="toggle"><input type="checkbox" id="clickTgl"> Metronome click on every beat</label>
     <label class="toggle"><input type="checkbox" id="hideTgl"> Hide stage controls when the mouse is still</label>
-    <p class="hint">Keys on stage: <b>Space</b> pause · <b>N</b> next team · <b>F</b> fullscreen · <b>Esc</b> end</p>
+    <p class="hint">Keys on stage: <b>Space</b> pause · <b>N</b> next team · <b>M</b> transcribe · <b>F</b> fullscreen · <b>Esc</b> end</p>
   </div>
 </div>
 
@@ -3075,7 +3114,7 @@ function peaksOf(buf, n) {
 }
 
 /* ================= settings + config ================= */
-const SETTINGS = Object.assign({ syncMs: 0, pace: 'auto', volume: 0.9, click: false, autohide: true }, ls.get('bfb.settings', {}));
+const SETTINGS = Object.assign({ syncMs: 0, pace: 'auto', volume: 0.9, click: false, autohide: true, transcribe: false }, ls.get('bfb.settings', {}));
 const saveSettings = () => ls.set('bfb.settings', SETTINGS);
 const DEFAULT_CFG = {
   mode: 'battle', list: 'basic', scheme: 'AABB', double: false, reveal: 'all',
@@ -4482,14 +4521,14 @@ function netSave() {
   if (Number.isFinite(NET.lastSet)) st.last = NET.lastSet;
   ls.set(NET_KEY, st);
 }
-async function netCopy(text, msg = 'Battle link copied. Paste it in your call’s chat.') {
+async function netCopy(text, msg = 'Battle link copied. Paste it in your call’s chat.', fail = 'Couldn’t copy. Select the link in the box and copy it.') {
   let ok = false;
   try { await navigator.clipboard.writeText(text); ok = true; } catch { }
   if (!ok) try {
     const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
     document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
   } catch { }
-  netToast(ok ? msg : 'Couldn’t copy. Select the link in the box and copy it.', !ok);
+  netToast(ok ? msg : fail, !ok);
 }
 let toastTimer = 0;
 function netToast(msg, err = false) {
@@ -4515,6 +4554,129 @@ function netInit() {
   window.addEventListener('popstate', netOpenHash);
   if (/^#battle=/.test(location.hash)) netOpenHash();
 }
+
+/* ================= transcripts: the browser's own speech recognition =================
+   With Transcribe on, the page listens through the microphone while you rap and keeps the text for each turn, which the
+   end screen shows under that turn's words. It uses the speech service built into the browser (Chrome sends the audio to
+   Google for this, Edge to Microsoft; Safari uses Apple's). Recognition reports phrases, not exact word times, so each phrase goes to
+   the turn where it started: a phrase that starts in a changeover belongs to the turn before it. */
+const SPEECH = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+// seen: the bar each phrase started in; wip: words not final yet; last: each session's latest phrase (see micCommit)
+const MIC = { rec: null, sess: 0, seen: new Map(), done: new Set(), wip: new Map(), last: new Map(), live: '', liveAt: 0, began: 0, fails: 0, gaveUp: false, timer: 0,
+  cumulative: /Android/i.test(navigator.userAgent) };
+
+// online battles: this mic only hears this device's own team; a watcher has nothing to transcribe
+const micAllowed = () => !!SPEECH && !!G && !(G.net && NET.role === 'w');
+function micStart() {
+  clearTimeout(MIC.timer);
+  if (!micAllowed() || G.ended || G.paused || MIC.rec || !SETTINGS.transcribe || MIC.gaveUp) { micUI(); return; }
+  const rec = new SPEECH(), g = G, sess = ++MIC.sess;
+  // the word lists are English, so listen for English (keeping the browser's own accent setting when it is English)
+  rec.continuous = true; rec.interimResults = true; rec.lang = /^en\b/i.test(navigator.language) ? navigator.language : 'en-US';
+  rec.onresult = e => micResult(e, g, sess);
+  rec.onerror = e => { if (MIC.rec === rec) micError(e); };
+  rec.onend = () => {
+    // a session that ends before its last words were final (a dropped connection, say) keeps them as they were heard
+    for (const [k, t] of MIC.wip) if (k.startsWith(sess + ':')) micCommit(k, g, t);
+    if (MIC.rec !== rec) return;   // stopped on purpose
+    MIC.rec = null; MIC.live = '';
+    // the service ends a session now and then (a long silence, a dropped connection): start a new one, backing off if it keeps
+    // failing. If it never comes back, stop for this battle; the next one tries again
+    MIC.fails = performance.now() - MIC.began < 2000 ? MIC.fails + 1 : 0;
+    if (MIC.fails > 6) { MIC.gaveUp = true; micUI(); netToast('Transcribing stopped: the speech service isn’t responding. Press Transcribe to try again.', true); return; }
+    MIC.timer = setTimeout(micStart, MIC.fails ? Math.min(4000, 250 * 2 ** MIC.fails) : 0);
+    micUI();
+  };
+  MIC.began = performance.now();
+  try { rec.start(); MIC.rec = rec; } catch (e) { console.warn(e); MIC.rec = null; }
+  micUI();
+}
+function micStop() {
+  clearTimeout(MIC.timer);
+  const rec = MIC.rec; MIC.rec = null; MIC.live = '';
+  if (rec) try { rec.stop(); } catch { }   // stop() still delivers the phrase being finished
+  micUI();
+}
+const micOn = () => !!SETTINGS.transcribe && !MIC.gaveUp;
+function micToggle() {
+  if (!SPEECH) { netToast('This browser can’t transcribe. Try Chrome, Edge or Safari.', true); return; }
+  if (!micAllowed() || G.ended) return;
+  const on = !micOn();
+  SETTINGS.transcribe = on; saveSettings(); MIC.gaveUp = false; MIC.fails = 0;
+  if (on) { micStart(); netToast('Transcribing. Your rap shows up as text on the end screen.'); }
+  else { micStop(); netToast('Transcribing off.'); }
+}
+function micError(e) {
+  if (e.error === 'not-allowed' || e.error === 'service-not-allowed' || e.error === 'audio-capture') {
+    SETTINGS.transcribe = false; saveSettings(); micStop();
+    netToast(e.error === 'audio-capture' ? 'No microphone found, so transcribing is off.'
+      : e.error === 'not-allowed' ? 'Transcribing needs the microphone. Allow it for this site, then turn it back on.'
+      : 'This browser’s speech recognition is off or blocked, so transcribing is off.', true);
+  } else if (e.error === 'network' && MIC.fails >= 2) netToast('Can’t reach the speech service right now. Still trying.', true);
+}
+// the bar being heard right now
+const micRow = g => Math.floor(beatAt(g.paused ? g.pauseT : heardTime()) / g.rowBeats - COUNTIN);
+function micResult(e, g, sess) {
+  if (!g.tx) return;
+  // a phrase first heard after End belongs where the battle stopped
+  const row = G === g && !g.ended ? micRow(g) : g.endNow;
+  let live = '';
+  for (let i = e.resultIndex; i < e.results.length; i++) {
+    const r = e.results[i], key = sess + ':' + i, text = r[0].transcript;
+    if (MIC.done.has(key)) continue;
+    if (!MIC.seen.has(key)) MIC.seen.set(key, row);
+    if (!r.isFinal) { MIC.wip.set(key, text); live += text; continue; }
+    micCommit(key, g, text);
+    live = text;
+  }
+  if (G === g) { MIC.live = live.trim(); MIC.liveAt = performance.now(); micLiveUI(); }
+}
+function micCommit(key, g, text) {
+  MIC.wip.delete(key); MIC.done.add(key);
+  text = (text || '').trim();
+  // Chrome on Android starts each new phrase with every word already heard in that session: keep only the new part
+  if (MIC.cumulative) {
+    const sess = key.split(':')[0], prev = MIC.last.get(sess);
+    if (text) MIC.last.set(sess, text);
+    if (prev && text.toLowerCase().startsWith(prev.toLowerCase()) && !/\w/.test(text[prev.length] || '')) text = text.slice(prev.length).replace(/^[\s,.;:!?]+/, '');
+  }
+  micAdd(g, MIC.seen.get(key), text);
+}
+function micAdd(g, row, text) {
+  text = (text || '').trim(); if (!text) return;
+  let turn = null;
+  for (const s of g.segs) if (s.kind === 'turn') { if (s.start <= row || !turn) turn = s; if (s.start > row) break; }
+  if (!turn || (g.net && turn.who && turn.who.team !== NET.role)) return;
+  if (!g.tx.has(turn.k)) g.tx.set(turn.k, []);
+  g.tx.get(turn.k).push(text);
+  if (g.ended && G === g) renderEndWords(g.endNow, true);   // a phrase that finished after End
+}
+// the transcript as plain text, for copying
+function micText(g) {
+  const out = [];
+  for (const s of g.segs) {
+    const said = s.kind === 'turn' && g.tx.get(s.k); if (!said) continue;
+    out.push((g.mode === 'battle' && s.who ? `${teamLabel(s.who.name)}, turn ${s.i + 1}` : 'Practice') + '\n' + said.join(' '));
+  }
+  return out.join('\n\n');
+}
+function micUI() {
+  const b = $('#micBtn'); if (!b) return;
+  b.hidden = !micAllowed();
+  b.setAttribute('aria-pressed', String(micOn()));
+  b.classList.toggle('live', !!MIC.rec);
+  b.title = micOn() ? 'Transcribing your rap (M to stop)' : 'Transcribe your rap with the browser’s speech recognition (M). Chrome sends the audio to Google to do this, and Edge to Microsoft.';
+  micLiveUI();
+}
+function micLiveUI() {
+  const el = $('#micLive'); if (!el) return;
+  // the last few words heard, so you can tell it's listening; a finished phrase clears after a few seconds. The space stays
+  // while Transcribe is on so the bar doesn't jump around as words come and go
+  const t = MIC.rec && MIC.live && performance.now() - MIC.liveAt < 4000 ? MIC.live : '';
+  el.hidden = !(micAllowed() && micOn());
+  el.firstChild.textContent = t.length > 90 ? t.slice(-90) : t;
+}
+setInterval(() => { if (MIC.live && performance.now() - MIC.liveAt > 4000) { MIC.live = ''; micLiveUI(); } }, 1000);
 
 /* ================= stage ================= */
 const COUNTIN = 2;          // rows of count-in before bar 1
@@ -4611,6 +4773,7 @@ async function startGame(online = false) {
     renderSummary();
   }
   if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } }
+  micStop(); MIC.seen.clear(); MIC.done.clear(); MIC.wip.clear(); MIC.last.clear();
   const bpm = b.bpm, spb = 60 / bpm, cb = online ? NET.data.cb : paceFor(bpm);
   const endless = CFG.mode === 'battle' && !CFG.rounds, turnAt = turnMaker();
   G = {
@@ -4618,7 +4781,7 @@ async function startGame(online = false) {
     segs: buildTimeline(turnAt, endless), words: new Map(), rows: new Map(),
     endless, turnAt, rounds: CFG.rounds, changeBars: CFG.changeBars, nextTurn: 8,
     gen: makeWordGen(CFG.list, CFG.scheme, CFG.double, CFG.reveal, true, online ? { rng: seededRng(NET.data.s), used: new Set() } : {}),
-    net: online, anchors: null,
+    net: online, anchors: null, tx: new Map(), endNow: Infinity,
     teams: JSON.parse(JSON.stringify(CFG.teams)), turns: 0,
     lastCell: null, seg: null, paused: false, ended: false, hud: {}, splashOn: false, litPad: null, look: { cur: 0, target: 0, acc: 0 },
     stageEl: $('#stage'), rowsEl: $('#rows'), glow: $('#glow'),
@@ -4649,6 +4812,7 @@ async function startGame(online = false) {
   // online battles run on everyone's clock at once: no pause or skipping ahead, just End (which only stops this device)
   $('#pauseBtn').hidden = $('#skipBtn').hidden = online; $('#netChip').hidden = !online;
   try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { if (G) G.wake = l; else l.release(); }).catch(() => { }); } catch { }
+  MIC.fails = 0; MIC.gaveUp = false; micStart();
   poke();
   G.raf = requestAnimationFrame(frame);
 }
@@ -4658,6 +4822,7 @@ function showStage() {
   document.body.style.overflow = 'hidden';
 }
 function exitStage() {
+  micStop();
   if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } }
   G = null;
   stopPlayback(0.2);
@@ -4881,9 +5046,11 @@ function finish(why) {
   if (G.yt) ytStageStop(why === 'done' ? Math.min(3, G.rowDur * 1.2) : 0.6);
   $('#splash').classList.remove('show'); G.splashOn = false; G.stageEl.classList.remove('splash-on');
   const recap = $('#recap');
+  // count what was actually rapped: an early (or endless) finish stops partway through
+  const now = why === 'done' ? Infinity : Math.floor(beatAt(G.paused ? G.pauseT : heardTime()) / G.rowBeats - COUNTIN);
+  micStop(); G.endNow = now;
+  renderEndWords(now);
   if (G.mode === 'battle') {
-    // count what was actually rapped: an early (or endless) finish stops partway through
-    const now = why === 'done' ? Infinity : Math.floor(beatAt(G.paused ? G.pauseT : heardTime()) / G.rowBeats - COUNTIN);
     const turns = G.segs.filter(s => s.kind === 'turn' && s.start <= now);
     const played = s => Math.max(0, Math.min(s.len, now - s.start + 1));
     recap.innerHTML = [0, 1].map(t => {
@@ -4909,6 +5076,36 @@ function finish(why) {
   $('#exitBtn').textContent = G.net ? 'Leave battle' : 'Back to setup';
   setTimeout(() => { if (G && G.ended) { $('#endcard').hidden = false; (tc ? $('#endWinner .ew-team') : $('#endcard .go:not([hidden])') || $('#exitBtn')).focus(); } }, why === 'done' ? 900 : 200);
 }
+// end screen: every word dealt in the bars that were played, turn by turn, four bars to a line, with what was rapped if
+// Transcribe was on. keep: redrawing for a phrase that came in late, so leave the panel open or shut as it is
+function renderEndWords(now, keep = false) {
+  const box = $('#endWords'); if (!box) return;
+  let bars = 0, words = 0, hidden = false, said = 0;
+  const html = G.segs.filter(s => s.kind === 'turn' && s.start <= now).map(s => {
+    const n = Math.max(0, Math.min(s.len, now - s.start + 1)); if (!n) return '';
+    const lines = [];
+    for (let b0 = 0; b0 < n; b0 += 4) {
+      const B = wordsFor(s, b0 / 4), last = Math.min(n, b0 + 4), cells = [];
+      for (let r = b0; r < last; r++) for (const c of B[r - b0]) if (c) { cells.push(c); if (!c.show) hidden = true; }
+      words += cells.length;
+      lines.push(`<div class="wr-blk"><span class="wr-bars">${last > b0 + 1 ? `${b0 + 1}–${last}` : b0 + 1}</span><div class="wr-ws">${cells.map(c => `<span class="w rh c${c.c}${c.show ? '' : ' wr-hid'}">${esc(c.w)}</span>`).join('')}</div></div>`);
+    }
+    bars += n;
+    const tx = G.tx.get(s.k);
+    if (tx) { said++; lines.push(`<p class="wr-said"><b>Transcript</b>${esc(tx.join(' '))}</p>`); }
+    const meta = `${n} bar${n === 1 ? '' : 's'}`;
+    const head = G.mode === 'battle' && s.who
+      ? `<h4 style="--c:${gColor(s.who.team)}">${esc(teamLabel(s.who.name))}<span>Turn ${s.i + 1}${G.endless || G.rounds > 1 ? ' · Round ' + s.who.round : ''} · ${meta}</span></h4>`
+      : `<h4 style="--c:var(--amber)">Practice<span>${meta}</span></h4>`;
+    return `<section class="wr-turn">${head}${lines.join('')}</section>`;
+  }).join('');
+  if (!keep) box.open = false;
+  box.hidden = !bars;
+  if (!bars) return;
+  $('#endWordsSum').innerHTML = `Every word from this ${G.mode === 'battle' ? 'battle' : 'practice'}<span>${bars} bar${bars === 1 ? '' : 's'} · ${words} word${words === 1 ? '' : 's'}${said ? ' · transcript' : ''}</span>`;
+  $('#endWordsBody').innerHTML = (said ? '<div class="wr-tools"><button class="chip small ghost" data-act="copy-said"><svg width="14" height="14"><use href="#i-copy"/></svg>Copy transcript</button></div>' : '') +
+    html + (hidden ? '<p class="hint">Outlined words were hidden on the pads.</p>' : '');
+}
 function skipTurn() {
   if (!G || G.ended || G.net) return;
   const t = G.paused ? G.pauseT : heardTime();
@@ -4922,8 +5119,8 @@ function skipTurn() {
 }
 function togglePause() {
   if (!G || G.ended || !A.ctx || G.net) return;
-  if (!G.paused) { G.pauseT = G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime(); G.paused = true; A.ctx.suspend(); }
-  else { G.paused = false; A.ctx.resume(); }
+  if (!G.paused) { G.pauseT = G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime(); G.paused = true; A.ctx.suspend(); micStop(); }
+  else { G.paused = false; A.ctx.resume(); micStart(); }
   if (G.yt && G.yt.player) { try { G.paused ? G.yt.player.pauseVideo() : G.yt.player.playVideo(); } catch { } }
   G.look.target = 0; G.look.acc = 0; lookLabel();
   $('#pausedTag').hidden = !G.paused; G.stageEl.classList.toggle('is-paused', G.paused);
@@ -5063,6 +5260,9 @@ document.addEventListener('click', e => {
     case 'net-join': netJoin(); break;
     case 'net-rejoin': NET.armed = true; netStartStage(); break;
     case 'net-nudge': netNudge(+v); break;
+    // transcripts
+    case 'mic': micToggle(); break;
+    case 'copy-said': if (G) netCopy(micText(G), 'Transcript copied.', 'Couldn’t copy. Select the transcript and copy it.'); break;
   }
 });
 document.addEventListener('input', e => {
@@ -5109,6 +5309,7 @@ document.addEventListener('keydown', e => {
     else if (G && G.paused && (e.key === 'ArrowDown' || e.key === 'PageDown')) { e.preventDefault(); lookBy(e.key === 'PageDown' ? -4 : -1); }
     else if (G && G.paused && (e.key === 'Home' || e.key === 'End')) { e.preventDefault(); lookBy(e.key === 'Home' ? 1e6 : -1e6); }
     else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+    else if ((e.key === 'm' || e.key === 'M') && !e.metaKey && !e.ctrlKey && !e.altKey && $('#endcard').hidden) { micToggle(); }
     else if (e.key === 'Escape') { if (!$('#endcard').hidden) exitStage(); else if (!document.fullscreenElement) finish('early'); }
     poke();
     return;

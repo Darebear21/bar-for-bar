@@ -1,6 +1,6 @@
 
 /* ================= settings + config ================= */
-const SETTINGS = Object.assign({ syncMs: 0, pace: 'auto', volume: 0.9, click: false, autohide: true }, ls.get('bfb.settings', {}));
+const SETTINGS = Object.assign({ syncMs: 0, pace: 'auto', volume: 0.9, click: false, autohide: true, transcribe: false }, ls.get('bfb.settings', {}));
 const saveSettings = () => ls.set('bfb.settings', SETTINGS);
 const DEFAULT_CFG = {
   mode: 'battle', list: 'basic', scheme: 'AABB', double: false, reveal: 'all',

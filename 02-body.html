@@ -16,6 +16,7 @@
   <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.5 9h17M3.5 15h17M12 3c-2.6 2.5-3.9 5.5-3.9 9s1.3 6.5 3.9 9c2.6-2.5 3.9-5.5 3.9-9S14.6 5.5 12 3z"/></g></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2.5"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></g></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect fill="currentColor" x="9" y="2.5" width="6" height="11.5" rx="3"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M6 11l6-6 6 6"/></symbol>
 </svg>
 
@@ -100,9 +101,11 @@
     </div>
     <div class="net-chip" id="netChip" hidden></div>
     <div class="upnext" id="upNext"></div>
+    <div class="mic-live" id="micLive" hidden aria-hidden="true"><span></span></div>
     <div class="tbtns">
       <button class="tbtn" data-act="pause" id="pauseBtn" title="Pause (Space)"><svg><use href="#i-pause"/></svg><span>Pause</span></button>
       <button class="tbtn" data-act="skip" id="skipBtn" title="Next team (N)"><svg><use href="#i-next"/></svg><span>Next team</span></button>
+      <button class="tbtn mic-btn" data-act="mic" id="micBtn" aria-pressed="false" aria-label="Transcribe" hidden><svg><use href="#i-mic"/></svg><span>Transcribe</span></button>
       <button class="tbtn" data-act="end" title="End (Esc)"><svg><use href="#i-stop"/></svg><span>End</span></button>
       <button class="tbtn" data-act="fullscreen" title="Fullscreen (F)" aria-label="Fullscreen"><svg><use href="#i-full"/></svg></button>
     </div>
@@ -130,6 +133,10 @@
       <p class="label" id="endKicker">Battle complete</p>
       <h2 id="endTitle">That's <em>the battle</em></h2>
       <div class="recap" id="recap"></div>
+      <details class="end-words" id="endWords" hidden>
+        <summary><span class="wr-sum" id="endWordsSum"></span><svg class="acc-chev" aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="wr-body" id="endWordsBody"></div>
+      </details>
       <div class="end-winner" id="endWinner" hidden></div>
       <div class="end-btns">
         <button class="go" data-act="again" id="againBtn"><svg><use href="#i-play"/></svg><span>Run it back</span></button>
@@ -181,7 +188,7 @@
     </div>
     <label class="toggle"><input type="checkbox" id="clickTgl"> Metronome click on every beat</label>
     <label class="toggle"><input type="checkbox" id="hideTgl"> Hide stage controls when the mouse is still</label>
-    <p class="hint">Keys on stage: <b>Space</b> pause · <b>N</b> next team · <b>F</b> fullscreen · <b>Esc</b> end</p>
+    <p class="hint">Keys on stage: <b>Space</b> pause · <b>N</b> next team · <b>M</b> transcribe · <b>F</b> fullscreen · <b>Esc</b> end</p>
   </div>
 </div>
 

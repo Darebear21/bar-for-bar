@@ -94,6 +94,7 @@ async function startGame(online = false) {
     renderSummary();
   }
   if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } }
+  micStop(); MIC.seen.clear(); MIC.done.clear(); MIC.wip.clear(); MIC.last.clear();
   const bpm = b.bpm, spb = 60 / bpm, cb = online ? NET.data.cb : paceFor(bpm);
   const endless = CFG.mode === 'battle' && !CFG.rounds, turnAt = turnMaker();
   G = {
@@ -101,7 +102,7 @@ async function startGame(online = false) {
     segs: buildTimeline(turnAt, endless), words: new Map(), rows: new Map(),
     endless, turnAt, rounds: CFG.rounds, changeBars: CFG.changeBars, nextTurn: 8,
     gen: makeWordGen(CFG.list, CFG.scheme, CFG.double, CFG.reveal, true, online ? { rng: seededRng(NET.data.s), used: new Set() } : {}),
-    net: online, anchors: null,
+    net: online, anchors: null, tx: new Map(), endNow: Infinity,
     teams: JSON.parse(JSON.stringify(CFG.teams)), turns: 0,
     lastCell: null, seg: null, paused: false, ended: false, hud: {}, splashOn: false, litPad: null, look: { cur: 0, target: 0, acc: 0 },
     stageEl: $('#stage'), rowsEl: $('#rows'), glow: $('#glow'),
@@ -132,6 +133,7 @@ async function startGame(online = false) {
   // online battles run on everyone's clock at once: no pause or skipping ahead, just End (which only stops this device)
   $('#pauseBtn').hidden = $('#skipBtn').hidden = online; $('#netChip').hidden = !online;
   try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(l => { if (G) G.wake = l; else l.release(); }).catch(() => { }); } catch { }
+  MIC.fails = 0; MIC.gaveUp = false; micStart();
   poke();
   G.raf = requestAnimationFrame(frame);
 }
@@ -141,6 +143,7 @@ function showStage() {
   document.body.style.overflow = 'hidden';
 }
 function exitStage() {
+  micStop();
   if (G) { cancelAnimationFrame(G.raf); try { G.wake && G.wake.release(); } catch { } }
   G = null;
   stopPlayback(0.2);
@@ -364,9 +367,11 @@ function finish(why) {
   if (G.yt) ytStageStop(why === 'done' ? Math.min(3, G.rowDur * 1.2) : 0.6);
   $('#splash').classList.remove('show'); G.splashOn = false; G.stageEl.classList.remove('splash-on');
   const recap = $('#recap');
+  // count what was actually rapped: an early (or endless) finish stops partway through
+  const now = why === 'done' ? Infinity : Math.floor(beatAt(G.paused ? G.pauseT : heardTime()) / G.rowBeats - COUNTIN);
+  micStop(); G.endNow = now;
+  renderEndWords(now);
   if (G.mode === 'battle') {
-    // count what was actually rapped: an early (or endless) finish stops partway through
-    const now = why === 'done' ? Infinity : Math.floor(beatAt(G.paused ? G.pauseT : heardTime()) / G.rowBeats - COUNTIN);
     const turns = G.segs.filter(s => s.kind === 'turn' && s.start <= now);
     const played = s => Math.max(0, Math.min(s.len, now - s.start + 1));
     recap.innerHTML = [0, 1].map(t => {
@@ -392,6 +397,36 @@ function finish(why) {
   $('#exitBtn').textContent = G.net ? 'Leave battle' : 'Back to setup';
   setTimeout(() => { if (G && G.ended) { $('#endcard').hidden = false; (tc ? $('#endWinner .ew-team') : $('#endcard .go:not([hidden])') || $('#exitBtn')).focus(); } }, why === 'done' ? 900 : 200);
 }
+// end screen: every word dealt in the bars that were played, turn by turn, four bars to a line, with what was rapped if
+// Transcribe was on. keep: redrawing for a phrase that came in late, so leave the panel open or shut as it is
+function renderEndWords(now, keep = false) {
+  const box = $('#endWords'); if (!box) return;
+  let bars = 0, words = 0, hidden = false, said = 0;
+  const html = G.segs.filter(s => s.kind === 'turn' && s.start <= now).map(s => {
+    const n = Math.max(0, Math.min(s.len, now - s.start + 1)); if (!n) return '';
+    const lines = [];
+    for (let b0 = 0; b0 < n; b0 += 4) {
+      const B = wordsFor(s, b0 / 4), last = Math.min(n, b0 + 4), cells = [];
+      for (let r = b0; r < last; r++) for (const c of B[r - b0]) if (c) { cells.push(c); if (!c.show) hidden = true; }
+      words += cells.length;
+      lines.push(`<div class="wr-blk"><span class="wr-bars">${last > b0 + 1 ? `${b0 + 1}–${last}` : b0 + 1}</span><div class="wr-ws">${cells.map(c => `<span class="w rh c${c.c}${c.show ? '' : ' wr-hid'}">${esc(c.w)}</span>`).join('')}</div></div>`);
+    }
+    bars += n;
+    const tx = G.tx.get(s.k);
+    if (tx) { said++; lines.push(`<p class="wr-said"><b>Transcript</b>${esc(tx.join(' '))}</p>`); }
+    const meta = `${n} bar${n === 1 ? '' : 's'}`;
+    const head = G.mode === 'battle' && s.who
+      ? `<h4 style="--c:${gColor(s.who.team)}">${esc(teamLabel(s.who.name))}<span>Turn ${s.i + 1}${G.endless || G.rounds > 1 ? ' · Round ' + s.who.round : ''} · ${meta}</span></h4>`
+      : `<h4 style="--c:var(--amber)">Practice<span>${meta}</span></h4>`;
+    return `<section class="wr-turn">${head}${lines.join('')}</section>`;
+  }).join('');
+  if (!keep) box.open = false;
+  box.hidden = !bars;
+  if (!bars) return;
+  $('#endWordsSum').innerHTML = `Every word from this ${G.mode === 'battle' ? 'battle' : 'practice'}<span>${bars} bar${bars === 1 ? '' : 's'} · ${words} word${words === 1 ? '' : 's'}${said ? ' · transcript' : ''}</span>`;
+  $('#endWordsBody').innerHTML = (said ? '<div class="wr-tools"><button class="chip small ghost" data-act="copy-said"><svg width="14" height="14"><use href="#i-copy"/></svg>Copy transcript</button></div>' : '') +
+    html + (hidden ? '<p class="hint">Outlined words were hidden on the pads.</p>' : '');
+}
 function skipTurn() {
   if (!G || G.ended || G.net) return;
   const t = G.paused ? G.pauseT : heardTime();
@@ -405,8 +440,8 @@ function skipTurn() {
 }
 function togglePause() {
   if (!G || G.ended || !A.ctx || G.net) return;
-  if (!G.paused) { G.pauseT = G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime(); G.paused = true; A.ctx.suspend(); }
-  else { G.paused = false; A.ctx.resume(); }
+  if (!G.paused) { G.pauseT = G.yt && G.yt.waiting ? G.T0 - 0.3 : heardTime(); G.paused = true; A.ctx.suspend(); micStop(); }
+  else { G.paused = false; A.ctx.resume(); micStart(); }
   if (G.yt && G.yt.player) { try { G.paused ? G.yt.player.pauseVideo() : G.yt.player.playVideo(); } catch { } }
   G.look.target = 0; G.look.acc = 0; lookLabel();
   $('#pausedTag').hidden = !G.paused; G.stageEl.classList.toggle('is-paused', G.paused);

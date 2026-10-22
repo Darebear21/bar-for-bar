@@ -112,6 +112,9 @@ document.addEventListener('click', e => {
     case 'net-join': netJoin(); break;
     case 'net-rejoin': NET.armed = true; netStartStage(); break;
     case 'net-nudge': netNudge(+v); break;
+    // transcripts
+    case 'mic': micToggle(); break;
+    case 'copy-said': if (G) netCopy(micText(G), 'Transcript copied.', 'Couldn’t copy. Select the transcript and copy it.'); break;
   }
 });
 document.addEventListener('input', e => {
@@ -158,6 +161,7 @@ document.addEventListener('keydown', e => {
     else if (G && G.paused && (e.key === 'ArrowDown' || e.key === 'PageDown')) { e.preventDefault(); lookBy(e.key === 'PageDown' ? -4 : -1); }
     else if (G && G.paused && (e.key === 'Home' || e.key === 'End')) { e.preventDefault(); lookBy(e.key === 'Home' ? 1e6 : -1e6); }
     else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
+    else if ((e.key === 'm' || e.key === 'M') && !e.metaKey && !e.ctrlKey && !e.altKey && $('#endcard').hidden) { micToggle(); }
     else if (e.key === 'Escape') { if (!$('#endcard').hidden) exitStage(); else if (!document.fullscreenElement) finish('early'); }
     poke();
     return;
