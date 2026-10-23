@@ -2070,7 +2070,7 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
    Step patterns: x=1, X=1.2, o=.65, -=.35, .=rest. Notes: [step, midi|chord[], lenSteps, vel, glideFrom] */
 const PRESETS = [
   {
-    id: 'basement', name: 'Basement Tapes', style: 'Boom bap', bpm: 90, swing: 0.58, steps: 16, color: '#ff7a3d', crackle: 0.5,
+    id: 'basement', name: 'Basement Tapes', style: 'Boom bap', bpm: 90, swing: 0.58, steps: 16, color: '#ff7a3d',
     mix: { kick: 1, snare: .95, hat: .55, bass: .9, keys: 1 },
     kick: ['x......x..x.....', 'x.x.......x..o..', 'x......x..x.....', 'x.x.......x.....'],
     snare: ['....x.......x...', '....x.......x..-', '....x.......x...', '....x..-....x...'],
@@ -2136,7 +2136,7 @@ const PRESETS = [
     keysCut: 1900,
   },
   {
-    id: 'lofi', name: 'Lo-Fi Study', style: 'Lo-fi', bpm: 82, swing: 0.62, steps: 16, color: '#4fdc8f', crackle: 1,
+    id: 'lofi', name: 'Lo-Fi Study', style: 'Lo-fi', bpm: 82, swing: 0.62, steps: 16, color: '#4fdc8f',
     mix: { kick: .8, snare: .55, rim: .7, hat: .32, bass: .8, keys: 1.1 },
     kick: ['x.......x.x.....', 'x......x..x.....'],
     snare: ['....x.......x...'],
@@ -2242,7 +2242,7 @@ const PRESETS = [
   },
   // ---------- genre flips: other styles with hip-hop drums on top ----------
   {
-    id: 'bluenote', name: 'Blue Note Lounge', style: 'Jazz hop', genre: true, bpm: 86, swing: 0.62, steps: 16, color: '#7fb3ff', crackle: 0.45,
+    id: 'bluenote', name: 'Blue Note Lounge', style: 'Jazz hop', genre: true, bpm: 86, swing: 0.62, steps: 16, color: '#7fb3ff',
     mix: { kick: 0.95, snare: 0.8, rim: 0.5, hat: 0.4, bass: 1, keys: 1.05, mallet: 0.55 },
     kick: ['x.......x.x.....', 'x......x..x.....', 'x.......x.x.....', 'x......x..x..x..'],
     snare: ['....x.......x...', '....x.......x..-', '....x.......x...', '....x..-....x...'],
@@ -2536,12 +2536,6 @@ function initAudio() {
   for (let c = 0; c < 2; c++) { const ch = ir.getChannelData(c); for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
   A.ir = ir;
   A.curve = softCurve(1.8);
-  // vinyl crackle
-  const cl = Math.floor(ctx.sampleRate * 5); const cb = ctx.createBuffer(1, cl, ctx.sampleRate); const cd = cb.getChannelData(0);
-  let lp = 0;
-  for (let i = 0; i < cl; i++) { lp = lp * 0.9 + (Math.random() * 2 - 1) * 0.1; cd[i] = lp * 0.12; }
-  for (let k = 0; k < 90; k++) { const p = rand(cl - 200); const a = (Math.random() * .7 + .3) * (Math.random() < .5 ? -1 : 1); for (let j = 0; j < 60; j++) cd[p + j] += a * Math.exp(-j / 7) * (j % 2 ? -.6 : 1); }
-  A.crackleBuf = cb;
   return ctx;
 }
 function makeSession() {
@@ -2886,12 +2880,7 @@ function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, clic
   const spb = 60 / bpm;
   S.running = true; S.T0 = T0; S.spb = spb; S.click = click; S.preset = preset || null; S.session = V;
   S.steps = preset ? preset.steps : 16; S.spbeat = S.steps / 4; S.stepDur = spb / S.spbeat; S.swing = preset ? preset.swing : 0.5;
-  S.next = startStep; S.timeOf = timeOf; S.lead = null; S.src = null; S.crackle = null; S.trackEnd = Infinity; S.phrase = phrase;
-  if (preset && preset.crackle) {
-    const c = ctx.createBufferSource(); c.buffer = A.crackleBuf; c.loop = true;
-    const hp = nodes.filt('highpass', 350); const g = nodes.gain(0.22 * preset.crackle); c.connect(hp); hp.connect(g); g.connect(V.clean);
-    c.start(Math.max(T0, ctx.currentTime)); S.crackle = c;
-  }
+  S.next = startStep; S.timeOf = timeOf; S.lead = null; S.src = null; S.trackEnd = Infinity; S.phrase = phrase;
   if (track) {
     const src = ctx.createBufferSource(); src.buffer = track.buffer;
     const bar = 4 * spb;
@@ -2913,9 +2902,8 @@ function stopPlayback(fade = 0.15) {
   if (!A.ctx) return;
   const now = A.ctx.currentTime;
   try { S.src && S.src.stop(now + fade + 0.02); } catch { }
-  try { S.crackle && S.crackle.stop(now + fade + 0.02); } catch { }
   killSession(S.session, fade);
-  S.src = S.crackle = S.session = null;
+  S.src = S.session = null;
 }
 function schedTick() {
   if (!S.running || !A.ctx) return;

@@ -1155,7 +1155,7 @@ function makeWordGen(listId, schemeId, dbl, reveal, track = false, opts = {}) {
    Step patterns: x=1, X=1.2, o=.65, -=.35, .=rest. Notes: [step, midi|chord[], lenSteps, vel, glideFrom] */
 const PRESETS = [
   {
-    id: 'basement', name: 'Basement Tapes', style: 'Boom bap', bpm: 90, swing: 0.58, steps: 16, color: '#ff7a3d', crackle: 0.5,
+    id: 'basement', name: 'Basement Tapes', style: 'Boom bap', bpm: 90, swing: 0.58, steps: 16, color: '#ff7a3d',
     mix: { kick: 1, snare: .95, hat: .55, bass: .9, keys: 1 },
     kick: ['x......x..x.....', 'x.x.......x..o..', 'x......x..x.....', 'x.x.......x.....'],
     snare: ['....x.......x...', '....x.......x..-', '....x.......x...', '....x..-....x...'],
@@ -1221,7 +1221,7 @@ const PRESETS = [
     keysCut: 1900,
   },
   {
-    id: 'lofi', name: 'Lo-Fi Study', style: 'Lo-fi', bpm: 82, swing: 0.62, steps: 16, color: '#4fdc8f', crackle: 1,
+    id: 'lofi', name: 'Lo-Fi Study', style: 'Lo-fi', bpm: 82, swing: 0.62, steps: 16, color: '#4fdc8f',
     mix: { kick: .8, snare: .55, rim: .7, hat: .32, bass: .8, keys: 1.1 },
     kick: ['x.......x.x.....', 'x......x..x.....'],
     snare: ['....x.......x...'],
@@ -1327,7 +1327,7 @@ const PRESETS = [
   },
   // ---------- genre flips: other styles with hip-hop drums on top ----------
   {
-    id: 'bluenote', name: 'Blue Note Lounge', style: 'Jazz hop', genre: true, bpm: 86, swing: 0.62, steps: 16, color: '#7fb3ff', crackle: 0.45,
+    id: 'bluenote', name: 'Blue Note Lounge', style: 'Jazz hop', genre: true, bpm: 86, swing: 0.62, steps: 16, color: '#7fb3ff',
     mix: { kick: 0.95, snare: 0.8, rim: 0.5, hat: 0.4, bass: 1, keys: 1.05, mallet: 0.55 },
     kick: ['x.......x.x.....', 'x......x..x.....', 'x.......x.x.....', 'x......x..x..x..'],
     snare: ['....x.......x...', '....x.......x..-', '....x.......x...', '....x..-....x...'],

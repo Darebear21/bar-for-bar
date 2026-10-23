@@ -24,12 +24,6 @@ function initAudio() {
   for (let c = 0; c < 2; c++) { const ch = ir.getChannelData(c); for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
   A.ir = ir;
   A.curve = softCurve(1.8);
-  // vinyl crackle
-  const cl = Math.floor(ctx.sampleRate * 5); const cb = ctx.createBuffer(1, cl, ctx.sampleRate); const cd = cb.getChannelData(0);
-  let lp = 0;
-  for (let i = 0; i < cl; i++) { lp = lp * 0.9 + (Math.random() * 2 - 1) * 0.1; cd[i] = lp * 0.12; }
-  for (let k = 0; k < 90; k++) { const p = rand(cl - 200); const a = (Math.random() * .7 + .3) * (Math.random() < .5 ? -1 : 1); for (let j = 0; j < 60; j++) cd[p + j] += a * Math.exp(-j / 7) * (j % 2 ? -.6 : 1); }
-  A.crackleBuf = cb;
   return ctx;
 }
 function makeSession() {
@@ -374,12 +368,7 @@ function startPlayback({ preset, bpm, track, T0, songPos0 = 0, loop = true, clic
   const spb = 60 / bpm;
   S.running = true; S.T0 = T0; S.spb = spb; S.click = click; S.preset = preset || null; S.session = V;
   S.steps = preset ? preset.steps : 16; S.spbeat = S.steps / 4; S.stepDur = spb / S.spbeat; S.swing = preset ? preset.swing : 0.5;
-  S.next = startStep; S.timeOf = timeOf; S.lead = null; S.src = null; S.crackle = null; S.trackEnd = Infinity; S.phrase = phrase;
-  if (preset && preset.crackle) {
-    const c = ctx.createBufferSource(); c.buffer = A.crackleBuf; c.loop = true;
-    const hp = nodes.filt('highpass', 350); const g = nodes.gain(0.22 * preset.crackle); c.connect(hp); hp.connect(g); g.connect(V.clean);
-    c.start(Math.max(T0, ctx.currentTime)); S.crackle = c;
-  }
+  S.next = startStep; S.timeOf = timeOf; S.lead = null; S.src = null; S.trackEnd = Infinity; S.phrase = phrase;
   if (track) {
     const src = ctx.createBufferSource(); src.buffer = track.buffer;
     const bar = 4 * spb;
@@ -401,9 +390,8 @@ function stopPlayback(fade = 0.15) {
   if (!A.ctx) return;
   const now = A.ctx.currentTime;
   try { S.src && S.src.stop(now + fade + 0.02); } catch { }
-  try { S.crackle && S.crackle.stop(now + fade + 0.02); } catch { }
   killSession(S.session, fade);
-  S.src = S.crackle = S.session = null;
+  S.src = S.session = null;
 }
 function schedTick() {
   if (!S.running || !A.ctx) return;
